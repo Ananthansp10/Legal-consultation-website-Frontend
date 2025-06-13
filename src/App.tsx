@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import SignUp from './components/auth/SignUp';
@@ -6,6 +6,15 @@ import SignIn from './components/auth/SignIn';
 import ForgotPassword from './components/auth/ForgotPassword';
 import OTPVerification from './components/auth/OTPVerification';
 import ResetPassword from './components/auth/ResetPassword';
+import Dashboard from './pages/usersidePages/Dashboard';
+import SignupForm from './components/lawyer/SignupForm';
+import LawyerDashboard from './pages/lawyersidePages/LawyerDashboard';
+import Login from './pages/adminsidePages/Login';
+import Layout from './components/admin/Layout';
+import AdminDashboard from './pages/adminsidePages/AdminDashboard';
+import LawyerVerification from './pages/adminsidePages/LawyerVerification';
+import LawyerListing from './pages/adminsidePages/LawyerListing';
+import UserListing from './pages/adminsidePages/UserListing';
 
 function App() {
   return (
@@ -21,6 +30,17 @@ function App() {
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/otp-verification" element={<OTPVerification />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route path="/user-dashboard" element={<Dashboard/>} />
+          <Route path="/auth/lawyer/signup" element={<SignupForm/>} />
+          <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
+
+          <Route path="/admin" element={<Login/>} />
+        <Route path="/admin-dashboard" element={<Layout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="lawyer-verification" element={<LawyerVerification />} />
+          <Route path="lawyers" element={<LawyerListing />} />
+          <Route path="users" element={<UserListing />} />
+        </Route>
         </Routes>
       </div>
     </Router>
