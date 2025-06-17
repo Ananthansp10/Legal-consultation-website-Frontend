@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { otpService, resendOtp } from '../../services/user/otpService';
+import {toast} from 'react-toastify'
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -26,7 +28,6 @@ const OTPVerification = () => {
       newOtp[index] = value;
       setOtp(newOtp);
 
-      // Auto-focus next input
       if (value && index < 5) {
         inputRefs.current[index + 1]?.focus();
       }
@@ -39,19 +40,36 @@ const OTPVerification = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     const otpValue = otp.join('');
-    console.log('OTP submitted:', otpValue);
-    // After successful OTP verification, redirect to reset password
-    navigate('/auth/reset-password');
+    let userDetails=localStorage.getItem('userDetails')
+    let userData
+    if(userDetails){
+      userData=JSON.parse(userDetails)
+    }
+    otpService({userDetails:userData,otp:otpValue}).then((response)=>{
+      toast.success(response.data.message)
+      setTimeout(() => {
+        navigate('/auth/signin')
+      }, 2000);
+    }).catch((error:any)=>{
+        toast.error(error.message)
+    })
   };
 
   const handleResend = () => {
-    setTimer(60);
     setCanResend(false);
     setOtp(['', '', '', '', '', '']);
-    console.log('Resend OTP clicked');
+    let userDetails:any=localStorage.getItem('userDetails')
+    resendOtp(JSON.parse(userDetails)).then((response)=>{
+      if(response.data.success){
+        toast.success(response.data.message)
+        setTimer(60);
+      }
+    }).catch((error)=>{
+      toast.error(error.response.data.message)
+    })
   };
 
   return (

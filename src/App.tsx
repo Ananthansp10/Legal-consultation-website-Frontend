@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import SignUp from './components/auth/SignUp';
@@ -15,6 +14,8 @@ import AdminDashboard from './pages/adminsidePages/AdminDashboard';
 import LawyerVerification from './pages/adminsidePages/LawyerVerification';
 import LawyerListing from './pages/adminsidePages/LawyerListing';
 import UserListing from './pages/adminsidePages/UserListing';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -42,6 +43,17 @@ function App() {
           <Route path="users" element={<UserListing />} />
         </Route>
         </Routes>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="colored"
+        />
+        
       </div>
     </Router>
   );

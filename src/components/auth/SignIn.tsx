@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { signinValidation } from '../../interface/SigninInterface';
+import { toast } from 'react-toastify';
+import { signinService } from '../../services/user/authService';
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    emailOrPhone: '',
+    email: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -19,9 +22,24 @@ const SignIn = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Sign in form submitted:', formData);
-    // After successful login, redirect to home
-    navigate('/');
+    let errorMsg=signinValidation(formData)
+    if(errorMsg){
+      toast.error(errorMsg)
+    }else{
+      signinService(formData).then((response)=>{
+        if(response.data.success){
+          toast.success(response.data.message)
+          setTimeout(() => {
+            navigate('/user-dashboard')
+          }, 2500);
+        }
+      }).catch((error)=>{
+        toast.error(error.response.data.message)
+        setTimeout(() => {
+           navigate('/auth/signin')
+        }, 2500);
+      })
+    }
   };
 
   const handleGoogleSignIn = () => {
@@ -67,19 +85,18 @@ const SignIn = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="emailOrPhone" className="block text-sm font-medium text-slate-700 mb-2">
-                  Email or Phone Number
+                  Enter the Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <input
                     type="text"
                     id="emailOrPhone"
-                    name="emailOrPhone"
-                    value={formData.emailOrPhone}
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder="Enter your email or phone"
-                    required
                   />
                 </div>
               </div>
@@ -98,7 +115,6 @@ const SignIn = () => {
                     onChange={handleChange}
                     className="w-full pl-10 pr-12 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder="Enter your password"
-                    required
                   />
                   <button
                     type="button"

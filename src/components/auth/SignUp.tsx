@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { registerUser } from '../../services/user/authService';
+import { toast } from 'react-toastify';
+import { validateSignup } from '../../interface/userInterface/signupInterface';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
     email: '',
-    phone: '',
+    phoneNumber: '',
     password: '',
     confirmPassword: ''
   });
@@ -21,11 +24,27 @@ const SignUp = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Sign up form submitted:', formData);
-    // After successful signup, redirect to OTP verification
-    navigate('/auth/otp-verification');
+    let signupObj={
+      name:formData.name,
+      email:formData.email,
+      password:formData.password,
+      phoneNumber:formData.phoneNumber,
+      confirmPassword:formData.confirmPassword
+    }
+    let errorMsg=await validateSignup(signupObj)
+    if(errorMsg){
+      toast.error(errorMsg)
+    }else{
+      registerUser(signupObj).then((response:any)=>{
+          localStorage.setItem("userDetails",JSON.stringify(response.data.data))
+          toast.success(response.data.message)
+          navigate('/auth/otp-verification');
+      }).catch((error)=>{
+        toast.error(error.message)
+      })
+    }
   };
 
   const handleGoogleSignUp = () => {
@@ -70,7 +89,7 @@ const SignUp = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
                   Full Name
                 </label>
                 <div className="relative">
@@ -78,12 +97,11 @@ const SignUp = () => {
                   <input
                     type="text"
                     id="fullName"
-                    name="fullName"
-                    value={formData.fullName}
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder="Enter your full name"
-                    required
                   />
                 </div>
               </div>
@@ -102,13 +120,12 @@ const SignUp = () => {
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder="Enter your email"
-                    required
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-700 mb-2">
                   Phone Number
                 </label>
                 <div className="relative">
@@ -116,12 +133,11 @@ const SignUp = () => {
                   <input
                     type="tel"
                     id="phone"
-                    name="phone"
-                    value={formData.phone}
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder="Enter your phone number"
-                    required
                   />
                 </div>
               </div>
@@ -140,7 +156,6 @@ const SignUp = () => {
                     onChange={handleChange}
                     className="w-full pl-10 pr-12 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder="Create a password"
-                    required
                   />
                   <button
                     type="button"
@@ -166,7 +181,6 @@ const SignUp = () => {
                     onChange={handleChange}
                     className="w-full pl-10 pr-12 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder="Confirm your password"
-                    required
                   />
                   <button
                     type="button"
