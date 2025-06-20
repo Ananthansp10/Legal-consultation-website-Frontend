@@ -6,10 +6,12 @@ import UpcomingAppointments from '../../components/userside/UpcommingAppointment
 import QuickActions from '../../components/userside/QuickActions';
 import RecentActivities from '../../components/userside/RecentActivities';
 import Footer from '../../components/Footer';
+import { useSelector } from 'react-redux';
 
 function Dashboard() {
+  let userDetails=useSelector((state:any)=>state.auth.user)
   const userData = {
-    name: 'Alex Thompson',
+    name:userDetails?.name,
     avatar: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400'
   };
 

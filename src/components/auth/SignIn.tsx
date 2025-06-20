@@ -4,8 +4,11 @@ import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { signinValidation } from '../../interface/SigninInterface';
 import { toast } from 'react-toastify';
 import { signinService } from '../../services/user/authService';
+import { login, logout } from '../../redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const SignIn = () => {
+  const dispatch=useDispatch()
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -28,12 +31,14 @@ const SignIn = () => {
     }else{
       signinService(formData).then((response)=>{
         if(response.data.success){
+          dispatch(login(response.data.user))
           toast.success(response.data.message)
           setTimeout(() => {
             navigate('/user-dashboard')
           }, 2500);
         }
       }).catch((error)=>{
+        dispatch(logout())
         toast.error(error.response.data.message)
         setTimeout(() => {
            navigate('/auth/signin')

@@ -1,16 +1,33 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
+import {toast} from 'react-toastify';
+import { forgotPassword } from '../../services/user/authService';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [email, setEmail] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Forgot password form submitted:', emailOrPhone);
-    // After sending reset link, redirect to OTP verification
-    navigate('/auth/otp-verification');
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if(!email){
+      return toast.error("Email is required")
+    }
+    if (!emailRegex.test(email.trim())) {
+      return toast.error("Invalid email format")
+    }
+    forgotPassword(email).then((response)=>{
+      console.log(response.data)
+      if(response.data.success){
+        const data={...response.data.data,forgotPassword:true}
+        localStorage.setItem('userDetails',JSON.stringify(data))
+        toast.success(response.data.message)
+        navigate('/auth/otp-verification');
+      }
+    }).catch((error)=>{
+      toast.error(error.response.data.message)
+    })
   };
 
   return (
@@ -53,20 +70,19 @@ const ForgotPassword = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="emailOrPhone" className="block text-sm font-medium text-slate-700 mb-2">
-                  Email or Phone Number
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                  Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <input
                     type="text"
-                    id="emailOrPhone"
-                    name="emailOrPhone"
-                    value={emailOrPhone}
-                    onChange={(e) => setEmailOrPhone(e.target.value)}
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Enter your email or phone number"
-                    required
+                    placeholder="Enter your email"
                   />
                 </div>
               </div>

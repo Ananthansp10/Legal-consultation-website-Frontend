@@ -44,15 +44,20 @@ const OTPVerification = () => {
     e.preventDefault();
     const otpValue = otp.join('');
     let userDetails=localStorage.getItem('userDetails')
-    let userData
+    let userData:any
     if(userDetails){
       userData=JSON.parse(userDetails)
     }
     otpService({userDetails:userData,otp:otpValue}).then((response)=>{
-      toast.success(response.data.message)
-      setTimeout(() => {
+      localStorage.removeItem('userDetails')
+      if(userData.forgotPassword){
+       navigate('/auth/new-password')
+      }else{
+        toast.success(response.data.message)
+        setTimeout(() => {
         navigate('/auth/signin')
       }, 2000);
+      }
     }).catch((error:any)=>{
         toast.error(error.message)
     })

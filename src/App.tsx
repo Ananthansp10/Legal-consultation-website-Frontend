@@ -4,7 +4,6 @@ import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import ForgotPassword from './components/auth/ForgotPassword';
 import OTPVerification from './components/auth/OTPVerification';
-import ResetPassword from './components/auth/ResetPassword';
 import Dashboard from './pages/usersidePages/Dashboard';
 import SignupForm from './components/lawyer/SignupForm';
 import LawyerDashboard from './pages/lawyersidePages/LawyerDashboard';
@@ -16,6 +15,8 @@ import LawyerListing from './pages/adminsidePages/LawyerListing';
 import UserListing from './pages/adminsidePages/UserListing';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NewPasswordPage from './components/auth/newPasswordPage';
+import ResetPasswordPage from './components/auth/ResetPasswordPage';
 
 function App() {
   return (
@@ -30,7 +31,8 @@ function App() {
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/otp-verification" element={<OTPVerification />} />
-          <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route path='/auth/new-password' element={<NewPasswordPage/>}/>
+          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
           <Route path="/user-dashboard" element={<Dashboard/>} />
           <Route path="/auth/lawyer/signup" element={<SignupForm/>} />
           <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />

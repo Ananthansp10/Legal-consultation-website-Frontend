@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Menu, X, ChevronDown, User, LogOut } from 'lucide-react';
+import { Menu, X, ChevronDown, User, LogOut, Lock } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { logoutService } from '../../services/user/authService';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { logout as logoutAction } from '../../redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 interface NavbarProps {
   userName: string;
@@ -9,9 +15,31 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState('My Appointments');
+  const [activeLink, setActiveLink] = useState('Home');
 
-  const navLinks = ['Lawyers', 'My Appointments', 'Chat'];
+  const navLinks = ['Home','Lawyers', 'My Appointments', 'Chat'];
+
+  const userId:string=useSelector((state:any)=>state.auth.user?._id)
+
+  const dispatch=useDispatch()
+
+  const navigate=useNavigate()
+  
+  async function logout(){
+    try {
+      let result=await logoutService(userId)
+      dispatch(logoutAction())
+      toast.success(result.data.message)
+      navigate('/auth/signin')
+    } catch (error:any) {
+      toast.error(error?.response?.data?.message)
+    }
+
+  }
+
+  function resetPasswordPage(){
+    navigate('/auth/reset-password')
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/20 shadow-lg">
@@ -64,7 +92,11 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
                     <User className="w-4 h-4" />
                     <span>My Profile</span>
                   </button>
-                  <button className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-red-50/50 transition-colors">
+                  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+                    <Lock className='w-4 h-4'/>
+                    <span>Reset Password</span>
+                  </button>
+                  <button onClick={logout} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-red-50/50 transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>
@@ -121,6 +153,10 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
                   <User className="w-5 h-5" />
                   <span>My Profile</span>
                 </button>
+                <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+                    <Lock className='w-5 h-5'/>
+                    <span>Reset Password</span>
+                  </button>
                 <button className="flex items-center space-x-3 w-full px-3 py-2 text-base font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/50 rounded-md transition-colors">
                   <LogOut className="w-5 h-5" />
                   <span>Logout</span>
