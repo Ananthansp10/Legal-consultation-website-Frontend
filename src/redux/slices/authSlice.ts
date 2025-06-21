@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface State{
+export interface State{
     isAuthenticate:boolean | null,
     user:any
 }

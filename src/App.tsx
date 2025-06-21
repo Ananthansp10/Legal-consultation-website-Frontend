@@ -15,8 +15,9 @@ import LawyerListing from './pages/adminsidePages/LawyerListing';
 import UserListing from './pages/adminsidePages/UserListing';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import NewPasswordPage from './components/auth/newPasswordPage';
+import NewPasswordPage from '../../Front-end/src/components/auth/NewPasswordPage';
 import ResetPasswordPage from './components/auth/ResetPasswordPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -33,9 +34,12 @@ function App() {
           <Route path="/auth/otp-verification" element={<OTPVerification />} />
           <Route path='/auth/new-password' element={<NewPasswordPage/>}/>
           <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/user-dashboard" element={<Dashboard/>} />
           <Route path="/auth/lawyer/signup" element={<SignupForm/>} />
           <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
+
+          <Route element={<ProtectedRoute allowedRoles={['user']}/>}>
+              <Route path="/user-dashboard" element={<Dashboard/>} />
+          </Route>
 
           <Route path="/admin" element={<Login/>} />
         <Route path="/admin-dashboard" element={<Layout />}>

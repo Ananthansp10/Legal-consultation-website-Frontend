@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Lock, Shield, CheckCircle, Check, X } from 'lucide-react';
+import { resetPassword } from '../../services/user/authService';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function ResetPasswordPage() {
   const [passwords, setPasswords] = useState({
@@ -31,6 +35,10 @@ function ResetPasswordPage() {
     hasUppercase: false,
     hasSpecialChar: false
   });
+
+  let email:string=useSelector((state:any)=>state.auth?.user?.email)
+
+  const navigate=useNavigate()
 
   const validatePasswordCriteria = (password: string) => {
     const criteria = {
@@ -106,27 +114,17 @@ function ResetPasswordPage() {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      // Reset form after success
-      setTimeout(() => {
-        setIsSuccess(false);
-        setPasswords({
-          oldPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        });
-        setPasswordCriteria({
-          minLength: false,
-          hasLowercase: false,
-          hasUppercase: false,
-          hasSpecialChar: false
-        });
-      }, 3000);
-    }, 2000);
+
+    resetPassword({email:email,oldPassword:passwords.oldPassword,newPassword:passwords.newPassword}).then((response:any)=>{
+      if(response.data.success){
+        setIsSubmitting(false)
+        toast.success(response.data.message)
+        navigate('/auth/signin')
+      }
+    }).catch((error:any)=>{
+      toast.error(error.response.data.message)
+      setIsSubmitting(false)
+    })
   };
 
   if (isSuccess) {

@@ -49,10 +49,10 @@ const OTPVerification = () => {
       userData=JSON.parse(userDetails)
     }
     otpService({userDetails:userData,otp:otpValue}).then((response)=>{
-      localStorage.removeItem('userDetails')
       if(userData.forgotPassword){
        navigate('/auth/new-password')
       }else{
+        localStorage.removeItem('userDetails')
         toast.success(response.data.message)
         setTimeout(() => {
         navigate('/auth/signin')

@@ -1,4 +1,3 @@
-import { Theater } from "lucide-react";
 import { axiosInstance as axios } from "../../config/axiox";
 import { Signin } from "../../interface/SigninInterface";
 import { SignupInterface } from "../../interface/userInterface/signupInterface";
@@ -39,9 +38,26 @@ export const logoutService=async(userId:string)=>{
 
 export const forgotPassword=async(email:string)=>{
     try {
-        console.log(email)
         let result=await axios.post('/user/forgot-password',{email})
         return result;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const changePaasword=async(data:any)=>{
+    try {
+        let result=await axios.post('/user/change-password',data)
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const resetPassword=async(data:any)=>{
+    try {
+       let result=await axios.post('/user/reset-password',data)
+       return result;
     } catch (error) {
         throw error;
     }

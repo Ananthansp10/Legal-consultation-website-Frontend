@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Shield } from 'lucide-react';
+import { changePaasword } from '../../services/user/authService';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function NewPasswordPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -8,13 +11,28 @@ function NewPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate=useNavigate()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
+    let userDetails=localStorage.getItem('userDetails')
+    let user
+    if(userDetails){
+      user=JSON.parse(userDetails) as {email:string}
+      changePaasword({email:user.email,password:newPassword}).then((response)=>{
+        if(response.data.success){
+          setIsLoading(false);
+          toast.success(response.data.message)
+          navigate('/auth/signin')
+        }
+      }).catch((error)=>{
+        setIsLoading(false);
+        toast.error(error.response.data.message)
+        navigate('/auth/forgot-password')
+      })
+    }
   };
 
   const passwordsMatch = newPassword === confirmPassword && newPassword.length > 0;
