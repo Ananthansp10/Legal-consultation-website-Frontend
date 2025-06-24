@@ -19,15 +19,15 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
 
   const navLinks = ['Home','Lawyers', 'My Appointments', 'Chat'];
 
-  const userId:string=useSelector((state:any)=>state.auth.user?._id)
-
+  const user:any=useSelector((state:any)=>state.auth.user)
+ 
   const dispatch=useDispatch()
 
   const navigate=useNavigate()
   
   async function logout(){
     try {
-      let result=await logoutService(userId)
+      let result=await logoutService(user._id)
       dispatch(logoutAction())
       toast.success(result.data.message)
       navigate('/auth/signin')
@@ -92,10 +92,10 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
                     <User className="w-4 h-4" />
                     <span>My Profile</span>
                   </button>
-                  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+                 {!user.googleId ?  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
                     <Lock className='w-4 h-4'/>
                     <span>Reset Password</span>
-                  </button>
+                  </button> : null}
                   <button onClick={logout} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-red-50/50 transition-colors">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
@@ -153,10 +153,10 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
                   <User className="w-5 h-5" />
                   <span>My Profile</span>
                 </button>
-                <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-3 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
-                    <Lock className='w-5 h-5'/>
+               {!user.googleId ?  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+                    <Lock className='w-4 h-4'/>
                     <span>Reset Password</span>
-                  </button>
+                  </button> : null}
                 <button className="flex items-center space-x-3 w-full px-3 py-2 text-base font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/50 rounded-md transition-colors">
                   <LogOut className="w-5 h-5" />
                   <span>Logout</span>

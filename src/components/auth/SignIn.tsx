@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { signinValidation } from '../../interface/SigninInterface';
 import { toast } from 'react-toastify';
-import { signinService } from '../../services/user/authService';
+import { googleAuth, signinService } from '../../services/user/authService';
 import { login, logout } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const SignIn = () => {
   const dispatch=useDispatch()
@@ -15,6 +16,8 @@ const SignIn = () => {
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+
+  //const { user, isAuthenticate } = useSelector((state: any) => state.auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -48,8 +51,14 @@ const SignIn = () => {
   };
 
   const handleGoogleSignIn = () => {
-    console.log('Google sign in clicked');
+    googleAuth()
   };
+
+//   useEffect(() => {
+//   if (user && isAuthenticate === true) {
+//     navigate("/user-dashboard");
+//   }
+// }, [user, isAuthenticate, navigate]);
 
   return (
     <div className="min-h-screen flex">

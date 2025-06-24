@@ -7,13 +7,29 @@ import QuickActions from '../../components/userside/QuickActions';
 import RecentActivities from '../../components/userside/RecentActivities';
 import Footer from '../../components/Footer';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getGoogleAuthDetails } from '../../services/user/authService';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/slices/authSlice';
 
 function Dashboard() {
   let userDetails=useSelector((state:any)=>state.auth.user)
+  let dispatch=useDispatch()
   const userData = {
     name:userDetails?.name,
     avatar: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400'
   };
+
+    useEffect(()=>{
+      if(!userDetails){
+        getGoogleAuthDetails().then((response)=>{
+        if(response.data.result){
+          localStorage.setItem('user',response.data.result)
+          dispatch(login(response.data.result))
+        }
+      })
+      }
+  },[])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">

@@ -9,8 +9,21 @@ import StatsTestimonials from '../components/StatsTestimonials';
 import FAQ from '../components/FAQ';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+  const user=useSelector((state:any)=>state.auth.user)
+  console.log(user)
+  const navigate=useNavigate()
+  useEffect(()=>{
+    if(user){
+      navigate('/user-dashboard')
+    }else if(user==null){
+      navigate('/auth/signin')
+    }
+  },[user])
   return (
     <>
       <Header />

@@ -62,3 +62,21 @@ export const resetPassword=async(data:any)=>{
         throw error;
     }
 }
+
+export const googleAuth=async()=>{
+    try {
+        window.open("http://localhost:5000/api/user/auth/google", "_self")
+    } catch (error) {
+        
+    }
+}
+
+export const getGoogleAuthDetails=async()=>{
+    try {
+        let result=await axios.post('/user/getGoogleAuthDetails')
+        return result;
+    } catch (error) {
+        throw error;
+    }
+    
+}

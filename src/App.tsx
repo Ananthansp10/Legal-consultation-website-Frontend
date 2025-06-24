@@ -18,6 +18,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import NewPasswordPage from '../../Front-end/src/components/auth/NewPasswordPage';
 import ResetPasswordPage from './components/auth/ResetPasswordPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import UnAuthorizedPage from './components/UnAuthorizedPage';
+import GoogleFail from './components/GoogleFail';
+import EmailExistError from './components/EmailExistError';
+import LawyerWelcomePage from './pages/lawyersidePages/LawyerWelcomePage';
+import LawyerSignin from './components/lawyer/LawyerSignin';
 
 function App() {
   return (
@@ -33,12 +38,19 @@ function App() {
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/otp-verification" element={<OTPVerification />} />
           <Route path='/auth/new-password' element={<NewPasswordPage/>}/>
-          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+          <Route path='/unAuthorized' element={<UnAuthorizedPage/>}/>
+          <Route path='/googleFail' element={<GoogleFail/>}/>
+          <Route path='/emailExist' element={<EmailExistError/>}/>
+
           <Route path="/auth/lawyer/signup" element={<SignupForm/>} />
           <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
+          <Route path="/auth/lawyer/signin" element={<LawyerSignin/>} />
+
+          <Route path='/lawyer' element={<LawyerWelcomePage/>}/>
 
           <Route element={<ProtectedRoute allowedRoles={['user']}/>}>
               <Route path="/user-dashboard" element={<Dashboard/>} />
+              <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
           </Route>
 
           <Route path="/admin" element={<Login/>} />

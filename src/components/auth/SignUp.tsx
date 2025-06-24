@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import { registerUser } from '../../services/user/authService';
+import { googleAuth, registerUser } from '../../services/user/authService';
 import { toast } from 'react-toastify';
 import { validateSignup } from '../../interface/userInterface/signupInterface';
 
@@ -47,8 +47,8 @@ const SignUp = () => {
     }
   };
 
-  const handleGoogleSignUp = () => {
-    console.log('Google sign up clicked');
+  const handleGoogleSignUp =() => {
+     googleAuth()
   };
 
   return (
