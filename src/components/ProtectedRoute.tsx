@@ -31,7 +31,7 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
     };
 
     checkAuth();
-  }, [allowedRoles]);
+  }, [allowedRoles[0]]);
    
   if (isAuth === null) {
     return <Loader/>

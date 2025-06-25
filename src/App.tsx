@@ -23,6 +23,7 @@ import GoogleFail from './components/GoogleFail';
 import EmailExistError from './components/EmailExistError';
 import LawyerWelcomePage from './pages/lawyersidePages/LawyerWelcomePage';
 import LawyerSignin from './components/lawyer/LawyerSignin';
+import LawyerVerificationStatusPage from './components/lawyer/LawyerVerificationStatusPage';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/auth/lawyer/signin" element={<LawyerSignin/>} />
 
           <Route path='/lawyer' element={<LawyerWelcomePage/>}/>
+          <Route path='/lawyer-verification-status' element={<LawyerVerificationStatusPage/>}/>
 
           <Route element={<ProtectedRoute allowedRoles={['user']}/>}>
               <Route path="/user-dashboard" element={<Dashboard/>} />

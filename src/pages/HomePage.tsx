@@ -20,8 +20,6 @@ const HomePage = () => {
   useEffect(()=>{
     if(user){
       navigate('/user-dashboard')
-    }else if(user==null){
-      navigate('/auth/signin')
     }
   },[user])
   return (
