@@ -11,6 +11,7 @@ import {
   ChevronRight,
   ArrowRight
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function LawyerWelcomePage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -18,6 +19,8 @@ function LawyerWelcomePage() {
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const navigate=useNavigate()
 
   const features = [
     {
@@ -41,6 +44,15 @@ function LawyerWelcomePage() {
       description: "Stay updated on deadlines and important events"
     }
   ];
+
+  function gotoSignup(){
+    navigate('/auth/lawyer/signup')
+  }
+
+  function gotoSignin(){
+    navigate('/auth/lawyer/signin')
+  }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-slate-100 relative overflow-hidden">
@@ -100,12 +112,12 @@ function LawyerWelcomePage() {
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/35 hover:scale-105 flex items-center space-x-2">
+                    <button onClick={gotoSignup} className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/35 hover:scale-105 flex items-center space-x-2">
                       <span>Get Started</span>
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                     
-                    <button className="group backdrop-blur-lg bg-white/30 hover:bg-white/40 border border-white/40 text-slate-700 px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-2">
+                    <button onClick={gotoSignin} className="group backdrop-blur-lg bg-white/30 hover:bg-white/40 border border-white/40 text-slate-700 px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-2">
                       <span>Sign In</span>
                       <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>

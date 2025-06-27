@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Upload, X, CheckCircle, Scale, Gavel, BookOpen, User, Mail, Lock, GraduationCap, FileText, Camera } from 'lucide-react';
+import { register } from '../../services/lawyer/authService';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
   fullName: string;
@@ -59,11 +62,16 @@ function SignupForm() {
     }
   };
 
+  const navigate=useNavigate()
+
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (step === 1) {
       if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+      else if (!/^[A-Za-z\s]+$/.test(formData.fullName.trim())) {
+        newErrors.fullName = 'Full name must contain only alphabets';
+      }
       if (!formData.email.trim()) newErrors.email = 'Email is required';
       else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
       if (!formData.password) newErrors.password = 'Password is required';
@@ -94,10 +102,28 @@ function SignupForm() {
 
   const handleSubmit = () => {
     if (validateStep(3)) {
-      setIsSubmitted(true);
-      // Here you would typically submit to your backend
-      console.log('Form submitted:', formData);
-    }
+      const data = new FormData();
+
+      data.append('name', formData.fullName);
+      data.append('email', formData.email);
+      data.append('password', formData.password);
+      data.append('experience', formData.experience);
+      data.append('barCouncilNumber', formData.barCouncilNumber);
+
+      formData.specialization.forEach((spec) => {
+        data.append('specialization[]', spec);
+      });
+
+      if (formData.lawDegree) data.append('files', formData.lawDegree);
+      if (formData.barCertificate) data.append('files', formData.barCertificate);
+
+        register(data).then((response:any)=>{
+          toast.success(response.data.message)
+          navigate('/auth/lawyer/signin')
+        }).catch((error)=>{
+          toast.error(error.response.data.message)
+        })
+      }
   };
 
   const handleDrag = (e: React.DragEvent, type: string) => {

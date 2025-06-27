@@ -6,9 +6,17 @@ function UnAuthorizedPage() {
     let role=location.state.role
     let navigate=useNavigate()
 
+    console.log(role)
+
     function gotoLogin(){
         if(role=='user'){
             navigate('/auth/signin')
+        }else if(role=='lawyer'){
+          navigate('/auth/lawyer/signin')
+        }else if(role=='admin'){
+          navigate('/admin')
+        }else{
+          navigate('/auth/signin')
         }
     }
 

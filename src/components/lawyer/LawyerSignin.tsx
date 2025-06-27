@@ -1,22 +1,73 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Scale, ArrowRight } from 'lucide-react';
+import {z} from 'zod'
+import { signin } from '../../services/lawyer/authService';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 function LawyerSignin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
+
+  const navigate=useNavigate()
+
+
+  const loginSchema = z.object({
+    email: z
+      .string({ required_error: 'Email is required' })
+      .trim()
+      .nonempty({ message: 'Email is required' })
+      .email({ message: 'Enter a valid email address' }),
+    
+    password: z
+      .string({ required_error: 'Password is required' })
+      .trim()
+      .nonempty({ message: 'Password is required' })
+      .min(6, { message: 'Password must be at least 6 characters' }),
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+     const result = loginSchema.safeParse({ email, password });
+
+    if (!result.success) {
+      const errors: { email?: string; password?: string } = {};
+      for (const err of result.error.errors) {
+        const field = err.path[0] as 'email' | 'password';
+      if (!errors[field]) {
+        errors[field] = err.message;
+      }
+    }
+      setFormErrors(errors);
+      setIsLoading(false);
+      return;
+    }
+
+    setFormErrors({});
+
+    signin({email,password}).then((response)=>{
+      if(response){
+        toast.success(response.data.message)
+        navigate('/lawyer-dashboard')
+      }
+    }).catch((error:any)=>{
+      console.log(error)
+      if(error.status==503){
+        navigate('/lawyer-verification-status')
+      }else{
+      toast.error(error.response.data.message)
+      }
+    })
     
-    // Simulate API call
+    
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsLoading(false);
-    
-    // Here you would typically handle the actual authentication
-    console.log('Sign in attempt:', { email, password });
   };
 
   return (
@@ -111,9 +162,12 @@ function LawyerSignin() {
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 bg-white/40 backdrop-blur-sm border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-slate-500 text-slate-900 transition-all duration-200"
                       placeholder="Enter your email"
-                      required
                     />
                   </div>
+                  {formErrors.email && (
+                    <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+                  )}
+
                 </div>
 
                 {/* Password field */}
@@ -130,8 +184,11 @@ function LawyerSignin() {
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full pl-10 pr-12 py-3 bg-white/40 backdrop-blur-sm border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-slate-500 text-slate-900 transition-all duration-200"
                       placeholder="Enter your password"
-                      required
                     />
+                    {formErrors.password && (
+                      <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -170,17 +227,16 @@ function LawyerSignin() {
               </form>
 
               {/* Sign up link */}
+              <Link to="/auth/lawyer/signup">
               <div className="text-center mt-6 pt-6 border-t border-white/20">
-                <p className="text-slate-600">
-                  Don't have an account?{' '}
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
-                  >
-                    Sign up here
-                  </a>
-                </p>
-              </div>
+              <p className="text-slate-600">
+                      Don't have an account?{' '}
+              <span className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+              Sign up here
+              </span>
+              </p>
+            </div>
+            </Link>
             </div>
 
             {/* Security notice */}

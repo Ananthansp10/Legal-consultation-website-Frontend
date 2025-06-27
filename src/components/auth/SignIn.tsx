@@ -17,7 +17,7 @@ const SignIn = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  //const { user, isAuthenticate } = useSelector((state: any) => state.auth);
+  const { user, isAuthenticate } = useSelector((state: any) => state.auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -54,11 +54,11 @@ const SignIn = () => {
     googleAuth()
   };
 
-//   useEffect(() => {
-//   if (user && isAuthenticate === true) {
-//     navigate("/user-dashboard");
-//   }
-// }, [user, isAuthenticate, navigate]);
+  useEffect(() => {
+  if (user && isAuthenticate === true) {
+    navigate("/user-dashboard");
+  }
+}, [user, isAuthenticate, navigate]);
 
   return (
     <div className="min-h-screen flex">
