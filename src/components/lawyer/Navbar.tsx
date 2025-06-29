@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { Menu, X, User, Settings, LogOut, Key } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { logout } from '../../services/lawyer/authService';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { lawyerLogout } from '../../redux/slices/lawyerAuthSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -7,6 +13,21 @@ const Navbar: React.FC = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
+
+  const lawyer=useSelector((state:any)=>state.lawyerAuth.lawyer)
+
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
+
+  function logoutLawyer(){
+    logout().then((response)=>{
+      dispatch(lawyerLogout)
+      toast.success(response.data.message)
+      navigate('/auth/lawyer/signin')
+    }).catch((error)=>{
+      toast.error(error.response.data.message)
+    })
+  }
 
   return (
     <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -45,7 +66,7 @@ const Navbar: React.FC = () => {
                     src="https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400"
                     alt="Profile"
                   />
-                  <span className="text-sm font-medium text-slate-700">Ananthan SP</span>
+                  <span className="text-sm font-medium text-slate-700">{lawyer?.name}</span>
                 </button>
 
                 {/* Profile Dropdown */}
@@ -66,13 +87,12 @@ const Navbar: React.FC = () => {
                         <Key className="mr-3 h-4 w-4" />
                         Reset Password
                       </a>
-                      <a
-                        href="#"
-                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-red-50 hover:text-red-600 transition-colors"
+                      <button
+                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-red-50 hover:text-red-600 transition-colors" onClick={logoutLawyer}
                       >
                         <LogOut className="mr-3 h-4 w-4" />
                         Logout
-                      </a>
+                      </button>
                     </div>
                   </div>
                 )}

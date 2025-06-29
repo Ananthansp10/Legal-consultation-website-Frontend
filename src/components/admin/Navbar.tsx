@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useDebugValue } from 'react';
 import { Scale, LogOut, User } from 'lucide-react';
+import { logout } from '../../services/admin/authService';
+import { toast } from 'react-toastify';
+import { adminLogout } from '../../redux/slices/adminAuthSlice';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 const Navbar: React.FC = () => {
+  const navigate=useNavigate()
+  const dispatch=useDispatch()
+
+  function logoutAdmin(){
+    logout().then((response)=>{
+      dispatch(adminLogout())
+      toast.success(response.data.message)
+      navigate('/auth/admin/signin')
+    }).catch((error)=>{
+      toast.error(error.response.data.message)
+    })
+  }
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="flex items-center justify-between px-6 py-4">
@@ -20,7 +37,7 @@ const Navbar: React.FC = () => {
             </div>
             <span className="text-sm font-medium text-slate-700">Admin</span>
           </div>
-          <button className="flex items-center space-x-2 text-slate-600 hover:text-blue-500 transition-colors duration-200">
+          <button onClick={logoutAdmin} className="flex items-center space-x-2 text-slate-600 hover:text-blue-500 transition-colors duration-200">
             <LogOut className="w-5 h-5" />
             <span className="text-sm font-medium">Logout</span>
           </button>

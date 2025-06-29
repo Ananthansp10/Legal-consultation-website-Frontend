@@ -24,6 +24,7 @@ import EmailExistError from './components/EmailExistError';
 import LawyerWelcomePage from './pages/lawyersidePages/LawyerWelcomePage';
 import LawyerSignin from './components/lawyer/LawyerSignin';
 import LawyerVerificationStatusPage from './components/lawyer/LawyerVerificationStatusPage';
+import AdminWelcomePage from './pages/adminsidePages/AdminWelcomePage';
 
 function App() {
   return (
@@ -44,7 +45,6 @@ function App() {
           <Route path='/emailExist' element={<EmailExistError/>}/>
 
           <Route path="/auth/lawyer/signup" element={<SignupForm/>} />
-          <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
           <Route path="/auth/lawyer/signin" element={<LawyerSignin/>} />
 
           <Route path='/lawyer' element={<LawyerWelcomePage/>}/>
@@ -55,13 +55,24 @@ function App() {
               <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
           </Route>
 
-          <Route path="/admin" element={<Login/>} />
-        <Route path="/admin-dashboard" element={<Layout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="lawyer-verification" element={<LawyerVerification />} />
-          <Route path="lawyers" element={<LawyerListing />} />
-          <Route path="users" element={<UserListing />} />
-        </Route>
+           <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>
+              <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
+          </Route>
+
+
+
+          <Route path='/admin' element={<AdminWelcomePage/>}/>
+          <Route path="/auth/admin/signin" element={<Login/>} />
+
+          <Route element={<ProtectedRoute allowedRoles={['admin']}/>}>
+           <Route path="/admin-dashboard" element={<Layout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="lawyer-verification" element={<LawyerVerification />} />
+              <Route path="lawyers" element={<LawyerListing />} />
+              <Route path="users" element={<UserListing />} />
+            </Route>
+          </Route>
+          
         </Routes>
 
         <ToastContainer

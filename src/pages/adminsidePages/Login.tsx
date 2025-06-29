@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Scale, Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Button from '../../components/admin/Button';
 import Footer from '../../components/admin/Footer';
+import { z } from 'zod';
+import { signin } from '../../services/admin/authService';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { adminLogin } from '../../redux/slices/adminAuthSlice';
+import { useSelector } from 'react-redux';
 
 const Login: React.FC = () => {
+
+  const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Invalid email format'),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+});
+
+  type LoginFormData = z.infer<typeof loginSchema>;
+  const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
+
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -12,10 +33,35 @@ const Login: React.FC = () => {
     password: '',
   });
 
+  const adminExist=useSelector((state:any)=>state.adminAuth.isAuthenticate)
+
+  const dispatch=useDispatch()
+
+  useEffect(()=>{
+    if(adminExist){
+      navigate('/admin-dashboard')
+    }
+  },[])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login
-    navigate('/dashboard');
+    const result = loginSchema.safeParse(formData);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setErrors({
+        email: fieldErrors.email?.[0],
+        password: fieldErrors.password?.[0],
+      });
+    }else{
+      signin(formData).then((response)=>{
+        dispatch(adminLogin(response.data.data))
+        toast.success(response.data.message)
+        navigate('/admin-dashboard')
+      }).catch((error)=>{
+        toast.error(error.response.data.message)
+      })
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,8 +125,8 @@ const Login: React.FC = () => {
                       onChange={handleInputChange}
                       className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200"
                       placeholder="admin@legalconnect.com"
-                      required
                     />
+                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                   </div>
                 </div>
 
@@ -98,8 +144,8 @@ const Login: React.FC = () => {
                       onChange={handleInputChange}
                       className="w-full pl-11 pr-12 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200"
                       placeholder="Enter your password"
-                      required
                     />
+                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -108,23 +154,6 @@ const Login: React.FC = () => {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-blue-500 focus:ring-blue-500 border-slate-300 rounded"
-                    />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-600">
-                      Remember me
-                    </label>
-                  </div>
-                  <a href="#" className="text-sm text-blue-500 hover:text-blue-600 font-medium">
-                    Forgot Password?
-                  </a>
                 </div>
 
                 <Button type="submit" className="w-full" size="lg">

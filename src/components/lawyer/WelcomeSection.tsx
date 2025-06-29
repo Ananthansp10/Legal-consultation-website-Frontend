@@ -1,7 +1,9 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 const WelcomeSection: React.FC = () => {
+  const lawyer=useSelector((state:any)=>state.lawyerAuth.lawyer)
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
@@ -11,7 +13,7 @@ const WelcomeSection: React.FC = () => {
         <div className="flex items-center space-x-3 mb-4">
           <Sparkles className="h-8 w-8 text-blue-600" />
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
-            Welcome back, Ananthan SP!
+            Welcome back, {lawyer?.name}!
           </h1>
         </div>
         <p className="text-lg text-slate-600 max-w-2xl">

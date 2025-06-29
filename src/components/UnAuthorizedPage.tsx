@@ -1,27 +1,30 @@
 import { ShieldX, ArrowLeft, Lock, AlertTriangle,LogIn } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useNavigate, useSearchParams } from 'react-router-dom';
 
 function UnAuthorizedPage() {
-    let location=useLocation()
-    let role=location.state.role
+    const [searchParams] = useSearchParams();
+    const role = searchParams.get('role')
     let navigate=useNavigate()
 
-    console.log(role)
-
     function gotoLogin(){
-        if(role=='user'){
+        if(role==='user'){
             navigate('/auth/signin')
-        }else if(role=='lawyer'){
+        }else if(role==='lawyer'){
           navigate('/auth/lawyer/signin')
-        }else if(role=='admin'){
-          navigate('/admin')
         }else{
-          navigate('/auth/signin')
+          navigate('/auth/admin/signin')
         }
     }
 
     function goBack(){
-      navigate('/')
+
+      if(role==='user'){
+            navigate('/')
+        }else if(role==='lawyer'){
+          navigate('/lawyer')
+        }else{
+          navigate('/admin')
+        }
     }
 
   return (
@@ -75,8 +78,8 @@ function UnAuthorizedPage() {
             </div>
 
             {/* Action Buttons */}
-            <div onClick={goBack} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="group inline-flex items-center justify-center px-6 py-3 bg-slate-800 text-white font-semibold rounded-xl shadow-lg hover:bg-slate-700 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button onClick={goBack} className="group inline-flex items-center justify-center px-6 py-3 bg-slate-800 text-white font-semibold rounded-xl shadow-lg hover:bg-slate-700 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
                 <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
                 Go Back
               </button>

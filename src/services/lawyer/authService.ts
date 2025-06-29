@@ -19,3 +19,12 @@ export const signin=async(data:any)=>{
         throw error;
     }
 }
+
+export const logout=async()=>{
+    try {
+        let result=await axios.post('/lawyer/logout')
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}

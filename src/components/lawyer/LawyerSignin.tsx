@@ -5,6 +5,8 @@ import { signin } from '../../services/lawyer/authService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { lawyerLogin } from '../../redux/slices/lawyerAuthSlice';
 
 function LawyerSignin() {
   const [email, setEmail] = useState('');
@@ -14,6 +16,7 @@ function LawyerSignin() {
   const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
 
   const navigate=useNavigate()
+  const dispatch=useDispatch()
 
 
   const loginSchema = z.object({
@@ -54,10 +57,10 @@ function LawyerSignin() {
     signin({email,password}).then((response)=>{
       if(response){
         toast.success(response.data.message)
+        dispatch(lawyerLogin(response.data.data))
         navigate('/lawyer-dashboard')
       }
     }).catch((error:any)=>{
-      console.log(error)
       if(error.status==503){
         navigate('/lawyer-verification-status')
       }else{

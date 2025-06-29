@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
-import { Eye, Search, Filter, UserCheck, Ban, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import {
+  Eye,
+  Search,
+  Filter,
+  UserCheck,
+  Ban,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import GlassCard from '../../components/admin/GlassCard';
 import Button from '../../components/admin/Button';
 import Modal from '../../components/admin/Modal';
 import Badge from '../../components/admin/Badge';
 import ConfirmationModal from '../../components/admin/ConfirmationModal';
+import { getLawyers, updateLawyerStatus } from '../../services/admin/lawyerListingService';
+import { toast } from 'react-toastify';
 
 interface Lawyer {
-  id: number;
+  _id: string;
   name: string;
   email: string;
-  phone: string;
-  specialization: string;
-  profileImage: string;
-  status: 'verified' | 'blocked' | 'pending';
-  rating: number;
-  consultations: number;
-  joinedDate: string;
+  specialization: string[];
+  experience: string;
+  barCouncilNumber: string;
+  documents: string[];
+  isBlock: boolean;
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  profileImage?: string;
 }
 
 const LawyerListing: React.FC = () => {
@@ -24,7 +36,7 @@ const LawyerListing: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmationModal, setConfirmationModal] = useState<{
     isOpen: boolean;
-    type: 'block' | 'unblock' | 'delete';
+    type: 'block' | 'unblock';
     lawyer: Lawyer | null;
   }>({ isOpen: false, type: 'block', lawyer: null });
   const [filter, setFilter] = useState('all');
@@ -32,83 +44,47 @@ const LawyerListing: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
+  const [lawyers,setLawyers]=useState<Lawyer[]>([])
 
-  // Mock data
-  const lawyers: Lawyer[] = [
-    {
-      id: 1,
-      name: 'Dr. Sarah Johnson',
-      email: 'sarah.johnson@email.com',
-      phone: '+1 (555) 123-4567',
-      specialization: 'Corporate Law',
-      profileImage: 'https://images.pexels.com/photos/5490276/pexels-photo-5490276.jpeg?auto=compress&cs=tinysrgb&w=400',
-      status: 'verified',
-      rating: 4.9,
-      consultations: 145,
-      joinedDate: '2023-01-15',
-    },
-    {
-      id: 2,
-      name: 'John Martinez',
-      email: 'john.martinez@email.com',
-      phone: '+1 (555) 234-5678',
-      specialization: 'Criminal Law',
-      profileImage: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400',
-      status: 'verified',
-      rating: 4.8,
-      consultations: 128,
-      joinedDate: '2023-02-20',
-    },
-    {
-      id: 3,
-      name: 'Emily Chen',
-      email: 'emily.chen@email.com',
-      phone: '+1 (555) 345-6789',
-      specialization: 'Family Law',
-      profileImage: 'https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=400',
-      status: 'blocked',
-      rating: 4.7,
-      consultations: 98,
-      joinedDate: '2023-03-10',
-    },
-    {
-      id: 4,
-      name: 'Michael Rodriguez',
-      email: 'michael.rodriguez@email.com',
-      phone: '+1 (555) 456-7890',
-      specialization: 'Real Estate Law',
-      profileImage: 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=400',
-      status: 'verified',
-      rating: 4.6,
-      consultations: 87,
-      joinedDate: '2023-04-05',
-    },
-    {
-      id: 5,
-      name: 'Lisa Thompson',
-      email: 'lisa.thompson@email.com',
-      phone: '+1 (555) 567-8901',
-      specialization: 'Immigration Law',
-      profileImage: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400',
-      status: 'pending',
-      rating: 4.5,
-      consultations: 76,
-      joinedDate: '2023-05-12',
-    },
-  ];
+  const dummyImage = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
-  const filteredLawyers = lawyers.filter(lawyer => {
-    const matchesFilter = filter === 'all' || lawyer.status === filter;
-    const matchesSearch = lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         lawyer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         lawyer.phone.includes(searchTerm);
-    return matchesFilter && matchesSearch;
+  function fetchLawyer(){
+    getLawyers().then((response)=>{
+      setLawyers(response.data.data)
+    })
+  }
+
+  useEffect(()=>{
+    fetchLawyer()
+  },[])
+
+  const filteredLawyers = lawyers.filter((lawyer) => {
+    const statusMatch =
+      filter === 'all' ||
+      (filter === 'active' && !lawyer.isBlock) ||
+      (filter === 'inactive' && lawyer.isBlock);
+
+    const searchMatch =
+      lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lawyer.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return statusMatch && searchMatch;
   });
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredLawyers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedLawyers = filteredLawyers.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedLawyers = filteredLawyers.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  const getStatusBadge = (isBlocked: boolean) => {
+    return isBlocked ? (
+      <Badge variant="danger">Inactive</Badge>
+    ) : (
+      <Badge variant="success">Active</Badge>
+    );
+  };
 
   const handleViewProfile = (lawyer: Lawyer) => {
     setSelectedLawyer(lawyer);
@@ -118,163 +94,96 @@ const LawyerListing: React.FC = () => {
   const handleToggleStatusClick = (lawyer: Lawyer) => {
     setConfirmationModal({
       isOpen: true,
-      type: lawyer.status === 'verified' ? 'block' : 'unblock',
-      lawyer: lawyer
-    });
-  };
-
-  const handleDeleteClick = (lawyer: Lawyer) => {
-    setConfirmationModal({
-      isOpen: true,
-      type: 'delete',
-      lawyer: lawyer
+      type: lawyer.isBlock ? 'unblock' : 'block',
+      lawyer,
     });
   };
 
   const handleConfirmAction = async () => {
     if (!confirmationModal.lawyer) return;
-    
+
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log(`${confirmationModal.type} lawyer:`, confirmationModal.lawyer.id);
-    
+    updateLawyerStatus(confirmationModal.lawyer._id,confirmationModal.type).then((response)=>{
+      toast.success(response.data.message)
+      fetchLawyer()
+    }).catch((error)=>{
+      toast.error(error.response.data.message)
+    })
+
     setIsLoading(false);
     setConfirmationModal({ isOpen: false, type: 'block', lawyer: null });
     setIsModalOpen(false);
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'verified':
-        return <Badge variant="success">Verified</Badge>;
-      case 'blocked':
-        return <Badge variant="danger">Blocked</Badge>;
-      case 'pending':
-        return <Badge variant="warning">Pending</Badge>;
-      default:
-        return <Badge>Unknown</Badge>;
-    }
-  };
-
-  const getConfirmationMessage = () => {
-    if (!confirmationModal.lawyer) return '';
-    
-    switch (confirmationModal.type) {
-      case 'block':
-        return `Are you sure you want to block ${confirmationModal.lawyer.name}? They will no longer be able to access the platform.`;
-      case 'unblock':
-        return `Are you sure you want to unblock ${confirmationModal.lawyer.name}? They will regain access to the platform.`;
-      case 'delete':
-        return `Are you sure you want to permanently delete ${confirmationModal.lawyer.name}? This action cannot be undone.`;
-      default:
-        return '';
-    }
-  };
-
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-800">Lawyer Management</h1>
-        <p className="text-slate-600 mt-2">View, search, filter, and manage all registered lawyers.</p>
+        <p className="text-slate-600 mt-2">
+          View, search, filter, and manage all registered lawyers.
+        </p>
       </div>
 
-      {/* Filters and Search */}
       <GlassCard className="p-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search by name, email, or phone..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-              />
-            </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by name or email..."
+              className="pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white/50 backdrop-blur-sm"
+            />
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Filter className="w-5 h-5 text-slate-400" />
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-              >
-                <option value="all">All Status</option>
-                <option value="verified">Verified</option>
-                <option value="blocked">Blocked</option>
-                <option value="pending">Pending</option>
-              </select>
-            </div>
+          <div className="flex items-center space-x-3">
+            <Filter className="text-slate-400" />
             <select
-              value={itemsPerPage}
+              value={filter}
               onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
+                setFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+              className="px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white/50 backdrop-blur-sm"
             >
-              <option value={10}>10 per page</option>
-              <option value={20}>20 per page</option>
-              <option value={50}>50 per page</option>
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
             </select>
           </div>
         </div>
       </GlassCard>
 
-      {/* Lawyers Table */}
       <GlassCard>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-200/50">
-                <th className="text-left py-4 px-6 text-sm font-semibold text-slate-700">Lawyer</th>
-                <th className="text-left py-4 px-6 text-sm font-semibold text-slate-700">Specialization</th>
-                <th className="text-left py-4 px-6 text-sm font-semibold text-slate-700">Contact</th>
-                <th className="text-left py-4 px-6 text-sm font-semibold text-slate-700">Status</th>
-                <th className="text-left py-4 px-6 text-sm font-semibold text-slate-700">Rating</th>
-                <th className="text-left py-4 px-6 text-sm font-semibold text-slate-700">Actions</th>
+                <th className="text-left px-6 py-4">Lawyer</th>
+                <th className="text-left px-6 py-4">Specialization</th>
+                <th className="text-left px-6 py-4">Email</th>
+                <th className="text-left px-6 py-4">Status</th>
+                <th className="text-left px-6 py-4">Actions</th>
               </tr>
             </thead>
             <tbody>
               {paginatedLawyers.map((lawyer) => (
-                <tr
-                  key={lawyer.id}
-                  className="border-b border-slate-200/30 hover:bg-white/50 transition-colors duration-200"
-                >
-                  <td className="py-4 px-6">
-                    <div className="flex items-center space-x-3">
-                      <img
-                        src={lawyer.profileImage}
-                        alt={lawyer.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="font-medium text-slate-800">{lawyer.name}</p>
-                        <p className="text-sm text-slate-600">{lawyer.consultations} consultations</p>
-                      </div>
-                    </div>
+                <tr key={lawyer._id} className="border-b border-slate-200/30">
+                  <td className="px-6 py-4 flex items-center space-x-3">
+                    <img
+                      src={lawyer.profileImage || dummyImage}
+                      alt={lawyer.name}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <span>{lawyer.name}</span>
                   </td>
-                  <td className="py-4 px-6 text-sm text-slate-600">{lawyer.specialization}</td>
-                  <td className="py-4 px-6">
-                    <div className="text-sm">
-                      <p className="text-slate-800">{lawyer.email}</p>
-                      <p className="text-slate-600">{lawyer.phone}</p>
-                    </div>
+                  <td className="px-6 py-4 text-sm">
+                    {lawyer.specialization.join(', ')}
                   </td>
-                  <td className="py-4 px-6">{getStatusBadge(lawyer.status)}</td>
-                  <td className="py-4 px-6">
-                    <div className="flex items-center space-x-1">
-                      <span className="text-yellow-500">★</span>
-                      <span className="text-sm font-medium text-slate-800">{lawyer.rating}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-6">
+                  <td className="px-6 py-4 text-sm">{lawyer.email}</td>
+                  <td className="px-6 py-4">{getStatusBadge(lawyer.isBlock)}</td>
+                  <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="ghost"
@@ -285,20 +194,12 @@ const LawyerListing: React.FC = () => {
                         View
                       </Button>
                       <Button
-                        variant={lawyer.status === 'verified' ? 'danger' : 'success'}
+                        variant={lawyer.isBlock ? 'success' : 'danger'}
                         size="sm"
-                        icon={lawyer.status === 'verified' ? Ban : UserCheck}
+                        icon={lawyer.isBlock ? UserCheck : Ban}
                         onClick={() => handleToggleStatusClick(lawyer)}
                       >
-                        {lawyer.status === 'verified' ? 'Block' : 'Verify'}
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        icon={Trash2}
-                        onClick={() => handleDeleteClick(lawyer)}
-                      >
-                        Delete
+                        {lawyer.isBlock ? 'Unblock' : 'Block'}
                       </Button>
                     </div>
                   </td>
@@ -309,41 +210,41 @@ const LawyerListing: React.FC = () => {
         </div>
       </GlassCard>
 
-      {/* Pagination */}
       <GlassCard className="p-4">
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-slate-600">
-            Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredLawyers.length)} of {filteredLawyers.length} lawyers
-          </div>
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-slate-600">
+            Showing {startIndex + 1}–{Math.min(startIndex + itemsPerPage, filteredLawyers.length)} of{' '}
+            {filteredLawyers.length}
+          </span>
           <div className="flex items-center space-x-2">
             <Button
+              icon={ChevronLeft}
               variant="ghost"
               size="sm"
-              icon={ChevronLeft}
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             >
-              Previous
+              Prev
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+            {Array.from({ length: totalPages }, (_, i) => (
               <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 text-sm rounded-lg transition-colors duration-200 ${
-                  currentPage === page
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === i + 1
                     ? 'bg-blue-500 text-white'
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                {page}
+                {i + 1}
               </button>
             ))}
             <Button
+              icon={ChevronRight}
               variant="ghost"
               size="sm"
-              icon={ChevronRight}
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             >
               Next
             </Button>
@@ -351,99 +252,60 @@ const LawyerListing: React.FC = () => {
         </div>
       </GlassCard>
 
-      {/* Profile Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={`Lawyer Profile - ${selectedLawyer?.name}`}
-        size="lg"
       >
         {selectedLawyer && (
-          <div className="space-y-6">
-            <div className="flex items-center space-x-4">
-              <img
-                src={selectedLawyer.profileImage}
-                alt={selectedLawyer.name}
-                className="w-20 h-20 rounded-full object-cover"
-              />
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold text-slate-800">{selectedLawyer.name}</h3>
-                <p className="text-slate-600">{selectedLawyer.specialization}</p>
-                <div className="flex items-center space-x-4 mt-2">
-                  {getStatusBadge(selectedLawyer.status)}
-                  <div className="flex items-center space-x-1">
-                    <span className="text-yellow-500">★</span>
-                    <span className="text-sm font-medium">{selectedLawyer.rating}</span>
-                  </div>
-                </div>
-              </div>
+          <div className="space-y-4">
+            <img
+              src={selectedLawyer.profileImage || dummyImage}
+              alt={selectedLawyer.name}
+              className="w-24 h-24 rounded-full object-cover mx-auto"
+            />
+            <div className="text-center">
+              <h2 className="text-lg font-semibold">{selectedLawyer.name}</h2>
+              <p className="text-slate-600">{selectedLawyer.specialization.join(', ')}</p>
+              {getStatusBadge(selectedLawyer.isBlock)}
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-slate-800 mb-3">Contact Information</h4>
-                <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Email:</span> {selectedLawyer.email}</p>
-                  <p><span className="font-medium">Phone:</span> {selectedLawyer.phone}</p>
-                  <p><span className="font-medium">Joined:</span> {selectedLawyer.joinedDate}</p>
-                </div>
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-800 mb-3">Statistics</h4>
-                <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Total Consultations:</span> {selectedLawyer.consultations}</p>
-                  <p><span className="font-medium">Rating:</span> {selectedLawyer.rating}/5.0</p>
-                  <p><span className="font-medium">Status:</span> {selectedLawyer.status}</p>
-                </div>
-              </div>
+            <div className="space-y-2 text-sm">
+              <p>Email: {selectedLawyer.email}</p>
+              <p>Experience: {selectedLawyer.experience}</p>
+              <p>Bar Council No: {selectedLawyer.barCouncilNumber}</p>
+              <p>Joined: {new Date(selectedLawyer.createdAt).toDateString()}</p>
             </div>
-
-            <div className="flex justify-end space-x-3 pt-4 border-t border-slate-200">
+            <div className="flex justify-end">
               <Button
-                variant={selectedLawyer.status === 'verified' ? 'danger' : 'success'}
+                variant={selectedLawyer.isBlock ? 'success' : 'danger'}
                 onClick={() => handleToggleStatusClick(selectedLawyer)}
               >
-                {selectedLawyer.status === 'verified' ? 'Block Lawyer' : 'Verify Lawyer'}
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => handleDeleteClick(selectedLawyer)}
-              >
-                Delete Lawyer
+                {selectedLawyer.isBlock ? 'Unblock' : 'Block'}
               </Button>
             </div>
           </div>
         )}
       </Modal>
 
-      {/* Confirmation Modal */}
       <ConfirmationModal
         isOpen={confirmationModal.isOpen}
-        onClose={() => setConfirmationModal({ isOpen: false, type: 'block', lawyer: null })}
+        onClose={() =>
+          setConfirmationModal({ isOpen: false, type: 'block', lawyer: null })
+        }
         onConfirm={handleConfirmAction}
         type={confirmationModal.type}
-        title={`${confirmationModal.type === 'block' ? 'Block' : confirmationModal.type === 'unblock' ? 'Unblock' : 'Delete'} Lawyer`}
-        message={getConfirmationMessage()}
+        title={
+          confirmationModal.type === 'block' ? 'Block Lawyer' : 'Unblock Lawyer'
+        }
+        message={
+          confirmationModal.lawyer
+            ? `Are you sure you want to ${
+                confirmationModal.type === 'block' ? 'block' : 'unblock'
+              } ${confirmationModal.lawyer.name}?`
+            : ''
+        }
         isLoading={isLoading}
       />
-
-      {/* Empty State */}
-      {filteredLawyers.length === 0 && (
-        <GlassCard className="p-12 text-center">
-          <div className="max-w-md mx-auto">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <UserCheck className="w-8 h-8 text-slate-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">No lawyers found</h3>
-            <p className="text-slate-600">
-              {searchTerm || filter !== 'all' 
-                ? 'No lawyers match your current filters. Try adjusting your search criteria.'
-                : 'No lawyers have been registered yet.'
-              }
-            </p>
-          </div>
-        </GlassCard>
-      )}
     </div>
   );
 };

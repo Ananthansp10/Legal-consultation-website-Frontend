@@ -9,6 +9,8 @@ interface ProtectRouteProps {
 
 function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   const [isAuth, setIsAuth] = useState<boolean | null | string>(null);
+  console.log('Allowed Roles:', allowedRoles);
+
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -38,7 +40,7 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   }
 
   if(isAuth=="unAuth"){
-    return <Navigate to="/unAuthorized" state={{role:allowedRoles[0]}}/>
+    return <Navigate to={`/unauthorized?role=${allowedRoles[0]}`} />
   }
 
   if(isAuth){
