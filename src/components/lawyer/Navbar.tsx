@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
 
   function logoutLawyer(){
     logout().then((response)=>{
-      dispatch(lawyerLogout)
+      dispatch(lawyerLogout())
       toast.success(response.data.message)
       navigate('/auth/lawyer/signin')
     }).catch((error)=>{
@@ -80,13 +80,13 @@ const Navbar: React.FC = () => {
                         <User className="mr-3 h-4 w-4" />
                         My Profile
                       </a>
-                      <a
-                        href="#"
+                      <button
+                        onClick={()=>navigate('/lawyer/reset-password')}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         <Key className="mr-3 h-4 w-4" />
                         Reset Password
-                      </a>
+                      </button>
                       <button
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-red-50 hover:text-red-600 transition-colors" onClick={logoutLawyer}
                       >

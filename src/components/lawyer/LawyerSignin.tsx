@@ -204,12 +204,11 @@ function LawyerSignin() {
 
                 {/* Forgot password link */}
                 <div className="text-right">
-                  <a
-                    href="#"
+                  <button onClick={()=>navigate('/auth/lawyer/forgot-password-email-page')}
                     className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
                   >
                     Forgot your password?
-                  </a>
+                  </button>
                 </div>
 
                 {/* Sign in button */}

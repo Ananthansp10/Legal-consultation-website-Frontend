@@ -25,6 +25,10 @@ import LawyerWelcomePage from './pages/lawyersidePages/LawyerWelcomePage';
 import LawyerSignin from './components/lawyer/LawyerSignin';
 import LawyerVerificationStatusPage from './components/lawyer/LawyerVerificationStatusPage';
 import AdminWelcomePage from './pages/adminsidePages/AdminWelcomePage';
+import AccountBlockPage from './components/AccountBlockPage';
+import LawyerForgotPasswordPage from './components/lawyer/LawyerForgotPasswordPage';
+import LawyerResetPasswordPage from './components/lawyer/LawyerResetPasswordPage';
+import LawyerForgotPasswordEmailPage from './components/lawyer/LawyerForgotPasswordEmailPage';
 
 function App() {
   return (
@@ -43,13 +47,17 @@ function App() {
           <Route path='/unAuthorized' element={<UnAuthorizedPage/>}/>
           <Route path='/googleFail' element={<GoogleFail/>}/>
           <Route path='/emailExist' element={<EmailExistError/>}/>
+          <Route path='/block-page' element={<AccountBlockPage/>}/>
+
 
           <Route path="/auth/lawyer/signup" element={<SignupForm/>} />
           <Route path="/auth/lawyer/signin" element={<LawyerSignin/>} />
+          <Route path='/auth/lawyer/forgotpassword' element={<LawyerForgotPasswordPage/>}/>
+          <Route path='/auth/lawyer/forgot-password-email-page' element={<LawyerForgotPasswordEmailPage/>}/>
 
           <Route path='/lawyer' element={<LawyerWelcomePage/>}/>
           <Route path='/lawyer-verification-status' element={<LawyerVerificationStatusPage/>}/>
-
+          
           <Route element={<ProtectedRoute allowedRoles={['user']}/>}>
               <Route path="/user-dashboard" element={<Dashboard/>} />
               <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
@@ -57,6 +65,7 @@ function App() {
 
            <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>
               <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
+              <Route path='/lawyer/reset-password' element={<LawyerResetPasswordPage/>}/>
           </Route>
 
 

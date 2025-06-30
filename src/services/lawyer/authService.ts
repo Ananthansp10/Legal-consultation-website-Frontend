@@ -28,3 +28,27 @@ export const logout=async()=>{
         throw error;
     }
 }
+
+export const sendMail=async(data:any)=>{
+    try {
+       return await axios.post('/lawyer/forgot-password-email',data) 
+    } catch (error) {
+       throw error; 
+    }
+}
+
+export const saveNewPassword=async(data:any)=>{
+    try {
+       return await axios.post('/lawyer/new-password',data)
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const resetPassword=async(data:any)=>{
+    try {
+        return await axios.post('/lawyer/reset-password',data)
+    } catch (error) {
+        throw error;
+    }
+}

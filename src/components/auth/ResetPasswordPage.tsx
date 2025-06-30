@@ -4,6 +4,8 @@ import { resetPassword } from '../../services/user/authService';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../../redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 function ResetPasswordPage() {
   const [passwords, setPasswords] = useState({
@@ -39,6 +41,7 @@ function ResetPasswordPage() {
   let email:string=useSelector((state:any)=>state.auth?.user?.email)
 
   const navigate=useNavigate()
+  const dispatch=useDispatch()
 
   const validatePasswordCriteria = (password: string) => {
     const criteria = {
@@ -118,6 +121,7 @@ function ResetPasswordPage() {
     resetPassword({email:email,oldPassword:passwords.oldPassword,newPassword:passwords.newPassword,role:'user'}).then((response:any)=>{
       if(response.data.success){
         setIsSubmitting(false)
+        dispatch(logout())
         toast.success(response.data.message)
         navigate('/auth/signin')
       }
