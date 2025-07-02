@@ -29,6 +29,9 @@ import AccountBlockPage from './components/AccountBlockPage';
 import LawyerForgotPasswordPage from './components/lawyer/LawyerForgotPasswordPage';
 import LawyerResetPasswordPage from './components/lawyer/LawyerResetPasswordPage';
 import LawyerForgotPasswordEmailPage from './components/lawyer/LawyerForgotPasswordEmailPage';
+import StartPage from './components/StartPage';
+import UserProfilePage from './components/userside/UserProfilePage';
+import UserProfileForm from './components/userside/UserProfileForm';
 
 function App() {
   return (
@@ -36,7 +39,9 @@ function App() {
       <div className="min-h-screen">
         <Routes>
           {/* Main Website Routes */}
-          <Route path="/" element={<HomePage />} />
+
+          <Route path='/' element={<StartPage/>}/>
+          <Route path="/user" element={<HomePage />} />
           
           {/* Authentication Routes */}
           <Route path="/auth/signin" element={<SignIn />} />
@@ -61,6 +66,8 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={['user']}/>}>
               <Route path="/user-dashboard" element={<Dashboard/>} />
               <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+              <Route path='/user/profile' element={<UserProfilePage/>}/>
+              <Route path='/user/add-profile' element={<UserProfileForm/>}/>
           </Route>
 
            <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>

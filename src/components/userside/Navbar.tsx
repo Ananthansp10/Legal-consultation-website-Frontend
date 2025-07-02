@@ -46,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div onClick={()=>navigate('/user')} className="flex-shrink-0">
             <h1 className="text-xl font-bold text-slate-700 cursor-pointer hover:text-blue-600 transition-colors">
               LegalConnect
             </h1>
@@ -88,7 +88,7 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
               {/* Profile Dropdown */}
               {isProfileOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-lg rounded-lg shadow-xl border border-gray-200/20 py-2">
-                  <button className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+                  <button onClick={()=>navigate('/user/profile')} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
                     <User className="w-4 h-4" />
                     <span>My Profile</span>
                   </button>

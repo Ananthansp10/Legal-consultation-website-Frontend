@@ -19,7 +19,7 @@ function UnAuthorizedPage() {
     function goBack(){
 
       if(role==='user'){
-            navigate('/')
+            navigate('/user')
         }else if(role==='lawyer'){
           navigate('/lawyer')
         }else{
