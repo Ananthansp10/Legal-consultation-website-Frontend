@@ -12,7 +12,7 @@ interface NavbarProps {
   userAvatar: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
+const Navbar: React.FC<NavbarProps> = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('Home');
@@ -77,11 +77,11 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-white/50 transition-all duration-200"
               >
                 <img
-                  src={userAvatar}
-                  alt={userName}
+                  src='https://up.yimg.com/ib/th/id/OIP.rozQhvU1KnTAwsbNXTorEAHaE8?pid=Api&rs=1&c=1&qlt=95&w=185&h=123'
+                  alt={user.name}
                   className="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm"
                 />
-                <span className="text-sm font-medium text-slate-700">{userName}</span>
+                <span className="text-sm font-medium text-slate-700">{user.name}</span>
                 <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
               </button>
 
@@ -140,12 +140,12 @@ const Navbar: React.FC<NavbarProps> = ({ userName, userAvatar }) => {
             <div className="pt-4 pb-3 border-t border-gray-200/20">
               <div className="flex items-center px-5">
                 <img
-                  src={userAvatar}
-                  alt={userName}
+                  src='https://up.yimg.com/ib/th/id/OIP.rozQhvU1KnTAwsbNXTorEAHaE8?pid=Api&rs=1&c=1&qlt=95&w=185&h=123'
+                  alt={user.name}
                   className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                 />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-slate-700">{userName}</div>
+                  <div className="text-base font-medium text-slate-700">{user.name}</div>
                 </div>
               </div>
               <div className="mt-3 px-2 space-y-1">

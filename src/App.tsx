@@ -32,6 +32,9 @@ import LawyerForgotPasswordEmailPage from './components/lawyer/LawyerForgotPassw
 import StartPage from './components/StartPage';
 import UserProfilePage from './components/userside/UserProfilePage';
 import UserProfileForm from './components/userside/UserProfileForm';
+import LawyerProfilePage from './pages/lawyersidePages/LawyerProfilePage';
+import LawyerProfileAddPage from './pages/lawyersidePages/LawyerProfileAddPage';
+import LawyerViewPage from './pages/usersidePages/LawyerViewPage';
 
 function App() {
   return (
@@ -68,14 +71,15 @@ function App() {
               <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
               <Route path='/user/profile' element={<UserProfilePage/>}/>
               <Route path='/user/add-profile' element={<UserProfileForm/>}/>
+              <Route path='/user/lawyer-view-page' element={<LawyerViewPage/>}/>
           </Route>
 
            <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>
               <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
               <Route path='/lawyer/reset-password' element={<LawyerResetPasswordPage/>}/>
+              <Route path='/lawyer-profile-page' element={<LawyerProfilePage/>}/>
+              <Route path='/lawyer/add-profile' element={<LawyerProfileAddPage/>}/>
           </Route>
-
-
 
           <Route path='/admin' element={<AdminWelcomePage/>}/>
           <Route path="/auth/admin/signin" element={<Login/>} />

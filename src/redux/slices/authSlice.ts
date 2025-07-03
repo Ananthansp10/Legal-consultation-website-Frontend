@@ -5,7 +5,7 @@ export interface State{
     user:any
 }
 
-let userDetails:any=localStorage.getItem('user')
+let userDetails:any=localStorage.getItem('userDetails')
 if(userDetails){
     userDetails=JSON.parse(userDetails)
 }
