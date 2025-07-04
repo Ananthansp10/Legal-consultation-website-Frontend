@@ -13,6 +13,9 @@ import {
 } from 'lucide-react';
 import Navbar from './Navbar';
 import { useSelector } from 'react-redux';
+import { addProfile } from '../../services/user/profileService';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
   fullName: string;
@@ -54,6 +57,8 @@ const UserProfileForm: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const navigate=useNavigate()
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -82,10 +87,34 @@ const UserProfileForm: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const data = new FormData()
+
+    data.append('userId',user.userId)
+    data.append('name', formData.fullName)
+    data.append('email', formData.email)
+    data.append('phoneNumber', formData.phone)
+    data.append('gender', formData.gender)
+    data.append('DOB', formData.dateOfBirth)
+    data.append('proffession', formData.profession)
+    data.append('company', formData.company)
+
+    if (formData.profileImage instanceof File) {
+      data.append('profileImage', formData.profileImage)
+    }
+
+    data.append('street', formData.streetAddress)
+    data.append('city', formData.city)
+    data.append('state', formData.state)
+    data.append('country', formData.country)
+    data.append('zipCode', formData.zipCode)
+
+    addProfile(data).then((response)=>{
+      toast.success(response.data.message)
+      navigate('/user/profile')
+    })
+
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    console.log('Profile data:', formData);
-    alert('Profile saved successfully!');
     setIsSubmitting(false);
   };
 
@@ -115,7 +144,7 @@ const UserProfileForm: React.FC = () => {
     <div className="min-h-screen bg-[#f8fafc] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto mt-12">
         <div className="bg-white rounded-xl shadow-xl p-6 md:p-10 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4">
-          <Navbar userName={user.name} userAvatar='https://tse1.mm.bing.net/th/id/OIP.SejAd161IGaSU4G9xY1RTwHaEK?pid=Api&P=0&h=180' />
+          <Navbar/>
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#1e293b] mb-2">Add Profile</h1>
             <p className="text-[#64748b] text-lg">

@@ -22,12 +22,12 @@ const authSlice:any=createSlice({
         login:(state,action)=>{
             state.isAuthenticate=true
             state.user=action.payload
-            localStorage.setItem('user',JSON.stringify(action.payload))
+            localStorage.setItem('userDetails',JSON.stringify(action.payload))
         },
         logout:(state)=>{
             state.isAuthenticate=false
             state.user=null
-            localStorage.removeItem('user')
+            localStorage.removeItem('userDetails')
         }
     }
 })

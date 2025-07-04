@@ -7,12 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { logout as logoutAction } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 
-interface NavbarProps {
-  userName: string;
-  userAvatar: string;
-}
-
-const Navbar: React.FC<NavbarProps> = () => {
+const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('Home');
@@ -78,10 +73,10 @@ const Navbar: React.FC<NavbarProps> = () => {
               >
                 <img
                   src='https://up.yimg.com/ib/th/id/OIP.rozQhvU1KnTAwsbNXTorEAHaE8?pid=Api&rs=1&c=1&qlt=95&w=185&h=123'
-                  alt={user.name}
+                  alt={user?.name}
                   className="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm"
                 />
-                <span className="text-sm font-medium text-slate-700">{user.name}</span>
+                <span className="text-sm font-medium text-slate-700">{user?.name}</span>
                 <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
               </button>
 
@@ -141,11 +136,11 @@ const Navbar: React.FC<NavbarProps> = () => {
               <div className="flex items-center px-5">
                 <img
                   src='https://up.yimg.com/ib/th/id/OIP.rozQhvU1KnTAwsbNXTorEAHaE8?pid=Api&rs=1&c=1&qlt=95&w=185&h=123'
-                  alt={user.name}
+                  alt={user?.name}
                   className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                 />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-slate-700">{user.name}</div>
+                  <div className="text-base font-medium text-slate-700">{user?.name}</div>
                 </div>
               </div>
               <div className="mt-3 px-2 space-y-1">

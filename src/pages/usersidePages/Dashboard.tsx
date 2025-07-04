@@ -24,8 +24,14 @@ function Dashboard() {
       if(!userDetails){
         getGoogleAuthDetails().then((response)=>{
         if(response.data.result){
-          localStorage.setItem('user',response.data.result)
-          dispatch(login(response.data.result))
+          let obj={
+            userId:response.data.result._id,
+            googleId:response.data.result.googleId,
+            email:response.data.result.email,
+            name:response.data.result.name
+          }
+          localStorage.setItem('userDetails',JSON.stringify(obj))
+          dispatch(login(obj))
         }
       })
       }
@@ -33,7 +39,7 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
-      <Navbar userName={userData.name} userAvatar={userData.avatar} />
+      <Navbar/>
       
       <main className="pt-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
