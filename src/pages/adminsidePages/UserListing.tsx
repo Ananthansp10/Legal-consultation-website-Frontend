@@ -15,10 +15,10 @@ interface User {
   name: string;
   email: string;
   phoneNumber: number;
-  isBlock: boolean;
+  status: boolean;
   createdAt: string;
   profileImage?: string;
-  status?: UserStatus;
+  userStatus?: UserStatus;
   joinedDate?: string;
 }
 
@@ -43,7 +43,7 @@ const UserListing: React.FC = () => {
     getUsers().then((response)=>{
       const transformedUsers = response.data.data.map((user: any) => ({
         ...user,
-        status: user.isBlock ? 'blocked' : 'active',
+        userStatus: user.status ? 'blocked' : 'active',
         joinedDate: new Date(user.createdAt).toLocaleDateString(),
         profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
       }))
@@ -56,7 +56,7 @@ const UserListing: React.FC = () => {
   },[])
 
   const filteredUsers = users.filter(user => {
-    const matchStatus = filter === 'all' || user.status === filter;
+    const matchStatus = filter === 'all' || user.userStatus === filter;
     const matchSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -79,7 +79,7 @@ const UserListing: React.FC = () => {
   const handleToggleStatusClick = (user: User) => {
     setConfirmationModal({
       isOpen: true,
-      type: user.status === 'active' ? 'block' : 'unblock',
+      type: user.userStatus === 'active' ? 'block' : 'unblock',
       user
     });
   };
@@ -194,7 +194,7 @@ const UserListing: React.FC = () => {
                   <td className="py-4 px-6 text-sm text-slate-600">
                     {user.phoneNumber ? user.phoneNumber : 'Nill'}
                   </td>
-                  <td className="py-4 px-6">{getStatusBadge(user.status!)}</td>
+                  <td className="py-4 px-6">{getStatusBadge(user.userStatus!)}</td>
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-2">
                       <Button
@@ -206,12 +206,12 @@ const UserListing: React.FC = () => {
                         View
                       </Button>
                       <Button
-                        variant={user.status === 'active' ? 'danger' : 'success'}
+                        variant={user.userStatus === 'active' ? 'danger' : 'success'}
                         size="sm"
                         icon={Ban}
                         onClick={() => handleToggleStatusClick(user)}
                       >
-                        {user.status === 'active' ? 'Block' : 'Activate'}
+                        {user.userStatus === 'active' ? 'Block' : 'Activate'}
                       </Button>
                     </div>
                   </td>
@@ -290,7 +290,7 @@ const UserListing: React.FC = () => {
                   <strong>Phone:</strong> {selectedUser.phoneNumber ? selectedUser.phoneNumber : "Nill" }
                 </p>
                 <p>
-                  <strong>Status:</strong> {selectedUser.status}
+                  <strong>Status:</strong> {selectedUser.userStatus}
                 </p>
               </div>
               <div>
@@ -302,11 +302,11 @@ const UserListing: React.FC = () => {
             <div className="flex justify-end space-x-3 pt-4 border-t border-slate-200">
               <Button
                 variant={
-                  selectedUser.status === 'active' ? 'danger' : 'success'
+                  selectedUser.userStatus === 'active' ? 'danger' : 'success'
                 }
                 onClick={() => handleToggleStatusClick(selectedUser)}
               >
-                {selectedUser.status === 'active'
+                {selectedUser.userStatus === 'active'
                   ? 'Block User'
                   : 'Activate User'}
               </Button>

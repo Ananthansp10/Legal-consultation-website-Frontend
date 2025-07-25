@@ -3,8 +3,10 @@ import { isValidUser } from "../services/protectionService";
 import { Navigate, Outlet } from "react-router-dom";
 import Loader from "./Loader";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/slices/authSlice";
+import { login, logout } from "../redux/slices/authSlice";
 import { lawyerLogout } from "../redux/slices/lawyerAuthSlice";
+import { useSelector } from "react-redux";
+import { getGoogleAuthDetails } from "../services/user/authService";
 
 interface ProtectRouteProps {
   allowedRoles: string[];
@@ -14,18 +16,36 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   const [isAuth, setIsAuth] = useState<boolean | null | string>(null);
   const dispatch=useDispatch()
 
+  const user:any=useSelector((state:any)=>state.auth.user)
+
+  useEffect(()=>{
+    if(!user){
+      getGoogleAuthDetails().then((response)=>{
+        console.log(response)
+        if(response.data.result){
+          let obj={
+            userId:response.data.result._id,
+            googleId:response.data.result.googleId,
+            email:response.data.result.email,
+            name:response.data.result.name
+          }
+          dispatch(login(obj))
+        }
+      })
+    }
+  },[])
+
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response:any = await isValidUser({role:allowedRoles[0]});
+        const response:any = await isValidUser(allowedRoles[0]);
         if (response.data.success) {
           setIsAuth(true);
         }else{
           setIsAuth(false)
         }
       } catch (error:any) {
-        console.log(error.response.data)
         if(error.response.data.isUnAuth){
           localStorage.removeItem('user')
           setIsAuth("unAuth");

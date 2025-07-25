@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu, X, ChevronDown, User, LogOut, Lock } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { logoutService } from '../../services/user/authService';
@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { logout as logoutAction } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { getProfile } from '../../services/user/profileService';
+
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,15 +16,17 @@ const Navbar: React.FC = () => {
 
   const navLinks = ['Home','Lawyers', 'My Appointments', 'Chat'];
 
-  const user:any=useSelector((state:any)=>state.auth.user)
- 
+  let user:any=useSelector((state:any)=>state.auth.user)
+
+  const [profileImage,setProfileImage]=useState<any>()
+
   const dispatch=useDispatch()
 
   const navigate=useNavigate()
   
   async function logout(){
     try {
-      let result=await logoutService(user._id)
+      let result=await logoutService()
       dispatch(logoutAction())
       toast.success(result.data.message)
       navigate('/auth/signin')
@@ -31,6 +35,14 @@ const Navbar: React.FC = () => {
     }
 
   }
+
+  useEffect(()=>{
+    getProfile(user?.id).then((response)=>{
+      if(response.data.data){
+        setProfileImage(response.data.data)
+      }
+    })
+  },[])
 
   function resetPasswordPage(){
     navigate('/auth/reset-password')
@@ -72,11 +84,11 @@ const Navbar: React.FC = () => {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-white/50 transition-all duration-200"
               >
                 <img
-                  src='https://up.yimg.com/ib/th/id/OIP.rozQhvU1KnTAwsbNXTorEAHaE8?pid=Api&rs=1&c=1&qlt=95&w=185&h=123'
+                  src={profileImage ? profileImage.profileImage :user?.name}
                   alt={user?.name}
                   className="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm"
                 />
-                <span className="text-sm font-medium text-slate-700">{user?.name}</span>
+                <span className="text-sm font-medium text-slate-700">{profileImage ? profileImage.name : user?.name}</span>
                 <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
               </button>
 
@@ -135,12 +147,12 @@ const Navbar: React.FC = () => {
             <div className="pt-4 pb-3 border-t border-gray-200/20">
               <div className="flex items-center px-5">
                 <img
-                  src='https://up.yimg.com/ib/th/id/OIP.rozQhvU1KnTAwsbNXTorEAHaE8?pid=Api&rs=1&c=1&qlt=95&w=185&h=123'
-                  alt={user?.name}
+                  src={profileImage ? profileImage.profileImage : user?.name}
+                  alt={profileImage ? profileImage.name : user?.name}
                   className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                 />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-slate-700">{user?.name}</div>
+                  <div className="text-base font-medium text-slate-700">{profileImage ? profileImage.name : user?.name}</div>
                 </div>
               </div>
               <div className="mt-3 px-2 space-y-1">

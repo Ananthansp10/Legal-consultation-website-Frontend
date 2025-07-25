@@ -118,7 +118,7 @@ function ResetPasswordPage() {
     
     setIsSubmitting(true);
 
-    resetPassword({email:email,oldPassword:passwords.oldPassword,newPassword:passwords.newPassword,role:'user'}).then((response:any)=>{
+    resetPassword({email:email,oldPassword:passwords.oldPassword,newPassword:passwords.newPassword}).then((response:any)=>{
       if(response.data.success){
         setIsSubmitting(false)
         dispatch(logout())

@@ -16,15 +16,16 @@ import {
 } from "lucide-react"
 import Navbar from "./Navbar"
 import { useNavigate } from "react-router-dom"
-import { getProfile } from "../../services/user/profileService"
+import { editProfile, getProfile } from "../../services/user/profileService"
 import { useSelector } from "react-redux"
+import { toast } from "react-toastify"
 
 interface ProfileData {
   name: string
   email: string
-  phone: string
+  phoneNumber: string
   gender: string
-  dateOfBirth: string
+  DOB: string
   proffession: string
   company: string
   address: {
@@ -36,6 +37,7 @@ interface ProfileData {
   }
   profileImage: string
 }
+
 
 export default function UserProfilePage() {
   const [activeTab, setActiveTab] = useState("personal")
@@ -57,10 +59,28 @@ export default function UserProfilePage() {
   }
 
   const handleSave = () => {
+    const data=new FormData()
     if (editData) {
-      setProfileData(editData)
+      data.append("userId",user.id)
+      data.append("name",editData.name)
+      data.append("email",editData.email)
+      data.append("phoneNumber",editData.phoneNumber)
+      data.append("DOB",editData.DOB)
+      data.append("gender",editData.gender)
+      data.append("proffession",editData.proffession)
+      data.append("company",editData.company)
+      data.append("profileImage",editData.profileImage)
+      data.append("street",editData.address.street)
+      data.append("state",editData.address.state)
+      data.append("city",editData.address.city)
+      data.append("country",editData.address.country)
+      data.append("zipCode",editData.address.zipCode)
     }
-    setIsEditModalOpen(false)
+    editProfile(data).then((response)=>{
+      toast.success(response.data.message)
+      setIsEditModalOpen(false)
+      fetchProfile()
+    })
   }
 
   const handleCancel = () => {
@@ -72,10 +92,14 @@ export default function UserProfilePage() {
     navigate('/user/add-profile')
   }
 
-  useEffect(()=>{
-    getProfile(user.userId).then((response)=>{
+  function fetchProfile(){
+    getProfile(user.id).then((response)=>{
       setProfileData(response.data.data)
     })
+  }
+
+  useEffect(()=>{
+    fetchProfile()
   },[])
 
   const updateEditData = (field: string, value: string) => {
@@ -108,8 +132,8 @@ export default function UserProfilePage() {
         if (editData) {
           setEditData({
             ...editData,
-            profileImage: result,
-          })
+            profileImage: file,
+          }as any)
         }
       }
       reader.readAsDataURL(file)
@@ -212,7 +236,7 @@ export default function UserProfilePage() {
                       <Phone className="w-5 h-5 text-[#3b82f6]" />
                       <div>
                         <p className="text-sm text-[#64748b]">Phone</p>
-                        <p className="text-[#334155] font-medium">{profileData.phone}</p>
+                        <p className="text-[#334155] font-medium">{profileData.phoneNumber}</p>
                       </div>
                     </div>
 
@@ -229,7 +253,7 @@ export default function UserProfilePage() {
                       <div>
                         <p className="text-sm text-[#64748b]">Date of Birth</p>
                         <p className="text-[#334155] font-medium">
-                          {new Date(profileData.dateOfBirth).toLocaleDateString()}
+                          {new Date(profileData.DOB).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -359,7 +383,7 @@ export default function UserProfilePage() {
                       id="fullName"
                       type="text"
                       value={editData.name}
-                      onChange={(e) => updateEditData("fullName", e.target.value)}
+                      onChange={(e) => updateEditData("name", e.target.value)}
                       className="w-full px-3 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent bg-white/50 backdrop-blur-sm"
                     />
                   </div>
@@ -374,6 +398,7 @@ export default function UserProfilePage() {
                       value={editData.email}
                       onChange={(e) => updateEditData("email", e.target.value)}
                       className="w-full px-3 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent bg-white/50 backdrop-blur-sm"
+                      readOnly
                     />
                   </div>
 
@@ -384,8 +409,8 @@ export default function UserProfilePage() {
                     <input
                       id="phone"
                       type="tel"
-                      value={editData.phone}
-                      onChange={(e) => updateEditData("phone", e.target.value)}
+                      value={editData.phoneNumber}
+                      onChange={(e) => updateEditData("phoneNumber", e.target.value)}
                       className="w-full px-3 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent bg-white/50 backdrop-blur-sm"
                     />
                   </div>
@@ -430,21 +455,21 @@ export default function UserProfilePage() {
                     <input
                       id="dateOfBirth"
                       type="date"
-                      value={editData.dateOfBirth}
-                      onChange={(e) => updateEditData("dateOfBirth", e.target.value)}
+                      value={editData.DOB}
+                      onChange={(e) => updateEditData("DOB", e.target.value)}
                       className="w-full px-3 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent bg-white/50 backdrop-blur-sm"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="profession" className="block text-sm font-medium text-[#334155] mb-1">
+                    <label htmlFor="proffession" className="block text-sm font-medium text-[#334155] mb-1">
                       Profession
                     </label>
                     <input
                       id="profession"
                       type="text"
                       value={editData.proffession}
-                      onChange={(e) => updateEditData("profession", e.target.value)}
+                      onChange={(e) => updateEditData("proffession", e.target.value)}
                       className="w-full px-3 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent bg-white/50 backdrop-blur-sm"
                     />
                   </div>

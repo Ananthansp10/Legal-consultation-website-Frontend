@@ -24,7 +24,7 @@ interface Lawyer {
   experience: string;
   barCouncilNumber: string;
   documents: string[];
-  isBlock: boolean;
+  status: boolean;
   verified: boolean;
   createdAt: string;
   updatedAt: string;
@@ -61,8 +61,8 @@ const LawyerListing: React.FC = () => {
   const filteredLawyers = lawyers.filter((lawyer) => {
     const statusMatch =
       filter === 'all' ||
-      (filter === 'active' && !lawyer.isBlock) ||
-      (filter === 'inactive' && lawyer.isBlock);
+      (filter === 'active' && !lawyer.status) ||
+      (filter === 'inactive' && lawyer.status);
 
     const searchMatch =
       lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -94,7 +94,7 @@ const LawyerListing: React.FC = () => {
   const handleToggleStatusClick = (lawyer: Lawyer) => {
     setConfirmationModal({
       isOpen: true,
-      type: lawyer.isBlock ? 'unblock' : 'block',
+      type: lawyer.status ? 'unblock' : 'block',
       lawyer,
     });
   };
@@ -182,7 +182,7 @@ const LawyerListing: React.FC = () => {
                     {lawyer.specialization.join(', ')}
                   </td>
                   <td className="px-6 py-4 text-sm">{lawyer.email}</td>
-                  <td className="px-6 py-4">{getStatusBadge(lawyer.isBlock)}</td>
+                  <td className="px-6 py-4">{getStatusBadge(lawyer.status)}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
                       <Button
@@ -194,12 +194,12 @@ const LawyerListing: React.FC = () => {
                         View
                       </Button>
                       <Button
-                        variant={lawyer.isBlock ? 'success' : 'danger'}
+                        variant={lawyer.status ? 'success' : 'danger'}
                         size="sm"
-                        icon={lawyer.isBlock ? UserCheck : Ban}
+                        icon={lawyer.status ? UserCheck : Ban}
                         onClick={() => handleToggleStatusClick(lawyer)}
                       >
-                        {lawyer.isBlock ? 'Unblock' : 'Block'}
+                        {lawyer.status ? 'Unblock' : 'Block'}
                       </Button>
                     </div>
                   </td>
@@ -267,7 +267,7 @@ const LawyerListing: React.FC = () => {
             <div className="text-center">
               <h2 className="text-lg font-semibold">{selectedLawyer.name}</h2>
               <p className="text-slate-600">{selectedLawyer.specialization.join(', ')}</p>
-              {getStatusBadge(selectedLawyer.isBlock)}
+              {getStatusBadge(selectedLawyer.status)}
             </div>
             <div className="space-y-2 text-sm">
               <p>Email: {selectedLawyer.email}</p>
@@ -277,10 +277,10 @@ const LawyerListing: React.FC = () => {
             </div>
             <div className="flex justify-end">
               <Button
-                variant={selectedLawyer.isBlock ? 'success' : 'danger'}
+                variant={selectedLawyer.status ? 'success' : 'danger'}
                 onClick={() => handleToggleStatusClick(selectedLawyer)}
               >
-                {selectedLawyer.isBlock ? 'Unblock' : 'Block'}
+                {selectedLawyer.status ? 'Unblock' : 'Block'}
               </Button>
             </div>
           </div>

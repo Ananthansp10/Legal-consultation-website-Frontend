@@ -27,9 +27,9 @@ export const signinService=async(data:Signin)=>{
     }
 }
 
-export const logoutService=async(userId:string)=>{
+export const logoutService=async()=>{
     try {
-        let result=await axios.post(`/user/logout/:${userId}`)
+        let result=await axios.post(`/user/logout`)
         return result;
     } catch (error) {
         throw error;
@@ -73,7 +73,7 @@ export const googleAuth=async()=>{
 
 export const getGoogleAuthDetails=async()=>{
     try {
-        let result=await axios.post('/user/getGoogleAuthDetails')
+        let result=await axios.get('/user/getGoogleAuthDetails')
         return result;
     } catch (error) {
         throw error;

@@ -25,6 +25,7 @@ function NewPasswordPage() {
         if(response.data.success){
           setIsLoading(false);
           toast.success(response.data.message)
+          localStorage.removeItem('userDetails')
           navigate('/auth/signin')
         }
       }).catch((error)=>{

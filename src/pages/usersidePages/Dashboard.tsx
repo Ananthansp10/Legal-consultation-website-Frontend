@@ -1,4 +1,3 @@
-
 import Navbar from '../../components/userside/Navbar';
 import WelcomeSection from '../../components/userside/WelcomeSection';
 import BannerSlider from '../../components/userside/BannerSlider';
@@ -7,45 +6,37 @@ import QuickActions from '../../components/userside/QuickActions';
 import RecentActivities from '../../components/userside/RecentActivities';
 import Footer from '../../components/Footer';
 import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { getGoogleAuthDetails } from '../../services/user/authService';
-import { useDispatch } from 'react-redux';
-import { login } from '../../redux/slices/authSlice';
+import { useEffect, useState } from 'react';
+import { getProfile } from '../../services/user/profileService';
+
 
 function Dashboard() {
-  let userDetails=useSelector((state:any)=>state.auth.user)
-  let dispatch=useDispatch()
-  const userData = {
-    name:userDetails?.name,
-    avatar: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400'
-  };
+  let userDetails:any=useSelector((state:any)=>state.auth.user)
 
-    useEffect(()=>{
-      if(!userDetails){
-        getGoogleAuthDetails().then((response)=>{
-        if(response.data.result){
-          let obj={
-            userId:response.data.result._id,
-            googleId:response.data.result.googleId,
-            email:response.data.result.email,
-            name:response.data.result.name
-          }
-          localStorage.setItem('userDetails',JSON.stringify(obj))
-          dispatch(login(obj))
+  const userData = {
+    name:userDetails?.name
+  }
+
+   const [userProfileData,setUserProfileData]:any=useState(null)
+
+   useEffect(()=>{
+      getProfile(userDetails?.id).then((response)=>{
+        if(response.data.data){
+          setUserProfileData(response.data.data)
         }
       })
-      }
   },[])
 
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
       <Navbar/>
       
       <main className="pt-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
-            <WelcomeSection userName={userData.name} />
+            <WelcomeSection userName={userProfileData ? userProfileData.name : userData.name} />
           </div>
 
           {/* Banner Slider */}

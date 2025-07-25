@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-slate-800">LegalConnect</h1>
+            <h1 onClick={()=>navigate('/lawyer-dashboard')} className="text-2xl font-bold text-slate-800">LegalConnect</h1>
           </div>
 
           {/* Desktop Navigation */}
@@ -73,13 +73,12 @@ const Navbar: React.FC = () => {
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-md shadow-lg border border-gray-200">
                     <div className="py-1">
-                      <a
-                        href="#"
+                      <button onClick={()=>navigate('/lawyer-profile-page')}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         <User className="mr-3 h-4 w-4" />
                         My Profile
-                      </a>
+                      </button>
                       <button
                         onClick={()=>navigate('/lawyer/reset-password')}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
@@ -139,13 +138,12 @@ const Navbar: React.FC = () => {
               </div>
             </div>
             <div className="mt-3 space-y-1 px-2">
-              <a
-                href="#"
+              <button onClick={()=>navigate('/lawyer-profile-page')}
                 className="flex items-center px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
               >
                 <User className="mr-3 h-5 w-5" />
                 My Profile
-              </a>
+              </button>
               <a
                 href="#"
                 className="flex items-center px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"

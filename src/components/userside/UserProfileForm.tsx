@@ -23,7 +23,7 @@ interface FormData {
   phone: string;
   dateOfBirth: string;
   gender: string;
-  profession: string;
+  proffession: string;
   company: string;
   profileImage: File | null;
   streetAddress: string;
@@ -43,7 +43,7 @@ const UserProfileForm: React.FC = () => {
     phone: '',
     dateOfBirth: '',
     gender: '',
-    profession: '',
+    proffession: '',
     company: '',
     profileImage: null,
     streetAddress: '',
@@ -89,13 +89,13 @@ const UserProfileForm: React.FC = () => {
 
     const data = new FormData()
 
-    data.append('userId',user.userId)
+    data.append('userId',user.id)
     data.append('name', formData.fullName)
     data.append('email', formData.email)
     data.append('phoneNumber', formData.phone)
     data.append('gender', formData.gender)
     data.append('DOB', formData.dateOfBirth)
-    data.append('proffession', formData.profession)
+    data.append('proffession', formData.proffession)
     data.append('company', formData.company)
 
     if (formData.profileImage instanceof File) {
@@ -113,8 +113,6 @@ const UserProfileForm: React.FC = () => {
       navigate('/user/profile')
     })
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
     setIsSubmitting(false);
   };
 
@@ -127,7 +125,7 @@ const UserProfileForm: React.FC = () => {
         phone: '',
         dateOfBirth: '',
         gender: '',
-        profession: '',
+        proffession: '',
         company: '',
         profileImage: null,
         streetAddress: '',
@@ -194,6 +192,7 @@ const UserProfileForm: React.FC = () => {
                       className="w-full pl-10 pr-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
                       placeholder="your.email@example.com"
                       required
+                      readOnly
                     />
                   </div>
                 </div>
@@ -259,16 +258,16 @@ const UserProfileForm: React.FC = () => {
 
                 {/* Profession */}
                 <div>
-                  <label htmlFor="profession" className="text-sm text-[#64748b] font-medium mb-1 block">
-                    Profession
+                  <label htmlFor="proffession" className="text-sm text-[#64748b] font-medium mb-1 block">
+                    Proffession
                   </label>
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-2.5 w-4 h-4 text-[#94a3b8]" />
                     <input
                       type="text"
                       id="profession"
-                      name="profession"
-                      value={formData.profession}
+                      name="proffession"
+                      value={formData.proffession}
                       onChange={handleInputChange}
                       className="w-full pl-10 pr-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
                       placeholder="Software Engineer"

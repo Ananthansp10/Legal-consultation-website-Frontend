@@ -7,7 +7,7 @@ import {toast} from 'react-toastify'
 const OTPVerification = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(120);
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -70,7 +70,7 @@ const OTPVerification = () => {
     resendOtp(JSON.parse(userDetails)).then((response)=>{
       if(response.data.success){
         toast.success(response.data.message)
-        setTimer(60);
+        setTimer(120);
       }
     }).catch((error)=>{
       toast.error(error.response.data.message)

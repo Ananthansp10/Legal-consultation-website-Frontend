@@ -58,8 +58,7 @@ const LawyerResetPasswordPage: React.FC = () => {
       const response = await resetPassword({
         email: email,
         oldPassword: formData.currentPassword,
-        newPassword: formData.newPassword,
-        role:'lawyer'
+        newPassword: formData.newPassword
       });
       toast.success(response.data.message);
       navigate('/auth/lawyer/signin');

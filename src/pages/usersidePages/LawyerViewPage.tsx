@@ -96,9 +96,9 @@ export default function LawyerViewPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        {/*<Navbar userName="Ananthan" userAvatar=""/>*/}
+       <Navbar/>
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white">
+      <div className="relative bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white mt-12">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto">

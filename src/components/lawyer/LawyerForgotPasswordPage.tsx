@@ -56,6 +56,7 @@ const LawyerForgotPasswordPage: React.FC = () => {
 
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email');
+  const token=searchParams.get('token')
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,13 +83,16 @@ const LawyerForgotPasswordPage: React.FC = () => {
 
     setFormErrors({});
 
-    saveNewPassword({ email: email, password: formData.newPassword })
+    saveNewPassword({ email: email, password: formData.newPassword,token:token })
       .then((response) => {
         toast.success(response.data.message);
         navigate('/auth/lawyer/signin');
       })
       .catch((error) => {
         toast.error(error.response?.data?.message || 'Something went wrong');
+        if(error.response.data.message=="Link has Expired try again"){
+          navigate('/auth/lawyer/forgot-password-email-page')
+        }
       });
   };
 
