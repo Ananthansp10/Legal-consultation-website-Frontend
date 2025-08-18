@@ -12,9 +12,10 @@ import Footer from '../components/Footer';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '../redux/store';
 
 const HomePage = () => {
-  const user=useSelector((state:any)=>state.auth.user)
+  const user=useSelector((state:RootState)=>state.auth.user)
   console.log(user)
   const navigate=useNavigate()
   useEffect(()=>{

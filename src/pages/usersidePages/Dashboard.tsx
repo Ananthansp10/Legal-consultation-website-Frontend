@@ -8,19 +8,41 @@ import Footer from '../../components/Footer';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getProfile } from '../../services/user/profileService';
+import { User } from '../../interface/userInterface/userInterface';
+import { RootState } from '../../redux/store';
+
+
+interface GetProfileData{
+  userId: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  gender: string;
+  DOB: string;
+  proffession: string;
+  company: string;
+  profileImage: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    zipCode: string;
+  };
+}
 
 
 function Dashboard() {
-  let userDetails:any=useSelector((state:any)=>state.auth.user)
+  let userDetails:User | null=useSelector((state:RootState)=>state.auth.user)
 
   const userData = {
     name:userDetails?.name
   }
 
-   const [userProfileData,setUserProfileData]:any=useState(null)
+   const [userProfileData,setUserProfileData]=useState<GetProfileData | undefined>()
 
    useEffect(()=>{
-      getProfile(userDetails?.id).then((response)=>{
+      getProfile(userDetails?.id!).then((response)=>{
         if(response.data.data){
           setUserProfileData(response.data.data)
         }
@@ -30,13 +52,13 @@ function Dashboard() {
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
-      <Navbar/>
+      <Navbar navLink='Home'/>
       
       <main className="pt-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
-            <WelcomeSection userName={userProfileData ? userProfileData.name : userData.name} />
+            <WelcomeSection userName={userProfileData?.name ?? userData.name!} />
           </div>
 
           {/* Banner Slider */}

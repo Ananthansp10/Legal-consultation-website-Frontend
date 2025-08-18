@@ -1,8 +1,14 @@
 import { axiosInstance as axios } from "../../config/axiox"
+import { ADMIN_AUTH_API } from "../../constants/adminAuthApi";
 
-export const signin=async(data:any)=>{
+interface SigninData{
+    email:string;
+    password:string;
+}
+
+export const signin=async(data:SigninData)=>{
     try {
-        let result=await axios.post('/admin/signin',data)
+        let result=await axios.post( ADMIN_AUTH_API.SIGNIN,data)
         return result;
     } catch (error) {
         throw error;
@@ -11,7 +17,7 @@ export const signin=async(data:any)=>{
 
 export const logout=async()=>{
     try {
-       let result=await axios.post('/admin/logout')
+       let result=await axios.post( ADMIN_AUTH_API.LOGOUT)
        return result;
     } catch (error) {
         throw error;

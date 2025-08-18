@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
+import { RootState } from '../../redux/store';
+import { AxiosError } from 'axios';
+import { ErrorResponse } from '../../interface/errorInterface';
 
 const passwordSchema = z
   .object({
@@ -28,7 +31,7 @@ const LawyerResetPasswordPage: React.FC = () => {
   });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
-  const email: string = useSelector((state: any) => state.lawyerAuth.lawyer.email);
+  const email: string | undefined = useSelector((state: RootState) => state?.lawyerAuth?.lawyer?.email);
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,14 +59,16 @@ const LawyerResetPasswordPage: React.FC = () => {
 
     try {
       const response = await resetPassword({
-        email: email,
+        email: email!,
         oldPassword: formData.currentPassword,
         newPassword: formData.newPassword
       });
       toast.success(response.data.message);
       navigate('/auth/lawyer/signin');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Something went wrong');
+    } catch (error) {
+      const errorData=error as AxiosError
+      const errorResponse=errorData.response?.data as ErrorResponse
+      toast.error(errorResponse.message || 'Something went wrong');
     }
   };
 

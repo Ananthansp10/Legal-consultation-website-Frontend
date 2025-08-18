@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { lawyerLogout } from '../../redux/slices/lawyerAuthSlice';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '../../redux/store';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,7 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
 
-  const lawyer=useSelector((state:any)=>state.lawyerAuth.lawyer)
+  const lawyer=useSelector((state:RootState)=>state.lawyerAuth.lawyer)
 
   const dispatch=useDispatch()
   const navigate=useNavigate()
@@ -27,6 +28,19 @@ const Navbar: React.FC = () => {
     }).catch((error)=>{
       toast.error(error.response.data.message)
     })
+  }
+
+  function pageNavigate(link:string){
+    if(link=='Schedule'){
+      navigate('/lawyer/add-availablity')
+    }
+    if(link=='Appointments'){
+      navigate('/lawyer/appointments')
+    }
+
+    if(link=='Home'){
+      navigate('/lawyer-dashboard')
+    }
   }
 
   return (
@@ -42,13 +56,13 @@ const Navbar: React.FC = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {['Home', 'Appointments', 'Schedule', 'Reviews', 'Chat'].map((item) => (
-                <a
+                <button
                   key={item}
-                  href="#"
+                  onClick={()=>pageNavigate(item)}
                   className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   {item}
-                </a>
+                </button>
               ))}
             </div>
           </div>

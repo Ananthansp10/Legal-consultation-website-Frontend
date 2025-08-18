@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { otpService, resendOtp } from '../../services/user/otpService';
 import {toast} from 'react-toastify'
+import { User } from '../../interface/userInterface/userInterface';
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -44,12 +45,12 @@ const OTPVerification = () => {
     e.preventDefault();
     const otpValue = otp.join('');
     let userDetails=localStorage.getItem('userDetails')
-    let userData:any
+    let userData:User | undefined
     if(userDetails){
       userData=JSON.parse(userDetails)
     }
-    otpService({userDetails:userData,otp:otpValue}).then((response)=>{
-      if(userData.forgotPassword){
+    otpService({userDetails:userData!,otp:otpValue}).then((response)=>{
+      if(userData?.forgotPassword){
        navigate('/auth/new-password')
       }else{
         localStorage.removeItem('userDetails')
@@ -58,7 +59,7 @@ const OTPVerification = () => {
         navigate('/auth/signin')
       }, 2000);
       }
-    }).catch((error:any)=>{
+    }).catch((error)=>{
         toast.error(error.message)
     })
   };
@@ -66,8 +67,9 @@ const OTPVerification = () => {
   const handleResend = () => {
     setCanResend(false);
     setOtp(['', '', '', '', '', '']);
-    let userDetails:any=localStorage.getItem('userDetails')
-    resendOtp(JSON.parse(userDetails)).then((response)=>{
+    let userDetails:string | null=localStorage.getItem('userDetails')
+    if(userDetails){
+       resendOtp(JSON.parse(userDetails)).then((response)=>{
       if(response.data.success){
         toast.success(response.data.message)
         setTimer(120);
@@ -75,6 +77,7 @@ const OTPVerification = () => {
     }).catch((error)=>{
       toast.error(error.response.data.message)
     })
+    }
   };
 
   return (

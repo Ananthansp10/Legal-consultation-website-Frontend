@@ -83,7 +83,7 @@ const LawyerForgotPasswordPage: React.FC = () => {
 
     setFormErrors({});
 
-    saveNewPassword({ email: email, password: formData.newPassword,token:token })
+    saveNewPassword({ email: email!, password: formData.newPassword,token:token! })
       .then((response) => {
         toast.success(response.data.message);
         navigate('/auth/lawyer/signin');

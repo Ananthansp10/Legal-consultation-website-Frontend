@@ -4,7 +4,7 @@ interface State{
     isAuthenticate:boolean;
 }
 
-const admin:any=localStorage.getItem('admin')
+const admin:string | null=localStorage.getItem('admin')
 let adminDetails=null
 if(admin){
     adminDetails=JSON.parse(admin)
@@ -14,7 +14,7 @@ const initialState:State={
     isAuthenticate:adminDetails ? true : false 
 }
 
-const adminAuthSlice:any=createSlice({
+const adminAuthSlice=createSlice({
     name:'adminAuth',
     initialState,
     reducers:{

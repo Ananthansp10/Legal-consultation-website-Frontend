@@ -5,6 +5,7 @@ import { addLawyerProfile } from '../../services/lawyer/lawyerProfileService';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '../../redux/store';
 
 interface Education {
   id: string;
@@ -54,12 +55,12 @@ const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 
 function LawyerProfileAddPage() {
 
-  const lawyer=useSelector((state:any)=>state.lawyerAuth.lawyer)
+  const lawyer=useSelector((state:RootState)=>state.lawyerAuth.lawyer)
 
   const [formData, setFormData] = useState<FormData>({
     profileImage: null,
-    fullName:lawyer.name,
-    email:lawyer.email,
+    fullName:lawyer?.name!,
+    email:lawyer?.email!,
     phone: '',
     dateOfBirth: '',
     gender: '',
@@ -68,8 +69,8 @@ function LawyerProfileAddPage() {
     state: '',
     country: '',
     languages: [],
-    practiceAreas: [...lawyer.specialization || []],
-    barRegistrationNumber:lawyer.barCouncilNumber,
+    practiceAreas: [],
+    barRegistrationNumber:'',
     yearsOfExperience: '',
     consultationFee: '',
     lawFirm: '',
@@ -90,7 +91,7 @@ function LawyerProfileAddPage() {
 
   const navigate=useNavigate()
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -186,7 +187,7 @@ function LawyerProfileAddPage() {
     e.preventDefault();
     const data=new FormData()
 
-    data.append("lawyerId",lawyer?._id)
+    data.append("lawyerId",lawyer?._id!)
     data.append("name",formData.fullName)
     data.append("email",formData.email)
     data.append("phoneNumber",formData.phone)

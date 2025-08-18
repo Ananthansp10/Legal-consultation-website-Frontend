@@ -7,18 +7,45 @@ import { useNavigate } from 'react-router-dom';
 import { logout as logoutAction } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import { getProfile } from '../../services/user/profileService';
+import { User as userDetails } from '../../interface/userInterface/userInterface';
+import { RootState } from '../../redux/store';
+import { AxiosError } from 'axios';
+import { ErrorResponse } from '../../interface/errorInterface';
+
+interface NavProps{
+  navLink:string
+}
+
+interface GetProfileData{
+  userId: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  gender: string;
+  DOB: string;
+  proffession: string;
+  company: string;
+  profileImage: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    zipCode: string;
+  };
+}
 
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<NavProps> = ({navLink}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState('Home');
+  const [activeLink, setActiveLink] = useState(navLink);
 
   const navLinks = ['Home','Lawyers', 'My Appointments', 'Chat'];
 
-  let user:any=useSelector((state:any)=>state.auth.user)
+  let user:userDetails | null=useSelector((state:RootState)=>state.auth.user)
 
-  const [profileImage,setProfileImage]=useState<any>()
+  const [profileImage,setProfileImage]=useState<GetProfileData>()
 
   const dispatch=useDispatch()
 
@@ -30,14 +57,16 @@ const Navbar: React.FC = () => {
       dispatch(logoutAction())
       toast.success(result.data.message)
       navigate('/auth/signin')
-    } catch (error:any) {
-      toast.error(error?.response?.data?.message)
+    } catch (error) {
+      const errorResponse=error as AxiosError
+      const errorData=errorResponse.response?.data as ErrorResponse
+      toast.error(errorData.message)
     }
 
   }
 
   useEffect(()=>{
-    getProfile(user?.id).then((response)=>{
+    getProfile(user?.id!).then((response)=>{
       if(response.data.data){
         setProfileImage(response.data.data)
       }
@@ -46,6 +75,19 @@ const Navbar: React.FC = () => {
 
   function resetPasswordPage(){
     navigate('/auth/reset-password')
+  }
+
+  function setNewPage(link:string){
+    setActiveLink(link)
+    if(link=='Lawyers'){
+      navigate('/user/lawyers')
+    }
+    if(link=='Home'){
+      navigate('/user-dashboard')
+    }
+    if(link=='My Appointments'){
+      navigate('/user/appointments')
+    }
   }
 
   return (
@@ -64,7 +106,7 @@ const Navbar: React.FC = () => {
             {navLinks.map((link) => (
               <button
                 key={link}
-                onClick={() => setActiveLink(link)}
+                onClick={() => setNewPage(link)}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                   activeLink === link
                     ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600'
@@ -99,7 +141,7 @@ const Navbar: React.FC = () => {
                     <User className="w-4 h-4" />
                     <span>My Profile</span>
                   </button>
-                 {!user.googleId ?  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+                 {!user?.googleId ?  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
                     <Lock className='w-4 h-4'/>
                     <span>Reset Password</span>
                   </button> : null}
@@ -160,7 +202,7 @@ const Navbar: React.FC = () => {
                   <User className="w-5 h-5" />
                   <span>My Profile</span>
                 </button>
-               {!user.googleId ?  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+               {!user?.googleId ?  <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
                     <Lock className='w-4 h-4'/>
                     <span>Reset Password</span>
                   </button> : null}

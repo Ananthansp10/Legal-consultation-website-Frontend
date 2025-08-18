@@ -1,9 +1,10 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const WelcomeSection: React.FC = () => {
-  const lawyer=useSelector((state:any)=>state.lawyerAuth.lawyer)
+  const lawyer=useSelector((state:RootState)=>state.lawyerAuth.lawyer)
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>

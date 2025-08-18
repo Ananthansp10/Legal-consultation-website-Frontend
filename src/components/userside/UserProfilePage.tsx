@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom"
 import { editProfile, getProfile } from "../../services/user/profileService"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
+import { RootState } from "../../redux/store"
 
 interface ProfileData {
   name: string
@@ -50,7 +51,7 @@ export default function UserProfilePage() {
 
   const navigate=useNavigate()
 
-  const user=useSelector((state:any)=>state.auth.user)
+  const user=useSelector((state:RootState)=>state.auth.user)!
 
   const handleEditClick = () => {
     setEditData(profileData)
@@ -155,7 +156,7 @@ export default function UserProfilePage() {
   return (
     <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <Navbar/>
+        <Navbar navLink=""/>
         <div className="mb-8 mt-12">
           <h1 className="text-3xl font-bold text-[#334155] mb-2">Profile Settings</h1>
           <p className="text-[#64748b]">Manage your account settings and preferences</p>

@@ -10,3 +10,5 @@ export const store=configureStore({
         lawyerAuth:lawyerAuthSlice
     }
 })
+
+export type RootState=ReturnType<typeof store.getState>

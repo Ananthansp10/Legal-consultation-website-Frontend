@@ -7,6 +7,9 @@ import { login, logout } from "../redux/slices/authSlice";
 import { lawyerLogout } from "../redux/slices/lawyerAuthSlice";
 import { useSelector } from "react-redux";
 import { getGoogleAuthDetails } from "../services/user/authService";
+import { User } from "../interface/userInterface/userInterface";
+import { RootState } from "../redux/store";
+import { AxiosError, AxiosResponse } from "axios";
 
 interface ProtectRouteProps {
   allowedRoles: string[];
@@ -16,15 +19,15 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   const [isAuth, setIsAuth] = useState<boolean | null | string>(null);
   const dispatch=useDispatch()
 
-  const user:any=useSelector((state:any)=>state.auth.user)
+
+  const user:User | null=useSelector((state:RootState)=>state.auth.user)
 
   useEffect(()=>{
     if(!user){
       getGoogleAuthDetails().then((response)=>{
-        console.log(response)
         if(response.data.result){
           let obj={
-            userId:response.data.result._id,
+            id:response.data.result.id,
             googleId:response.data.result.googleId,
             email:response.data.result.email,
             name:response.data.result.name
@@ -35,21 +38,35 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
     }
   },[])
 
+  interface CheckAuthResponse{
+    success:boolean;
+    message:string;
+  }
+
+  interface CheckAuthErrorResponse{
+    success:boolean;
+    message:string;
+    isUnAuth:boolean;
+    isBlock:string;
+  }
+
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response:any = await isValidUser(allowedRoles[0]);
+        const response:AxiosResponse<CheckAuthResponse> = await isValidUser(allowedRoles[0]);
         if (response.data.success) {
           setIsAuth(true);
         }else{
           setIsAuth(false)
         }
-      } catch (error:any) {
-        if(error.response.data.isUnAuth){
+      } catch (error) {
+        const axiosError=error as AxiosError<CheckAuthErrorResponse>
+        const errorData=axiosError.response?.data
+        if(errorData?.isUnAuth){
           localStorage.removeItem('user')
           setIsAuth("unAuth");
-        }else if(error.response.data.isBlock){
+        }else if(errorData?.isBlock){
           if(allowedRoles[0]=='user'){
             dispatch(logout())
             setIsAuth('blocked')

@@ -9,6 +9,8 @@ import Badge from '../../components/admin/Badge';
 import ConfirmationModal from '../../components/admin/ConfirmationModal';
 import { getUsers, updateUserStatus } from '../../services/admin/userListingService';
 import { toast } from 'react-toastify';
+import { AxiosResponse } from 'axios';
+import { ApiResponse } from '../../interface/userInterface/axiosResponseInterface';
 
 interface User {
   _id: string;
@@ -37,14 +39,21 @@ const UserListing: React.FC = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
 
- 
+ interface fetchUserResponse{
+   _id:string;
+    name:string;
+    email:string;
+    phoneNumber ? :number;
+    status:boolean;
+    createdAt ? :Date;
+ }
 
   function fetchUsers(){
     getUsers().then((response)=>{
-      const transformedUsers = response.data.data.map((user: any) => ({
+      const transformedUsers = response.data.data.map((user:fetchUserResponse) => ({
         ...user,
         userStatus: user.status ? 'blocked' : 'active',
-        joinedDate: new Date(user.createdAt).toLocaleDateString(),
+        joinedDate: user.createdAt ? new Date(user?.createdAt!).toLocaleDateString() : new Date(),
         profileImage: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
       }))
       setUsers(transformedUsers)
@@ -88,7 +97,7 @@ const UserListing: React.FC = () => {
     if (!confirmationModal.user) return;
     setIsLoading(true);
 
-    updateUserStatus(confirmationModal.user._id,confirmationModal.type).then((response:any)=>{
+    updateUserStatus(confirmationModal.user._id,confirmationModal.type).then((response:AxiosResponse<ApiResponse>)=>{
       toast.success(response.data.message)
       fetchUsers()
     }).catch((error)=>{

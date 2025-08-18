@@ -35,6 +35,13 @@ import UserProfileForm from './components/userside/UserProfileForm';
 import LawyerProfilePage from './pages/lawyersidePages/LawyerProfilePage';
 import LawyerProfileAddPage from './pages/lawyersidePages/LawyerProfileAddPage';
 import LawyerViewPage from './pages/usersidePages/LawyerViewPage';
+import LawyerListingPage from './pages/usersidePages/LawyerListingPage';
+import SpecializationPage from './pages/adminsidePages/SpecializationPage';
+import AvailablityAddPage from './pages/lawyersidePages/AvailablityAddPage';
+import AppointmentPage from './pages/lawyersidePages/AppointmentPage';
+import SlotBookingPage from './pages/usersidePages/SlotBookingPage';
+import UserAppointmentPage from './pages/usersidePages/UserAppointmentPage';
+import SlotListPage from './pages/lawyersidePages/SlotListPage';
 
 function App() {
   return (
@@ -71,14 +78,21 @@ function App() {
               <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
               <Route path='/user/profile' element={<UserProfilePage/>}/>
               <Route path='/user/add-profile' element={<UserProfileForm/>}/>
-              <Route path='/user/lawyer-view-page' element={<LawyerViewPage/>}/>
+              <Route path='/user/lawyers' element={<LawyerListingPage/>}/>
+              <Route path='/user/lawyer-view-page/:lawyerId' element={<LawyerViewPage/>}/>
+              <Route path='/user/slot-booking/:lawyerId' element={<SlotBookingPage/>}/>
+              <Route path='/user/appointments' element={<UserAppointmentPage/>}/>
           </Route>
+
 
            <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>
               <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
               <Route path='/lawyer/reset-password' element={<LawyerResetPasswordPage/>}/>
               <Route path='/lawyer-profile-page' element={<LawyerProfilePage/>}/>
               <Route path='/lawyer/add-profile' element={<LawyerProfileAddPage/>}/>
+              <Route path='/lawyer/add-availablity' element={<AvailablityAddPage/>}/>
+              <Route path='/lawyer/appointments' element={<AppointmentPage/>}/>
+              <Route path='/lawyer/slot-list-page' element={<SlotListPage/>}/>
           </Route>
 
           <Route path='/admin' element={<AdminWelcomePage/>}/>
@@ -91,6 +105,7 @@ function App() {
               <Route path="lawyers" element={<LawyerListing />} />
               <Route path="users" element={<UserListing />} />
             </Route>
+            <Route path='/specialization' element={<SpecializationPage/>}/>
           </Route>
           
         </Routes>

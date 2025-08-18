@@ -1,26 +1,27 @@
 import { axiosInstance as axios } from "../../config/axiox"
+import { LAWYER_API } from "../../constants/lawyerApi";
 
-export const addLawyerProfile=async(data:any)=>{
+export const addLawyerProfile=async(data:FormData)=>{
     try {
-        let result=await axios.post('/lawyer/add-profile',data,{headers:{'Content-Type':'multipart/formData'}})
+        let result=await axios.post(LAWYER_API.ADD_PROFILE,data,{headers:{'Content-Type':'multipart/formData'}})
         return result;
     } catch (error) {
         throw error;
     }
 }
 
-export const getLawyerProfile=async(lawyerId:any)=>{
+export const getLawyerProfile=async(lawyerId:string)=>{
     try {
-        let result=await axios.get(`/lawyer/get-profile/${lawyerId}`)
+        let result=await axios.get(LAWYER_API.GET_PROFILE(lawyerId))
         return result;
     } catch (error) {
         throw error;
     }
 }
 
-export const editLawyerProfile=async(data:any)=>{
+export const editLawyerProfile=async(data:FormData)=>{
     try {
-        let result=await axios.patch('/lawyer/edit-profile',data,{headers:{'Content-Type':'multipart-formData'}})
+        let result=await axios.patch(LAWYER_API.EDIT_PROFILE,data,{headers:{'Content-Type':'multipart-formData'}})
         return result;
     } catch (error) {
         throw error;

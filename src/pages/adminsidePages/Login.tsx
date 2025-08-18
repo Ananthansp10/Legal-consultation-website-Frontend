@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { adminLogin } from '../../redux/slices/adminAuthSlice';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const Login: React.FC = () => {
 
@@ -33,7 +34,7 @@ const Login: React.FC = () => {
     password: '',
   });
 
-  const adminExist=useSelector((state:any)=>state.adminAuth.isAuthenticate)
+  const adminExist=useSelector((state:RootState)=>state.adminAuth.isAuthenticate)
 
   const dispatch=useDispatch()
 

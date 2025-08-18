@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Upload, X, CheckCircle, Scale, Gavel, BookOp
 import { register } from '../../services/lawyer/authService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { AxiosResponse } from 'axios';
 
 interface FormData {
   fullName: string;
@@ -55,7 +56,7 @@ function SignupForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [dragActive, setDragActive] = useState<string | null>(null);
 
-  const updateFormData = (field: keyof FormData, value: any) => {
+  const updateFormData = (field: keyof FormData, value: string | string[] | File | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -117,7 +118,7 @@ function SignupForm() {
       if (formData.lawDegree) data.append('files', formData.lawDegree);
       if (formData.barCertificate) data.append('files', formData.barCertificate);
 
-        register(data).then((response:any)=>{
+        register(data).then((response:AxiosResponse)=>{
           toast.success(response.data.message)
           navigate('/auth/lawyer/signin')
         }).catch((error)=>{

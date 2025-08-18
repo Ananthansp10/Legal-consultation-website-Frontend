@@ -6,6 +6,9 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { ApiResponse } from '../../interface/userInterface/axiosResponseInterface';
+import { AxiosResponse } from 'axios';
 
 function ResetPasswordPage() {
   const [passwords, setPasswords] = useState({
@@ -37,8 +40,9 @@ function ResetPasswordPage() {
     hasUppercase: false,
     hasSpecialChar: false
   });
+ 
 
-  let email:string=useSelector((state:any)=>state.auth?.user?.email)
+  let email:string | undefined=useSelector((state:RootState)=>state.auth?.user?.email)
 
   const navigate=useNavigate()
   const dispatch=useDispatch()
@@ -118,14 +122,19 @@ function ResetPasswordPage() {
     
     setIsSubmitting(true);
 
-    resetPassword({email:email,oldPassword:passwords.oldPassword,newPassword:passwords.newPassword}).then((response:any)=>{
-      if(response.data.success){
+    interface ResetPasswordResponse{
+      success:boolean;
+      message:string;
+    }
+
+    resetPassword({email:email!,oldPassword:passwords.oldPassword,newPassword:passwords.newPassword}).then((response:AxiosResponse<ApiResponse<ResetPasswordResponse>>)=>{
+      if(response?.data?.success){
         setIsSubmitting(false)
         dispatch(logout())
         toast.success(response.data.message)
         navigate('/auth/signin')
       }
-    }).catch((error:any)=>{
+    }).catch((error)=>{
       toast.error(error.response.data.message)
       setIsSubmitting(false)
     })

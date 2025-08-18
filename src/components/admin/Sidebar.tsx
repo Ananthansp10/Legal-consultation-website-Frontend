@@ -17,6 +17,7 @@ const sidebarItems = [
   { path: '/admin-dashboard/lawyers', icon: UserCircle, label: 'Lawyers' },
   { path: '/admin-dashboard/users', icon: Users, label: 'Users' },
   { path: '/appointments', icon: Calendar, label: 'Appointments' },
+  { path: '/specialization', icon: Calendar, label: 'Specialization'},
   { path: '/reports', icon: FileText, label: 'Reports' },
   { path: '/revenue', icon: DollarSign, label: 'Revenue' },
   { path: '/settings', icon: Settings, label: 'Settings' },

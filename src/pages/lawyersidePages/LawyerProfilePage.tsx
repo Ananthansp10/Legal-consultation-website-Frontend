@@ -33,6 +33,7 @@ import Navbar from "../../components/lawyer/Navbar"
 import { editLawyerProfile, getLawyerProfile } from "../../services/lawyer/lawyerProfileService"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
+import { RootState } from "../../redux/store"
 
 
 export default function LawyerProfilePage() {
@@ -42,7 +43,7 @@ export default function LawyerProfilePage() {
   const [showEditModal, setShowEditModal] = useState(false)
 
   const navigate=useNavigate()
-  const lawyer=useSelector((state:any)=>state.lawyerAuth.lawyer)
+  const lawyer=useSelector((state:RootState)=>state.lawyerAuth.lawyer)!
   
   interface Address{
     street:string;
@@ -145,7 +146,7 @@ interface ProffessionalInfo{
     })
   }
 
-  const handleInputChange = (path: string, value: any) => {
+  const handleInputChange = (path: string, value: string) => {
   setEditForm(prevForm => {
     if (!prevForm) return prevForm;
 
@@ -165,7 +166,7 @@ interface ProffessionalInfo{
 };
 
 
-  const handleLanguageToggle = (language:any) => {
+  const handleLanguageToggle = (language:string) => {
     setEditForm(prev => ({
       ...prev,
       language: prev.language.includes(language)
@@ -174,7 +175,7 @@ interface ProffessionalInfo{
     }))
   }
 
-  const formatDisplayDate = (dateString:any) => {
+  const formatDisplayDate = (dateString:string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', { 
       year: 'numeric', 
@@ -534,7 +535,7 @@ interface ProffessionalInfo{
                             <label className="text-sm font-medium text-slate-700">Date of Birth</label>
                             <div className="flex items-center space-x-2 text-slate-600">
                               <Calendar className="w-4 h-4" />
-                              <span>{formatDisplayDate(personalInfo?.DOB)}</span>
+                              <span>{formatDisplayDate(personalInfo?.DOB!)}</span>
                             </div>
                           </div>
                         </div>

@@ -1,21 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { User } from "../../interface/userInterface/userInterface";
 
 export interface State{
     isAuthenticate:boolean | null,
-    user:any
+    user:User | null
 }
 
-let userDetails:any=localStorage.getItem('userDetails')
-if(userDetails){
-    userDetails=JSON.parse(userDetails)
+let userDetails:User | null=null
+
+let userStored:string | null=localStorage.getItem('userDetails')
+if(userStored){
+    userDetails=JSON.parse(userStored)
 }
 
 const initialState:State={
-    isAuthenticate:userDetails ? true : null,
+    isAuthenticate:userStored ? true : null,
     user:userDetails ? userDetails : null
 }
 
-const authSlice:any=createSlice({
+const authSlice=createSlice({
     name:'auth',
     initialState,
     reducers:{

@@ -15,69 +15,82 @@ import {
   Scale,
   User,
   Award,
+  AlertCircle
 } from "lucide-react"
 import Navbar from "../../components/userside/Navbar"
+import { useNavigate, useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { getLawyerDetails, reportLawyer } from "../../services/user/userService"
+import { toast } from "react-toastify"
+
+interface Address{
+    street:string;
+    country:string;
+    state:string;
+    city:string;
+}
+
+interface Education{
+    degree:string;
+    university:string;
+    year:string;
+}
+
+interface PersonalInfo{
+    name:string;
+    email:string;
+    phoneNumber:string;
+    DOB:string;
+    gender:string;
+    address:Address;
+    language:string[];
+    profileImage:string;
+}
+
+interface ProffessionalInfo{
+    practiceAreas:string[];
+    barRegisterNumber:string;
+    experience:string;
+    courtName:string;
+    workLocation:string;
+    fee:string;
+    availableDays:string[];
+    startTime:string;
+    endTime:string;
+    education:Education[];
+    documents:string[];
+}
+
+export interface LawyerProfileData{
+    _id ? :string;
+    lawyerId:string;
+    personalInfo:PersonalInfo;
+    proffessionalInfo:ProffessionalInfo;
+    rating ? :number;
+    reviewCount ? :number;
+    reviews ? :[string]
+}
 
 export default function LawyerViewPage() {
-  const lawyerData = {
-    name: "Sarah Mitchell",
-    specialization: "Criminal Defense Lawyer",
-    rating: 4.8,
-    reviewCount: 42,
-    court: "Supreme Court of California",
-    location: "Los Angeles, CA",
-    experience: "12+ Years",
-    profileImage: "/placeholder.svg?height=150&width=150",
-    personalInfo: {
-      dob: "March 15, 1985",
-      phone: "+1 (555) 123-4567",
-      email: "sarah.mitchell@lawfirm.com",
-      languages: ["English", "Spanish", "French"],
-      address: "1234 Legal Avenue, Downtown LA, CA 90210",
-    },
-    professionalInfo: {
-      barNumber: "CA-BAR-123456",
-      courtName: "Supreme Court of California",
-      yearsExperience: 12,
-      workLocation: "Los Angeles, California",
-      consultationFee: "$300/hour",
-      practiceAreas: ["Criminal Defense", "DUI Defense", "White Collar Crime", "Appeals", "Federal Crimes"],
-    },
-    education: [
-      {
-        degree: "Juris Doctor (JD)",
-        university: "UCLA School of Law",
-        year: "2011",
-      },
-      {
-        degree: "Bachelor of Arts in Political Science",
-        university: "University of California, Berkeley",
-        year: "2008",
-      },
-    ],
-    reviews: [
-      {
-        username: "Michael R.",
-        date: "2 weeks ago",
-        rating: 5,
-        comment:
-          "Exceptional representation in my criminal case. Sarah's expertise and dedication were evident throughout the entire process.",
-      },
-      {
-        username: "Jennifer L.",
-        date: "1 month ago",
-        rating: 5,
-        comment:
-          "Professional, knowledgeable, and compassionate. Highly recommend for anyone needing criminal defense.",
-      },
-      {
-        username: "David K.",
-        date: "2 months ago",
-        rating: 4,
-        comment: "Great communication and strong legal strategy. Very satisfied with the outcome of my case.",
-      },
-    ],
+
+  const {lawyerId}=useParams()
+
+  const [lawyerData,setLawyerData]=useState<LawyerProfileData>()
+
+  useEffect(()=>{
+    getLawyerDetails(lawyerId!).then((response)=>{
+      setLawyerData(response.data.data)
+    })
+  },[lawyerId])
+
+  const navigate=useNavigate()
+
+  function report(lawyerId:string){
+    reportLawyer(lawyerId).then((response)=>{
+      toast.success(response.data.message)
+    })
   }
+
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -96,7 +109,7 @@ export default function LawyerViewPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-       <Navbar/>
+       <Navbar navLink="Lawyers"/>
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white mt-12">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -108,8 +121,8 @@ export default function LawyerViewPage() {
                   {/* Profile Avatar */}
                   <div className="relative w-32 h-32 rounded-full border-4 border-blue-100 overflow-hidden bg-blue-600 flex items-center justify-center">
                     <img
-                      src={lawyerData.profileImage || "/placeholder.svg"}
-                      alt={lawyerData.name}
+                      src={lawyerData?.personalInfo?.profileImage}
+                      alt={lawyerData?.personalInfo?.name}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
@@ -123,41 +136,49 @@ export default function LawyerViewPage() {
                       className="absolute inset-0 bg-blue-600 text-white text-2xl font-semibold flex items-center justify-center"
                       style={{ display: "none" }}
                     >
-                      {lawyerData.name
+                      {lawyerData?.personalInfo?.name
                         .split(" ")
-                        .map((n) => n[0])
+                        .map((n:string) => n[0])
                         .join("")}
                     </div>
                   </div>
 
                   <div className="flex-1 text-center md:text-left">
-                    <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">{lawyerData.name}</h1>
-                    <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">
-                      {lawyerData.specialization}
-                    </span>
+                    <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">{lawyerData?.personalInfo?.name}</h1>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                          {lawyerData?.proffessionalInfo?.practiceAreas?.map((area: string, index: number) => (
+                            <span
+                              key={index}
+                              className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                            >
+                              {area}
+                            </span>
+                          ))}
+                        </div>
+
 
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-6 text-slate-600">
                       <div className="flex items-center gap-1">
-                        {renderStars(lawyerData.rating)}
-                        <span className="ml-1 font-semibold">{lawyerData.rating}</span>
-                        <span className="text-sm">({lawyerData.reviewCount} reviews)</span>
+                        {renderStars(lawyerData?.rating ?? 123)}
+                        <span className="ml-1 font-semibold">{}</span>
+                        <span className="text-sm">({lawyerData?.reviewCount} reviews)</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Scale className="w-4 h-4" />
-                        <span className="text-sm">{lawyerData.court}</span>
+                        <span className="text-sm">{lawyerData?.proffessionalInfo?.courtName}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
-                        <span className="text-sm">{lawyerData.location}</span>
+                        <span className="text-sm">{lawyerData?.proffessionalInfo?.workLocation}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Briefcase className="w-4 h-4" />
-                        <span className="text-sm">{lawyerData.experience}</span>
+                        <span className="text-sm">{lawyerData?.proffessionalInfo?.experience}+ years</span>
                       </div>
                     </div>
 
                     <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+                      <button onClick={()=>navigate(`/user/slot-booking/${lawyerId}`)} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         Book Appointment
                       </button>
@@ -165,9 +186,9 @@ export default function LawyerViewPage() {
                         <MessageCircle className="w-4 h-4" />
                         Message Lawyer
                       </button>
-                      <button className="border border-slate-300 text-slate-700 hover:bg-slate-50 bg-transparent px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
-                        <Bookmark className="w-4 h-4" />
-                        Save
+                      <button onClick={()=>report(lawyerId!)} className="border border-slate-300 text-slate-700 hover:bg-slate-50 bg-transparent px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        Report Lawyer
                       </button>
                     </div>
                   </div>
@@ -191,28 +212,28 @@ export default function LawyerViewPage() {
                     <User className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Full Name</p>
-                      <p className="font-medium">{lawyerData.name}</p>
+                      <p className="font-medium">{lawyerData?.personalInfo?.name}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Calendar className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Date of Birth</p>
-                      <p className="font-medium">{lawyerData.personalInfo.dob}</p>
+                      <p className="font-medium">{lawyerData?.personalInfo?.DOB}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Phone className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Phone</p>
-                      <p className="font-medium">{lawyerData.personalInfo.phone}</p>
+                      <p className="font-medium">{lawyerData?.personalInfo?.phoneNumber}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Mail className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Email</p>
-                      <p className="font-medium">{lawyerData.personalInfo.email}</p>
+                      <p className="font-medium">{lawyerData?.personalInfo?.email}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -220,7 +241,7 @@ export default function LawyerViewPage() {
                     <div>
                       <p className="text-sm text-slate-500">Languages</p>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {lawyerData.personalInfo.languages.map((lang) => (
+                        {lawyerData?.personalInfo?.language.map((lang:string) => (
                           <span
                             key={lang}
                             className="bg-slate-100 text-slate-700 px-2 py-1 rounded-full text-xs font-medium"
@@ -235,7 +256,7 @@ export default function LawyerViewPage() {
                     <Home className="w-5 h-5 text-blue-600 mt-1" />
                     <div>
                       <p className="text-sm text-slate-500">Address</p>
-                      <p className="font-medium text-sm">{lawyerData.personalInfo.address}</p>
+                      <p className="font-medium text-sm">{lawyerData?.personalInfo?.address.street}</p>
                     </div>
                   </div>
                 </div>
@@ -251,35 +272,35 @@ export default function LawyerViewPage() {
                     <Award className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Bar Registration</p>
-                      <p className="font-medium">{lawyerData.professionalInfo.barNumber}</p>
+                      <p className="font-medium">{lawyerData?.proffessionalInfo?.barRegisterNumber}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Scale className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Court</p>
-                      <p className="font-medium">{lawyerData.professionalInfo.courtName}</p>
+                      <p className="font-medium">{lawyerData?.proffessionalInfo?.courtName}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Clock className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Experience</p>
-                      <p className="font-medium">{lawyerData.professionalInfo.yearsExperience} Years</p>
+                      <p className="font-medium">{lawyerData?.proffessionalInfo?.experience} Years</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <MapPin className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Work Location</p>
-                      <p className="font-medium">{lawyerData.professionalInfo.workLocation}</p>
+                      <p className="font-medium">{lawyerData?.proffessionalInfo?.workLocation}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <DollarSign className="w-5 h-5 text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-500">Consultation Fee</p>
-                      <p className="font-medium">{lawyerData.professionalInfo.consultationFee}</p>
+                      <p className="font-medium">{lawyerData?.proffessionalInfo?.fee}</p>
                     </div>
                   </div>
                 </div>
@@ -287,7 +308,7 @@ export default function LawyerViewPage() {
                 <div>
                   <p className="text-sm text-slate-500 mb-3">Practice Areas</p>
                   <div className="flex flex-wrap gap-2">
-                    {lawyerData.professionalInfo.practiceAreas.map((area) => (
+                    {lawyerData?.proffessionalInfo?.practiceAreas.map((area:string) => (
                       <span
                         key={area}
                         className="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200"
@@ -305,13 +326,13 @@ export default function LawyerViewPage() {
               <div className="p-6">
                 <h2 className="text-2xl font-semibold text-slate-800 mb-6">Education</h2>
                 <div className="space-y-4">
-                  {lawyerData.education.map((edu, index) => (
+                  {lawyerData?.proffessionalInfo?.education.map((edu:Education, index:number) => (
                     <div key={index} className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg">
                       <GraduationCap className="w-6 h-6 text-blue-600 mt-1" />
                       <div>
-                        <h3 className="font-semibold text-slate-800">{edu.degree}</h3>
-                        <p className="text-slate-600">{edu.university}</p>
-                        <p className="text-sm text-slate-500">{edu.year}</p>
+                        <h3 className="font-semibold text-slate-800">{edu?.degree}</h3>
+                        <p className="text-slate-600">{edu?.university}</p>
+                        <p className="text-sm text-slate-500">{edu?.year}</p>
                       </div>
                     </div>
                   ))}
@@ -327,20 +348,20 @@ export default function LawyerViewPage() {
                 <h2 className="text-2xl font-semibold text-slate-800 mb-6">Client Reviews & Ratings</h2>
 
                 <div className="text-center mb-6 p-4 bg-blue-50 rounded-lg">
-                  <div className="flex items-center justify-center gap-1 mb-2">{renderStars(lawyerData.rating)}</div>
-                  <p className="text-2xl font-bold text-slate-800">{lawyerData.rating}/5</p>
-                  <p className="text-sm text-slate-600">Based on {lawyerData.reviewCount} reviews</p>
+                  <div className="flex items-center justify-center gap-1 mb-2">{renderStars(lawyerData?.rating ?? 123)}</div>
+                  <p className="text-2xl font-bold text-slate-800">{lawyerData?.rating}/5</p>
+                  <p className="text-sm text-slate-600">Based on {lawyerData?.reviewCount} reviews</p>
                 </div>
 
                 <div className="space-y-4">
-                  {lawyerData.reviews.map((review, index) => (
+                  {lawyerData?.reviews?.map((review:any, index:number) => (
                     <div key={index} className="border-b border-slate-100 pb-4 last:border-b-0">
                       <div className="flex items-center justify-between mb-2">
-                        <p className="font-medium text-slate-800">{review.username}</p>
-                        <p className="text-xs text-slate-500">{review.date}</p>
+                        <p className="font-medium text-slate-800">{review?.username}</p>
+                        <p className="text-xs text-slate-500">{review?.date}</p>
                       </div>
-                      <div className="flex items-center gap-1 mb-2">{renderStars(review.rating)}</div>
-                      <p className="text-sm text-slate-600">{review.comment}</p>
+                      <div className="flex items-center gap-1 mb-2">{renderStars(review?.rating)}</div>
+                      <p className="text-sm text-slate-600">{review?.comment}</p>
                     </div>
                   ))}
                 </div>

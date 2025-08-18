@@ -60,7 +60,7 @@ function LawyerSignin() {
         dispatch(lawyerLogin(response.data.data))
         navigate('/lawyer-dashboard')
       }
-    }).catch((error:any)=>{
+    }).catch((error)=>{
       if(error.status==503){
         navigate('/lawyer-verification-status')
       }else{

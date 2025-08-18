@@ -7,6 +7,8 @@ import { googleAuth, signinService } from '../../services/user/authService';
 import { login, logout } from '../../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { useApi } from '../../hooks/UseApi';
 
 const SignIn = () => {
   const dispatch=useDispatch()
@@ -17,7 +19,9 @@ const SignIn = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const { user, isAuthenticate } = useSelector((state: any) => state.auth);
+  const { user, isAuthenticate } = useSelector((state:RootState) => state.auth);
+
+  //const {data,error,execute}=useApi(signinService)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -47,6 +51,15 @@ const SignIn = () => {
            navigate('/auth/signin')
         }, 2500);
       })
+
+      //  execute(formData)
+
+      //  if(error){
+      //   toast.error(error.message)
+      //  }else{
+      //   toast.success(data.message)
+      //   dispatch(login(data.user))
+      //  }
     }
   };
 

@@ -1,27 +1,27 @@
 import { axiosInstance as axios } from "../../config/axiox";
+import { USER_API } from "../../constants/userApi";
 
-export const getProfile=async(userId:any)=>{
+export const getProfile=async(userId:string)=>{
     try {
-        let data:any=await axios.get(`/user/get-profile/${userId}`)
+        let data=await axios.get(USER_API.GET_PROFILE(userId))
         return data;
     } catch (error) {
-        console.log(error)
         throw error;
     }
 }
 
-export const addProfile=async(data:any)=>{
+export const addProfile=async(data:FormData)=>{
     try {
-        let result=await axios.post('/user/add-profile',data,{headers:{"Content-Type":'multipart/formData'}})
+        let result=await axios.post(USER_API.ADD_PROFILE,data,{headers:{"Content-Type":'multipart/formData'}})
         return result;
     } catch (error) {
         throw error;
     }
 }
 
-export const editProfile=async(data:any)=>{
+export const editProfile=async(data:FormData)=>{
     try {
-        let result=await axios.put('/user/edit-profile',data,{headers:{'Content-Type':'multipart/formData'}})
+        let result=await axios.put(USER_API.EDIT_PROFILE,data,{headers:{'Content-Type':'multipart/formData'}})
         return result;
     } catch (error) {
        throw error; 

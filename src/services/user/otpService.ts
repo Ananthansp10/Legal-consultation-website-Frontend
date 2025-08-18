@@ -1,20 +1,32 @@
+import { AxiosError } from "axios";
 import { axiosInstance as axios } from "../../config/axiox"
+import { User } from "../../interface/userInterface/userInterface";
+import { ErrorResponse } from "../../interface/errorInterface";
+import { OTP_API } from "../../constants/otpApi";
 
+interface OtpVerificationData{
+    userDetails:User
+    otp:string;
+}
 
-export const otpService=async(data:any)=>{
+export const otpService=async(data:OtpVerificationData)=>{
     try {
-       let result= await axios.post('/user/otp-verification',data)
+       let result= await axios.post(OTP_API.OTP_VERIFICATION,data)
        return result;
-    } catch (error:any) {
-        throw new Error(error.response.data.message)
+    } catch (error) {
+        const errorResponse=error as AxiosError<ErrorResponse>
+        const errorData=errorResponse.response?.data
+        throw new Error(errorData?.message)
     }
 }
 
-export const resendOtp=async(data:any)=>{
+export const resendOtp=async(data:User)=>{
     try {
-        let result=await axios.post('/user/resend-otp',data)
+        let result=await axios.post(OTP_API.RESEND_OTP,data)
         return result;
-    } catch (error:any) {
-        throw new Error(error.response.data.message)
+    } catch (error) {
+        const errorResponse=error as AxiosError<ErrorResponse>
+        const errorData=errorResponse.response?.data
+        throw new Error(errorData?.message)
     }
 }

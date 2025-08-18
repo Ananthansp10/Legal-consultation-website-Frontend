@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Lawyer } from "../../interface/lawyerInterface/lawyerInterface";
 
 interface State{
 
     isAuthenticate:boolean;
-    lawyer:any;
+    lawyer:Lawyer | null;
 }
 
-const lawyer:any=localStorage.getItem('lawyer')
-let lawyerDetails:any
+const lawyer:string | null=localStorage.getItem('lawyer')
+let lawyerDetails
 if(lawyer){
     lawyerDetails=JSON.parse(lawyer)
 }
@@ -17,7 +18,7 @@ const initialState:State={
     lawyer:lawyerDetails ? lawyerDetails : null
 }
 
-const lawyerAuthSlice:any=createSlice({
+const lawyerAuthSlice=createSlice({
     name:'lawyerAuth',
     initialState,
     reducers:{

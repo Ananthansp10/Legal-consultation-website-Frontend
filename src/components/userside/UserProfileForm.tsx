@@ -16,6 +16,8 @@ import { useSelector } from 'react-redux';
 import { addProfile } from '../../services/user/profileService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '../../redux/store';
+import { User as userDetails } from '../../interface/userInterface/userInterface';
 
 interface FormData {
   fullName: string;
@@ -35,7 +37,7 @@ interface FormData {
 
 
 const UserProfileForm: React.FC = () => {
-  const user=useSelector((state:any)=>state.auth.user)
+  const user:userDetails | null=useSelector((state:RootState)=>state.auth.user)!
   
   const [formData, setFormData] = useState<FormData>({
     fullName: user.name,
@@ -142,7 +144,7 @@ const UserProfileForm: React.FC = () => {
     <div className="min-h-screen bg-[#f8fafc] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto mt-12">
         <div className="bg-white rounded-xl shadow-xl p-6 md:p-10 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4">
-          <Navbar/>
+          <Navbar navLink=''/>
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#1e293b] mb-2">Add Profile</h1>
             <p className="text-[#64748b] text-lg">

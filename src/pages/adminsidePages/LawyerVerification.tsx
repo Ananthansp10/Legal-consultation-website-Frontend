@@ -6,6 +6,7 @@ import Modal from '../../components/admin/Modal';
 import ConfirmationModal from '../../components/admin/ConfirmationModal';
 import { unverifiedLawyersListing, verifyLawyer } from '../../services/admin/lawyerListingService';
 import { toast } from 'react-toastify';
+import { AxiosResponse } from 'axios';
 
 interface Lawyer {
   _id: string;
@@ -31,7 +32,7 @@ const LawyerVerification: React.FC = () => {
 
   function fetchData(){
 
-    unverifiedLawyersListing().then((response: any) => {
+    unverifiedLawyersListing().then((response: AxiosResponse) => {
       setLawyers(response.data.data);
     });
 
@@ -61,7 +62,7 @@ const LawyerVerification: React.FC = () => {
       setRejectReasonModalOpen(true);
     } else {
       setConfirmModal({ isOpen: false, type: 'approve', lawyer: null });
-      verifyLawyer(confirmModal.lawyer?._id,confirmModal.type,null).then((response)=>{
+      verifyLawyer(confirmModal.lawyer?._id,confirmModal.type,"null").then((response)=>{
         toast.success(response.data.message)
         fetchData()
       }).catch((error)=>{
