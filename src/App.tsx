@@ -42,6 +42,9 @@ import AppointmentPage from './pages/lawyersidePages/AppointmentPage';
 import SlotBookingPage from './pages/usersidePages/SlotBookingPage';
 import UserAppointmentPage from './pages/usersidePages/UserAppointmentPage';
 import SlotListPage from './pages/lawyersidePages/SlotListPage';
+import ProfileView from './components/reusableComponents/ProfileView';
+import AppointmentListingPage from './pages/adminsidePages/AppointmentListingPage';
+import ReportedAccountsPage from './pages/adminsidePages/ReportedAccountPage';
 
 function App() {
   return (
@@ -106,6 +109,9 @@ function App() {
               <Route path="users" element={<UserListing />} />
             </Route>
             <Route path='/specialization' element={<SpecializationPage/>}/>
+            {/* <Route path='/profile-view' element={<ProfileView profile="lawyer"/>}/> */}
+            <Route path='/admin/appointments' element={<AppointmentListingPage/>}/>
+            <Route path='/reported-accounts' element={<ReportedAccountsPage/>}/>
           </Route>
           
         </Routes>

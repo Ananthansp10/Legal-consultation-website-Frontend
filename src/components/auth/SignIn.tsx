@@ -21,7 +21,7 @@ const SignIn = () => {
 
   const { user, isAuthenticate } = useSelector((state:RootState) => state.auth);
 
-  //const {data,error,execute}=useApi(signinService)
+  const {data,error,loading,execute}=useApi(signinService)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -30,38 +30,28 @@ const SignIn = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
     let errorMsg=signinValidation(formData)
     if(errorMsg){
       toast.error(errorMsg)
     }else{
-      signinService(formData).then((response)=>{
-        if(response.data.success){
-          dispatch(login(response.data.user))
-          toast.success(response.data.message)
-          setTimeout(() => {
-            navigate('/user-dashboard')
-          }, 2500);
-        }
-      }).catch((error)=>{
-        dispatch(logout())
-        toast.error(error.response.data.message)
-        setTimeout(() => {
-           navigate('/auth/signin')
-        }, 2500);
-      })
-
-      //  execute(formData)
-
-      //  if(error){
-      //   toast.error(error.message)
-      //  }else{
-      //   toast.success(data.message)
-      //   dispatch(login(data.user))
-      //  }
+      await execute(formData)
     }
   };
+
+  useEffect(()=>{
+    if(error){
+      toast.error(error.message)
+    }
+  },[error])
+
+  useEffect(()=>{
+    if(data){
+      dispatch(login(data.user))
+      toast.success(data.message)
+    }
+  },[data])
 
   const handleGoogleSignIn = () => {
     googleAuth()

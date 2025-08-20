@@ -11,4 +11,7 @@ export const ADMIN_API={
     GET_SPECIALIZATION: "/admin/get-specialization",
     EDIT_SPECIALIZATION: "/admin/edit-specialization",
     DELETE_SPECIALIZATION: (specId:string)=> `/admin/delete-specialization/${specId}`,
+    GET_APPOINTMENTS: (appointmentStatus:string)=> `/admin/get-appointments/${appointmentStatus}`,
+    GET_REPORTED_ACCOUNTS: (userType:string)=> `/admin/reported-accounts/${userType}`,
+    UPDATE_REPORTED_ACCOUNT_STATUS: (reportedAccountId:string)=> `/admin/update-reportedAccount-status/${reportedAccountId}`
 }

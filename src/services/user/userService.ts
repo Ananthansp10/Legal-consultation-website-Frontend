@@ -10,6 +10,14 @@ interface AppointmentData{
     problem:string;
 }
 
+interface ReportData{
+    reportedId:string;
+    userType:string;
+    reason:string;
+    description:string;
+    reporterId:string;
+}
+
 export const getLawyers=async()=>{
     try {
         let result=await axios.get(USER_API.GET_LAWYERS)
@@ -95,9 +103,9 @@ export const resheduleAppointment=async(appointmentId:string)=>{
     }
 }
 
-export const reportLawyer=async(lawyerId:string)=>{
+export const reportAccount=async(data:ReportData)=>{
     try {
-        return axios.post(USER_API.REPORT_LAWYER(lawyerId))
+        return axios.post(USER_API.REPORT_LAWYER,data)
     } catch (error) {
         throw error
     }

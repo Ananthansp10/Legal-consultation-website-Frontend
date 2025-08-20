@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { googleAuth, registerUser } from '../../services/user/authService';
 import { toast } from 'react-toastify';
 import { validateSignup } from '../../interface/userInterface/signupInterface';
-import { AxiosResponse } from 'axios';
-import { ApiResponse } from '../../interface/userInterface/axiosResponseInterface';
-import { User as userResponse } from '../../interface/userInterface/userInterface';
+import { useApi } from '../../hooks/UseApi';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -19,6 +17,8 @@ const SignUp = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const {data,error,loading,execute}=useApi(registerUser)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -40,15 +40,23 @@ const SignUp = () => {
     if(errorMsg){
       toast.error(errorMsg)
     }else{
-      registerUser(signupObj).then((response:AxiosResponse<ApiResponse<userResponse>>)=>{
-          localStorage.setItem("userDetails",JSON.stringify(response?.data?.data))
-          toast.success(response?.data?.message)
-          navigate('/auth/otp-verification');
-      }).catch((error)=>{
-        toast.error(error.message)
-      })
+      await execute(signupObj)
     }
   };
+
+  useEffect(()=>{
+    if(error){
+      toast.error(error.message)
+    }
+  },[error])
+
+  useEffect(()=>{
+    if(data){
+      localStorage.setItem("userDetails",JSON.stringify(data.data))
+      toast.success(data.message)
+      navigate('/auth/otp-verification')
+    }
+  },[data])
 
   const handleGoogleSignUp =() => {
      googleAuth()

@@ -14,5 +14,5 @@ export const USER_API={
   CANCEL_APPOINTMENT: (appointmentId:string)=> `/user/cancel-appointment/${appointmentId}`,
   GET_TODAYS_APPOINTMENTS: (userId:string)=> `/user/get-todays-appointments/${userId}`,
   RESHEDULE_APPOINTMENT: (appointmentId:string)=> `/user/reshedule-appointment/${appointmentId}`,
-  REPORT_LAWYER: (lawyerId:string)=> `/user/report-lawyer/${lawyerId}`,
+  REPORT_LAWYER: `/user/report-lawyer`,
 }

@@ -41,3 +41,27 @@ export const deleteSpecialization=async(specId:string)=>{
         throw error
     }
 }
+
+export const getAppointments=async(appointmentStatus:string)=>{
+    try {
+        return await axios.get(ADMIN_API.GET_APPOINTMENTS(appointmentStatus))
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getReportedAccounts=async(userType:string)=>{
+    try {
+        return await axios.get(ADMIN_API.GET_REPORTED_ACCOUNTS(userType))
+    } catch (error) {
+        throw error
+    }
+}
+
+export const updateReportedAccountStatus=async(reportedAccountId:string)=>{
+    try {
+        await axios.post(ADMIN_API.UPDATE_REPORTED_ACCOUNT_STATUS(reportedAccountId))
+    } catch (error) {
+      throw error  
+    }
+}

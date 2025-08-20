@@ -20,8 +20,11 @@ import {
 import Navbar from "../../components/userside/Navbar"
 import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { getLawyerDetails, reportLawyer } from "../../services/user/userService"
+import { getLawyerDetails} from "../../services/user/userService"
 import { toast } from "react-toastify"
+import ReportModal from "../../components/reusableComponents/ReportModal"
+import { useSelector } from "react-redux"
+import { RootState } from "../../redux/store"
 
 interface Address{
     street:string;
@@ -74,8 +77,10 @@ export interface LawyerProfileData{
 export default function LawyerViewPage() {
 
   const {lawyerId}=useParams()
+  const userId:string | undefined=useSelector((state:RootState)=>state.auth.user?.id)
 
   const [lawyerData,setLawyerData]=useState<LawyerProfileData>()
+  const [showReportModal,setShowReportModal]=useState(false)
 
   useEffect(()=>{
     getLawyerDetails(lawyerId!).then((response)=>{
@@ -85,10 +90,8 @@ export default function LawyerViewPage() {
 
   const navigate=useNavigate()
 
-  function report(lawyerId:string){
-    reportLawyer(lawyerId).then((response)=>{
-      toast.success(response.data.message)
-    })
+  function report(){
+    setShowReportModal(true)
   }
 
 
@@ -186,7 +189,7 @@ export default function LawyerViewPage() {
                         <MessageCircle className="w-4 h-4" />
                         Message Lawyer
                       </button>
-                      <button onClick={()=>report(lawyerId!)} className="border border-slate-300 text-slate-700 hover:bg-slate-50 bg-transparent px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+                      <button onClick={report} className="border border-slate-300 text-slate-700 hover:bg-slate-50 bg-transparent px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
                         <AlertCircle className="w-4 h-4" />
                         Report Lawyer
                       </button>
@@ -375,6 +378,7 @@ export default function LawyerViewPage() {
           </div>
         </div>
       </div>
+      {showReportModal && <ReportModal isOpen={true} onClose={()=>setShowReportModal(false)} reportType="lawyer" reportedId={lawyerData?.lawyerId!} reporterId={userId!}/>}
     </div>
   )
 }
