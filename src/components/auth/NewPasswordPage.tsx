@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Eye, EyeOff, Lock, Shield } from 'lucide-react';
 import { changePaasword } from '../../services/user/authService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useApi } from '../../hooks/UseApi';
 
 function NewPasswordPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -10,6 +11,8 @@ function NewPasswordPage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const {data,error,loading,execute}=useApi(changePaasword)
 
   const navigate=useNavigate()
 
@@ -21,20 +24,39 @@ function NewPasswordPage() {
     let user
     if(userDetails){
       user=JSON.parse(userDetails) as {email:string}
-      changePaasword({email:user.email,password:newPassword}).then((response)=>{
-        if(response.data.success){
-          setIsLoading(false);
-          toast.success(response.data.message)
-          localStorage.removeItem('userDetails')
-          navigate('/auth/signin')
-        }
-      }).catch((error)=>{
-        setIsLoading(false);
-        toast.error(error.response.data.message)
-        navigate('/auth/forgot-password')
-      })
+      // changePaasword({email:user.email,password:newPassword}).then((response)=>{
+      //   if(response.data.success){
+      //     setIsLoading(false);
+      //     toast.success(response.data.message)
+      //     localStorage.removeItem('userDetails')
+      //     navigate('/auth/signin')
+      //   }
+      // }).catch((error)=>{
+      //   setIsLoading(false);
+      //   toast.error(error.response.data.message)
+      //   navigate('/auth/forgot-password')
+      // })
+
+        await execute({email:user.email,password:newPassword})
     }
   };
+
+  useEffect(()=>{
+    if(error){
+      setIsLoading(false)
+      toast.error(error.message)
+      navigate('/auth/forgot-password')
+    }
+  },[error])
+
+  useEffect(()=>{
+    if(data){
+      setIsLoading(false)
+      toast.success(data.message)
+      localStorage.removeItem('userDetails')
+      navigate('/auth/signin')
+    }
+  },[data])
 
   const passwordsMatch = newPassword === confirmPassword && newPassword.length > 0;
   

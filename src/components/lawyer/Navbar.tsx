@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu, X, User, Settings, LogOut, Key } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { logout } from '../../services/lawyer/authService';
@@ -7,10 +7,12 @@ import { useDispatch } from 'react-redux';
 import { lawyerLogout } from '../../redux/slices/lawyerAuthSlice';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
+import { getProfileImage } from '../../services/lawyer/lawyerProfileService';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [profileImage,setProfileImage]=useState('')
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
@@ -41,7 +43,17 @@ const Navbar: React.FC = () => {
     if(link=='Home'){
       navigate('/lawyer-dashboard')
     }
+
+    if(link=='Subscription Plans'){
+      navigate('/lawyer/subscription-plans')
+    }
   }
+
+  useEffect(()=>{
+    getProfileImage(lawyer?._id!).then((response)=>{
+      setProfileImage(response.data.data)
+    })
+  },[])
 
   return (
     <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -55,7 +67,7 @@ const Navbar: React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {['Home', 'Appointments', 'Schedule', 'Reviews', 'Chat'].map((item) => (
+              {['Home', 'Appointments', 'Schedule', 'Reviews', 'Subscription Plans', 'Chat'].map((item) => (
                 <button
                   key={item}
                   onClick={()=>pageNavigate(item)}
@@ -77,7 +89,7 @@ const Navbar: React.FC = () => {
                 >
                   <img
                     className="h-8 w-8 rounded-full object-cover"
-                    src="https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400"
+                    src={profileImage}
                     alt="Profile"
                   />
                   <span className="text-sm font-medium text-slate-700">{lawyer?.name}</span>

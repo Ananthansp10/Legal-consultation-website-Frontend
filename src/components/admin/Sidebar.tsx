@@ -19,8 +19,9 @@ const sidebarItems = [
   { path: '/admin/appointments', icon: Calendar, label: 'Appointments' },
   { path: '/specialization', icon: Calendar, label: 'Specialization'},
   { path: '/reported-accounts', icon: FileText, label: 'Reports' },
+  { path: '/admin/subscription-plans', icon: DollarSign, label: 'Plans' },
   { path: '/revenue', icon: DollarSign, label: 'Revenue' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
+  { path: '/settings', icon: Settings, label: 'Settings' }
 ];
 
 const Sidebar: React.FC = () => {

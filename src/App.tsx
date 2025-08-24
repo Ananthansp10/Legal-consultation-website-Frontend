@@ -45,6 +45,8 @@ import SlotListPage from './pages/lawyersidePages/SlotListPage';
 import ProfileView from './components/reusableComponents/ProfileView';
 import AppointmentListingPage from './pages/adminsidePages/AppointmentListingPage';
 import ReportedAccountsPage from './pages/adminsidePages/ReportedAccountPage';
+import SubscriptionPlanManagement from './pages/adminsidePages/SubscriptionManagementPage';
+import SubscriptionPlanPage from './pages/lawyersidePages/SubscriptionPlanPage';
 
 function App() {
   return (
@@ -96,6 +98,7 @@ function App() {
               <Route path='/lawyer/add-availablity' element={<AvailablityAddPage/>}/>
               <Route path='/lawyer/appointments' element={<AppointmentPage/>}/>
               <Route path='/lawyer/slot-list-page' element={<SlotListPage/>}/>
+              <Route path='/lawyer/subscription-plans' element={<SubscriptionPlanPage/>}/>
           </Route>
 
           <Route path='/admin' element={<AdminWelcomePage/>}/>
@@ -112,6 +115,7 @@ function App() {
             {/* <Route path='/profile-view' element={<ProfileView profile="lawyer"/>}/> */}
             <Route path='/admin/appointments' element={<AppointmentListingPage/>}/>
             <Route path='/reported-accounts' element={<ReportedAccountsPage/>}/>
+            <Route path='/admin/subscription-plans' element={<SubscriptionPlanManagement/>}/>
           </Route>
           
         </Routes>

@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
 import {toast} from 'react-toastify';
 import { forgotPassword } from '../../services/user/authService';
+import { useApi } from '../../hooks/UseApi';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const {data,error,loading,execute}=useApi(forgotPassword)
+
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     const emailRegex = /^\S+@\S+\.\S+$/;
     if(!email){
@@ -17,18 +20,34 @@ const ForgotPassword = () => {
     if (!emailRegex.test(email.trim())) {
       return toast.error("Invalid email format")
     }
-    forgotPassword(email).then((response)=>{
-      console.log(response.data)
-      if(response.data.success){
-        const data={...response.data.data,forgotPassword:true}
-        localStorage.setItem('userDetails',JSON.stringify(data))
-        toast.success(response.data.message)
-        navigate('/auth/otp-verification');
-      }
-    }).catch((error)=>{
-      toast.error(error.response.data.message)
-    })
+    // forgotPassword(email).then((response)=>{
+    //   if(response.data.success){
+    //     const data={...response.data.data,forgotPassword:true}
+    //     localStorage.setItem('userDetails',JSON.stringify(data))
+    //     toast.success(response.data.message)
+    //     navigate('/auth/otp-verification');
+    //   }
+    // }).catch((error)=>{
+    //   toast.error(error.response.data.message)
+    // })
+
+      await execute(email)
   };
+
+  useEffect(()=>{
+    if(error){
+      toast.error(error.message)
+    }
+  },[error])
+
+  useEffect(()=>{
+    if(data){
+      const responseData={...data.data,forgotPassword:true}
+       localStorage.setItem('userDetails',JSON.stringify(responseData))
+       toast.success(data.message)
+       navigate('/auth/otp-verification')
+    }
+  },[data])
 
   return (
     <div className="min-h-screen flex">

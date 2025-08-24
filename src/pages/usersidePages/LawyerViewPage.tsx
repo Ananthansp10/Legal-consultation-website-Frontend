@@ -129,7 +129,7 @@ export default function LawyerViewPage() {
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
-                          const next:any = e.currentTarget.nextElementSibling;
+                          const next = e.currentTarget.nextElementSibling as HTMLElement | null;
                           if (next) {
                             next.style.display = "flex";
                           }
@@ -356,8 +356,8 @@ export default function LawyerViewPage() {
                   <p className="text-sm text-slate-600">Based on {lawyerData?.reviewCount} reviews</p>
                 </div>
 
-                <div className="space-y-4">
-                  {lawyerData?.reviews?.map((review:any, index:number) => (
+                {/* <div className="space-y-4">
+                  {lawyerData?.reviews?.map((review, index:number) => (
                     <div key={index} className="border-b border-slate-100 pb-4 last:border-b-0">
                       <div className="flex items-center justify-between mb-2">
                         <p className="font-medium text-slate-800">{review?.username}</p>
@@ -367,7 +367,7 @@ export default function LawyerViewPage() {
                       <p className="text-sm text-slate-600">{review?.comment}</p>
                     </div>
                   ))}
-                </div>
+                </div> */}
 
                 <button className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
                   <MessageCircle className="w-4 h-4" />

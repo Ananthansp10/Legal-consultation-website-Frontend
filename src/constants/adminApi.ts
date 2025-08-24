@@ -1,3 +1,4 @@
+import { PlanData } from "../services/admin/adminService";
 
 
 export const ADMIN_API={
@@ -13,5 +14,10 @@ export const ADMIN_API={
     DELETE_SPECIALIZATION: (specId:string)=> `/admin/delete-specialization/${specId}`,
     GET_APPOINTMENTS: (appointmentStatus:string)=> `/admin/get-appointments/${appointmentStatus}`,
     GET_REPORTED_ACCOUNTS: (userType:string)=> `/admin/reported-accounts/${userType}`,
-    UPDATE_REPORTED_ACCOUNT_STATUS: (reportedAccountId:string)=> `/admin/update-reportedAccount-status/${reportedAccountId}`
+    UPDATE_REPORTED_ACCOUNT_STATUS: (reportedAccountId:string)=> `/admin/update-reportedAccount-status/${reportedAccountId}`,
+    ADD_SUBSCRIPTION_PLAN: `/admin/add-plan`,
+    GET_SUBSCRIPTION_PLANS: '/admin/plans',
+    MANAGE_PLAN_STATUS: (planId:string,status:string)=> `/admin/manage-plan-status/${planId}/${status}`,
+    DELETE_PLAN: (planId:string)=> `/admin/delete-plan/${planId}`,
+    EDIT_PLAN: (planId:string)=> `/admin/edit-plan/${planId}`,
 }

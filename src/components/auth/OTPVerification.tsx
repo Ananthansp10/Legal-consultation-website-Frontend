@@ -4,6 +4,7 @@ import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { otpService, resendOtp } from '../../services/user/otpService';
 import {toast} from 'react-toastify'
 import { User } from '../../interface/userInterface/userInterface';
+import { useApi } from '../../hooks/UseApi';
 
 const OTPVerification = () => {
   const navigate = useNavigate();
@@ -11,6 +12,9 @@ const OTPVerification = () => {
   const [timer, setTimer] = useState(120);
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const {data:otpData,error:otpError,loading:otpLoading,execute:otpExecute}=useApi(otpService)
+  const {data:resendData,error:resendError,loading:resendLoading,execute:resendExecute}=useApi(resendOtp)
 
   useEffect(() => {
     if (timer > 0) {
@@ -49,36 +53,73 @@ const OTPVerification = () => {
     if(userDetails){
       userData=JSON.parse(userDetails)
     }
-    otpService({userDetails:userData!,otp:otpValue}).then((response)=>{
-      if(userData?.forgotPassword){
-       navigate('/auth/new-password')
-      }else{
-        localStorage.removeItem('userDetails')
-        toast.success(response.data.message)
-        setTimeout(() => {
-        navigate('/auth/signin')
-      }, 2000);
-      }
-    }).catch((error)=>{
-        toast.error(error.message)
-    })
+    // otpService({userDetails:userData!,otp:otpValue}).then((response)=>{
+    //   if(userData?.forgotPassword){
+    //    navigate('/auth/new-password')
+    //   }else{
+    //     localStorage.removeItem('userDetails')
+    //     toast.success(response.data.message)
+    //     setTimeout(() => {
+    //     navigate('/auth/signin')
+    //   }, 2000);
+    //   }
+    // }).catch((error)=>{
+    //     toast.error(error.message)
+    // })
+
+      await otpExecute({userDetails:userData!,otp:otpValue})
   };
 
-  const handleResend = () => {
+  useEffect(()=>{
+    if(otpError){
+      toast.error(otpError.message)
+    }
+  },[otpError])
+
+  useEffect(()=>{
+    if(otpData){
+      if(otpData.forgotPassword){
+        navigate('/auth/new-password')
+      }else{
+        localStorage.removeItem('userDetails')
+        toast.success(otpData.message)
+        setTimeout(()=>{
+           navigate('/auth/signin')
+        },2000)
+      }
+    }
+  },[otpData])
+
+  const handleResend = async() => {
     setCanResend(false);
     setOtp(['', '', '', '', '', '']);
     let userDetails:string | null=localStorage.getItem('userDetails')
     if(userDetails){
-       resendOtp(JSON.parse(userDetails)).then((response)=>{
-      if(response.data.success){
-        toast.success(response.data.message)
-        setTimer(120);
-      }
-    }).catch((error)=>{
-      toast.error(error.response.data.message)
-    })
+    //    resendOtp(JSON.parse(userDetails)).then((response)=>{
+    //   if(response.data.success){
+    //     toast.success(response.data.message)
+    //     setTimer(120);
+    //   }
+    // }).catch((error)=>{
+    //   toast.error(error.response.data.message)
+    // })
+
+      await resendExecute(JSON.parse(userDetails))
     }
   };
+
+  useEffect(()=>{
+    if(resendError){
+      toast.error(resendError.message)
+    }
+  },[resendError])
+
+  useEffect(()=>{
+    if(resendData){
+      toast.success(resendData.message)
+      setTimer(120)
+    }
+  },[resendData])
 
   return (
     <div className="min-h-screen flex">

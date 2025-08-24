@@ -4,8 +4,6 @@ import { Signin } from "../../interface/SigninInterface";
 import { SignupInterface } from "../../interface/userInterface/signupInterface";
 import { ApiResponse } from "../../interface/userInterface/axiosResponseInterface";
 import { User } from "../../interface/userInterface/userInterface";
-import { AxiosError } from "axios";
-import { ErrorResponse } from "../../interface/errorInterface";
 import { USER_AUTH_API } from "../../constants/userAuthApi";
 
 interface ChangePasswordData{
@@ -24,11 +22,6 @@ export const registerUser=async(data:SignupInterface):Promise<AxiosResponse<ApiR
         let result=await axios.post(USER_AUTH_API.SIGNUP,data)
         return result
     } catch (error) {
-        const errorResponse=error as AxiosError<ErrorResponse>
-        const errorData=errorResponse.response?.data
-        if (errorData) {
-            throw new Error(errorData.message);
-        }
         throw error
     }
 }

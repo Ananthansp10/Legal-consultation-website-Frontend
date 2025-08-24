@@ -158,7 +158,7 @@ const ReportedAccountsPage = () => {
               <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as any)}
+                onChange={(e) => setStatusFilter(e.target.value as 'Pending' | 'Resolved' | 'All')}
                 className="w-full pl-10 pr-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 appearance-none"
               >
                 <option value="All">All</option>
@@ -172,7 +172,7 @@ const ReportedAccountsPage = () => {
               <AlertTriangle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <select
                 value={reasonFilter}
-                onChange={(e) => setReasonFilter(e.target.value as any)}
+                onChange={(e) => setReasonFilter(e.target.value as 'All' | 'Harassment' | 'Fake Profile' | 'Scam' | 'Other')}
                 className="w-full pl-10 pr-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 appearance-none"
               >
                 <option value="All">All Reasons</option>

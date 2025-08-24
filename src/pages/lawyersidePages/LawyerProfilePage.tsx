@@ -108,6 +108,18 @@ interface ProffessionalInfo{
   profileImageFile?: File;
 }
 
+interface editPersonalInfo {
+  name: string;
+  email: string;
+  profileImage: string;
+}
+
+interface EditForm {
+  personalInfo: PersonalInfo;
+  profileImageFile?: File;
+}
+
+
 
   // Edit form state
   const [editForm, setEditForm] = useState<EditFormType & { profileImageFile?: File }>(personalInfo!)
@@ -151,7 +163,7 @@ interface ProffessionalInfo{
     if (!prevForm) return prevForm;
 
     const keys = path.split('.');
-    const updatedForm: any = { ...prevForm };
+    const updatedForm:any = { ...prevForm };
     let temp = updatedForm;
 
     for (let i = 0; i < keys.length - 1; i++) {
@@ -184,8 +196,8 @@ interface ProffessionalInfo{
     })
   }
 
-      const handleProfileImageChange = (event: any) => {
-  const file = event.target.files[0];
+  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -483,7 +495,7 @@ interface ProffessionalInfo{
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
-                          const next:any = e.currentTarget.nextElementSibling;
+                          const next = e.currentTarget.nextElementSibling as HTMLElement | null;
                           if (next) {
                             next.style.display = "flex";
                           }

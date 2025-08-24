@@ -71,6 +71,7 @@ function SlotListPage() {
   };
 
   const handleToggleStatus = (slotId: string, currentStatus: boolean) => {
+    console.log(currentStatus)
     updateRuleStatus(slotId,currentStatus).then((response)=>{
       toast.success(response.data.message)
       fetchRules('all')

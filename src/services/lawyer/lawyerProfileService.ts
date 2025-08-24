@@ -27,3 +27,11 @@ export const editLawyerProfile=async(data:FormData)=>{
         throw error;
     }
 }
+
+export const getProfileImage=async(lawyerId:string)=>{
+    try {
+       return axios.get(LAWYER_API.GET_PROFILE_IMAGE(lawyerId))
+    } catch (error) {
+        throw error
+    }
+}

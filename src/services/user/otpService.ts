@@ -1,7 +1,5 @@
-import { AxiosError } from "axios";
 import { axiosInstance as axios } from "../../config/axiox"
 import { User } from "../../interface/userInterface/userInterface";
-import { ErrorResponse } from "../../interface/errorInterface";
 import { OTP_API } from "../../constants/otpApi";
 
 interface OtpVerificationData{
@@ -14,9 +12,7 @@ export const otpService=async(data:OtpVerificationData)=>{
        let result= await axios.post(OTP_API.OTP_VERIFICATION,data)
        return result;
     } catch (error) {
-        const errorResponse=error as AxiosError<ErrorResponse>
-        const errorData=errorResponse.response?.data
-        throw new Error(errorData?.message)
+        throw error
     }
 }
 
@@ -25,8 +21,6 @@ export const resendOtp=async(data:User)=>{
         let result=await axios.post(OTP_API.RESEND_OTP,data)
         return result;
     } catch (error) {
-        const errorResponse=error as AxiosError<ErrorResponse>
-        const errorData=errorResponse.response?.data
-        throw new Error(errorData?.message)
+        throw error
     }
 }

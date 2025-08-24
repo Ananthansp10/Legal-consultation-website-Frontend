@@ -19,12 +19,17 @@ export interface Appointment {
   problem: string;
   date: string;
   time: string;
-  mode: 'Online' | 'Offline';
+  mode: 'online' | 'offline';
   status: 'Accepted' | 'Pending' | 'Rejected' | 'Completed' | 'Cancelled';
 }
 
+interface AppointmentCardProps {
+  appointment: Appointment;
+  setActiveFilter: (filter: string) => void;
+}
 
-function AppointmentCard({ appointment,setActiveFilter }:any) {
+
+function AppointmentCard({ appointment,setActiveFilter }:AppointmentCardProps) {
   const getStatusColor = (status:string) => {
     switch (status) {
       case 'Pending': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
@@ -50,11 +55,15 @@ function AppointmentCard({ appointment,setActiveFilter }:any) {
 
   const [showModal,setShowModal]=useState(false)
 
+  const lawyerId:string | undefined=useSelector((state:RootState)=>state.lawyerAuth.lawyer?._id)
+
   function updateStatus(id:string,status:string){
     if(status=='Accepted'){
-      updateAppointmentStatus(id,status).then((response)=>{
+      updateAppointmentStatus(id,status,lawyerId!).then((response)=>{
       toast.success(response.data.message)
       setActiveFilter('Accepted')
+    }).catch((error)=>{
+      toast.error(error.response.data.message)
     })
     }else{
       setShowModal(true)
@@ -127,7 +136,7 @@ function AppointmentCard({ appointment,setActiveFilter }:any) {
         )}
       </div>
       {showModal &&(
-      <ConfirmModal message='Are you sure want to Reject Appointment' onConfirm={()=>updateAppointmentStatus(appointment._id,'Rejected').then((response)=>{
+      <ConfirmModal message='Are you sure want to Reject Appointment' onConfirm={()=>updateAppointmentStatus(appointment._id,'Rejected',lawyerId!).then((response)=>{
         toast.success(response.data.message)
         setActiveFilter('Rejected')
         setShowModal(false)
