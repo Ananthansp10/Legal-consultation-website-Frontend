@@ -36,3 +36,19 @@ export const updateLawyerStatus=async(lawyerId:string,status:string)=>{
         throw error;
     }
 }
+
+export const searchLawyer=async(name:string)=>{
+    try {
+       return await axios.get(ADMIN_API.SEARCH_LAWYER(name)) 
+    } catch (error) {
+        throw error
+    }
+}
+
+export const filterLawyer=async(status:string)=>{
+    try {
+        return await axios.get(ADMIN_API.FILTER_LAWYER(status))
+    } catch (error) {
+        throw error
+    }
+}

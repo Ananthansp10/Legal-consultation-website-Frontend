@@ -2,8 +2,22 @@ import { toast } from "react-toastify";
 import { verifyRazorpayPayment } from "../services/lawyer/lawyerService";
 import { AxiosResponse } from "axios";
 import { ApiResponse } from "../interface/userInterface/axiosResponseInterface";
+import { RazorpayPaymentFailedResponse, RazorpayPaymentResponse } from "./razorpay";
 
-export function openRazorpayCheckout(order: any): Promise<AxiosResponse<ApiResponse>> {
+export interface RazorpayOrder {
+  id: string;
+  entity: "order";
+  amount: number;
+  amount_paid: number;
+  currency: string;
+  receipt: string;
+  status: "created" | "attempted" | "paid";
+  attempts: number;
+  notes: Record<string, any>;
+  created_at?: number;
+}
+
+export function openRazorpayCheckout(order: RazorpayOrder): Promise<AxiosResponse<ApiResponse>> {
   return new Promise((resolve, reject) => {
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY,
@@ -12,7 +26,7 @@ export function openRazorpayCheckout(order: any): Promise<AxiosResponse<ApiRespo
       name: "Legal Consultation",
       description: "Subscription Payment",
       order_id: order.id,
-      handler: async function (paymentResponse: any) {
+      handler: async function (paymentResponse:RazorpayPaymentResponse) {
         try {
           const response = await verifyRazorpayPayment({
             razorpay_order_id: paymentResponse.razorpay_order_id,
@@ -37,7 +51,7 @@ export function openRazorpayCheckout(order: any): Promise<AxiosResponse<ApiRespo
     const rzp = new (window as any).Razorpay(options);
     rzp.open();
 
-    rzp.on("payment.failed", function (response: any) {
+    rzp.on("payment.failed", function (response:RazorpayPaymentFailedResponse) {
       toast.error("Payment Failed");
       reject(response.error);
     });

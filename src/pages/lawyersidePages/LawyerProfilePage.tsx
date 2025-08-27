@@ -115,9 +115,14 @@ interface editPersonalInfo {
 }
 
 interface EditForm {
-  personalInfo: PersonalInfo;
-  profileImageFile?: File;
+  name: string;
+  email: string;
+  address: {
+    city: string;
+    state: string;
+  };
 }
+
 
 
 
@@ -159,12 +164,12 @@ interface EditForm {
   }
 
   const handleInputChange = (path: string, value: string) => {
-  setEditForm(prevForm => {
+  setEditForm((prevForm) => {
     if (!prevForm) return prevForm;
 
-    const keys = path.split('.');
-    const updatedForm:any = { ...prevForm };
-    let temp = updatedForm;
+    const keys = path.split(".");
+    const updatedForm: EditFormType & { profileImageFile?: File } = { ...prevForm };
+    let temp: any = updatedForm;
 
     for (let i = 0; i < keys.length - 1; i++) {
       temp[keys[i]] = { ...temp[keys[i]] };
@@ -176,6 +181,8 @@ interface EditForm {
     return updatedForm;
   });
 };
+
+
 
 
   const handleLanguageToggle = (language:string) => {

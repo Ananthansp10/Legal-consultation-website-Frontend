@@ -21,6 +21,13 @@ function SpecializationPage() {
        fetchSpecialization()
     },[isModalOpen])
 
+    const [currentPage,setCurrentPage]=useState(1)
+    const itemsPerPage=4
+    const totalPages=Math.ceil(specializations.length/itemsPerPage)
+    const startIndex=(currentPage-1) * itemsPerPage
+    const lastIndex=startIndex+itemsPerPage
+    const currentData=specializations.slice(startIndex,lastIndex)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -37,7 +44,7 @@ function SpecializationPage() {
           <EmptyState onAddClick={() => setIsModalOpen(true)} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
-            {specializations.map((specialization, index) => (
+            {currentData.map((specialization, index) => (
               <SpecializationCard
                 key={index}
                 specId={specialization?._id}
@@ -54,7 +61,7 @@ function SpecializationPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      {/* <Pagination currentPage={1} totalPages={10} onPageChange={1} /> */}
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   );
 }

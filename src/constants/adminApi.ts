@@ -20,4 +20,8 @@ export const ADMIN_API={
     MANAGE_PLAN_STATUS: (planId:string,status:string)=> `/admin/manage-plan-status/${planId}/${status}`,
     DELETE_PLAN: (planId:string)=> `/admin/delete-plan/${planId}`,
     EDIT_PLAN: (planId:string)=> `/admin/edit-plan/${planId}`,
+    SEARCH_USER: (name:string)=> `/admin/search-user/${name}`,
+    SEARCH_LAWYER: (name:string)=> `/admin/search-lawyer/${name}`,
+    FILTER_USER: (status:string)=> `/admin/filter-user/${status}`,
+    FILTER_LAWYER: (status:string)=> `/admin/filter-lawyer/${status}`
 }

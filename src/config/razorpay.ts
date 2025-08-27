@@ -9,13 +9,13 @@ interface CreateOrderData {
   currency: string;
 }
 
-interface RazorpayPaymentResponse {
+export interface RazorpayPaymentResponse {
   razorpay_order_id: string;
   razorpay_payment_id: string;
   razorpay_signature: string;
 }
 
-interface RazorpayPaymentFailedResponse {
+export interface RazorpayPaymentFailedResponse {
   error: {
     code: string;
     description: string;

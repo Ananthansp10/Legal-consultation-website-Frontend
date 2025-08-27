@@ -20,3 +20,19 @@ export const updateUserStatus=async(userId:string,status:string):Promise<AxiosRe
         throw  error;
     }
 }
+
+export const searchUser=async(name:string)=>{
+    try {
+        return await axios.get(ADMIN_API.SEARCH_USER(name))
+    } catch (error) {
+       throw error 
+    }
+}
+
+export const filterUser=async(status:string)=>{
+    try {
+       return await axios.get(ADMIN_API.FILTER_USER(status))
+    } catch (error) {
+        throw error
+    }
+}
