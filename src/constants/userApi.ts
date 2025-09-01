@@ -1,3 +1,4 @@
+import { User } from "lucide-react";
 
 
 export const USER_API={
@@ -15,4 +16,7 @@ export const USER_API={
   GET_TODAYS_APPOINTMENTS: (userId:string)=> `/user/get-todays-appointments/${userId}`,
   RESHEDULE_APPOINTMENT: (appointmentId:string)=> `/user/reshedule-appointment/${appointmentId}`,
   REPORT_LAWYER: `/user/report-lawyer`,
+  GET_USER_CHAT: (userId:string,lawyerId:string)=> `/user/get-user-chat/${userId}/${lawyerId}`,
+  GET_USER_ALL_CHATS: (userId:string)=> `/user/get-user-all-chats/${userId}`,
+  GET_LAWYER_CHAT_PROFILE: (lawyerId:string)=> `/user/get-lawyer-chat-profile/${lawyerId}`
 }

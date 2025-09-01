@@ -110,3 +110,27 @@ export const reportAccount=async(data:ReportData)=>{
         throw error
     }
 }
+
+export const getUserChat=async(userId:string,lawyerId:string)=>{
+    try {
+        return await axios.get(USER_API.GET_USER_CHAT(userId,lawyerId))
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getUserAllChats=async(userId:string)=>{
+    try {
+       return await axios.get(USER_API.GET_USER_ALL_CHATS(userId)) 
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getLawyerChatProfile=async(lawyerId:string)=>{
+    try {
+       return await axios.get(USER_API.GET_LAWYER_CHAT_PROFILE(lawyerId))
+    } catch (error) {
+        throw error
+    }
+}

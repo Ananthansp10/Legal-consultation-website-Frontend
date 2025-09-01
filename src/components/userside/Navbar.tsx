@@ -88,6 +88,9 @@ const Navbar: React.FC<NavProps> = ({navLink}) => {
     if(link=='My Appointments'){
       navigate('/user/appointments')
     }
+    if(link=='Chat'){
+      navigate('/user/chat')
+    }
   }
 
   return (

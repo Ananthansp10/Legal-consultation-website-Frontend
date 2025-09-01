@@ -185,7 +185,7 @@ export default function LawyerViewPage() {
                         <Calendar className="w-4 h-4" />
                         Book Appointment
                       </button>
-                      <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
+                      <button onClick={()=>navigate(`/user/chat-view-page/${lawyerId}`)} className="border border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2">
                         <MessageCircle className="w-4 h-4" />
                         Message Lawyer
                       </button>

@@ -1,4 +1,4 @@
-import { PlanData } from "../services/admin/adminService";
+
 
 
 export const ADMIN_API={
@@ -23,5 +23,7 @@ export const ADMIN_API={
     SEARCH_USER: (name:string)=> `/admin/search-user/${name}`,
     SEARCH_LAWYER: (name:string)=> `/admin/search-lawyer/${name}`,
     FILTER_USER: (status:string)=> `/admin/filter-user/${status}`,
-    FILTER_LAWYER: (status:string)=> `/admin/filter-lawyer/${status}`
+    FILTER_LAWYER: (status:string)=> `/admin/filter-lawyer/${status}`,
+    GET_USER_PROFILE: (userId:string)=> `/admin/get-user-profile/${userId}`,
+    GET_LAWYER_PROFILE: (lawyerId:string)=> `/admin/get-lawyer-profile/${lawyerId}`
 }

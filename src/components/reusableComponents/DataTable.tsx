@@ -4,6 +4,8 @@ import { filterUser, searchUser, updateUserStatus } from '../../services/admin/u
 import { toast } from 'react-toastify';
 import { filterLawyer, searchLawyer, updateLawyerStatus } from '../../services/admin/lawyerListingService';
 import Pagination from './Pagination';
+import { getLawyerProfile, getUserProfile } from '../../services/admin/adminService';
+import { useNavigate } from 'react-router-dom';
 
 interface DataItem {
   _id:string;
@@ -25,6 +27,8 @@ interface DataTableProps {
 const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetchData }) => {
 
     const [filteredData,setFilteredData]=useState<DataItem[]>(data)
+
+    const navigate=useNavigate()
 
     function toggleStatus(id:string,status:string){
         if(type=='user'){
@@ -77,6 +81,19 @@ const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetc
         }
     }
 
+    function getProfile(id:string){
+      if(type=='user'){
+        getUserProfile(id).then((response)=>{
+          navigate('/profile-view',{state:{profile:response.data.data}})
+        })
+      }else{
+        getLawyerProfile(id).then((response)=>{
+          let data={...response.data.data,type:'lawyer'}
+          navigate('/profile-view',{state:{profile:data}})
+        })
+      }
+    }
+
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -87,7 +104,6 @@ const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetc
           <p className="mt-2 text-gray-600">{subtitle}</p>
         </div>
 
-        {/* Header Section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 p-6">
           <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
             {/* Search Input */}
@@ -178,7 +194,7 @@ const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetc
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm">
+                      <button onClick={()=>getProfile(item._id)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm">
                         View Details
                       </button>
                     </td>

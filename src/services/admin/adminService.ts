@@ -113,3 +113,19 @@ export const planEdit=async(planId:string,data:PlanData)=>{
         throw error
     }
 }
+
+export const getUserProfile=async(userId:string)=>{
+    try {
+      return await axios.get(ADMIN_API.GET_USER_PROFILE(userId))  
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getLawyerProfile=async(lawyerId:string)=>{
+    try {
+       return await axios.get(ADMIN_API.GET_LAWYER_PROFILE(lawyerId)) 
+    } catch (error) {
+        throw error
+    }
+}

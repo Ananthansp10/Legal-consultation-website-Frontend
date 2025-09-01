@@ -42,11 +42,13 @@ import AppointmentPage from './pages/lawyersidePages/AppointmentPage';
 import SlotBookingPage from './pages/usersidePages/SlotBookingPage';
 import UserAppointmentPage from './pages/usersidePages/UserAppointmentPage';
 import SlotListPage from './pages/lawyersidePages/SlotListPage';
-import ProfileView from './components/reusableComponents/ProfileView';
 import AppointmentListingPage from './pages/adminsidePages/AppointmentListingPage';
 import ReportedAccountsPage from './pages/adminsidePages/ReportedAccountPage';
 import SubscriptionPlanManagement from './pages/adminsidePages/SubscriptionManagementPage';
 import SubscriptionPlanPage from './pages/lawyersidePages/SubscriptionPlanPage';
+import ProfilePage from './components/admin/ProfilePage';
+import ChatViewPage from './pages/usersidePages/ChatViewPage';
+import ChatPage from './pages/usersidePages/ChatePage';
 
 function App() {
   return (
@@ -87,6 +89,8 @@ function App() {
               <Route path='/user/lawyer-view-page/:lawyerId' element={<LawyerViewPage/>}/>
               <Route path='/user/slot-booking/:lawyerId' element={<SlotBookingPage/>}/>
               <Route path='/user/appointments' element={<UserAppointmentPage/>}/>
+              <Route path='/user/chat-view-page/:lawyerId' element={<ChatViewPage/>}/>
+              <Route path='/user/chat' element={<ChatPage/>}/>
           </Route>
 
 
@@ -112,7 +116,7 @@ function App() {
               <Route path="users" element={<UserListing />} />
             </Route>
             <Route path='/specialization' element={<SpecializationPage/>}/>
-            {/* <Route path='/profile-view' element={<ProfileView profile="lawyer"/>}/> */}
+            <Route path='/profile-view' element={<ProfilePage/>}/>
             <Route path='/admin/appointments' element={<AppointmentListingPage/>}/>
             <Route path='/reported-accounts' element={<ReportedAccountsPage/>}/>
             <Route path='/admin/subscription-plans' element={<SubscriptionPlanManagement/>}/>
