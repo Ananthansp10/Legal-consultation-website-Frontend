@@ -22,6 +22,9 @@ export const validateSignup = (data: SignupInterface) => {
   if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/.test(data.email))
     return 'Invalid email address';
 
+  if(!data.phoneNumber.trim())
+    return 'Phone Number is required';
+
   if (data.password.length < 6)
     return 'Password must be at least 6 characters';
   if (!/[A-Z]/.test(data.password))
@@ -36,8 +39,8 @@ export const validateSignup = (data: SignupInterface) => {
   if (data.password !== data.confirmPassword)
     return 'Passwords do not match';
 
-  if (!/^\d{10,15}$/.test(data.phoneNumber))
-    return 'Phone number must be 10–15 digits';
+  if (!/^\d{10}$/.test(data.phoneNumber))
+    return 'Phone number must be 10 digits';
 
   return null;
 };

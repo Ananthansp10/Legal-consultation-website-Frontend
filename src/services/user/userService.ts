@@ -1,4 +1,5 @@
 import { axiosInstance as axios } from "../../config/axiox";
+import { LAWYER_API } from "../../constants/lawyerApi";
 import { USER_API } from "../../constants/userApi";
 
 interface AppointmentData{
@@ -8,6 +9,7 @@ interface AppointmentData{
     time:string;
     consultationMode:string;
     problem:string;
+    fee:number;
 }
 
 interface ReportData{
@@ -16,6 +18,13 @@ interface ReportData{
     reason:string;
     description:string;
     reporterId:string;
+}
+
+interface Review{
+    userName:string;
+    date:string;
+    feedback:string;
+    rating:number;
 }
 
 export const getLawyers=async()=>{
@@ -130,6 +139,30 @@ export const getUserAllChats=async(userId:string)=>{
 export const getLawyerChatProfile=async(lawyerId:string)=>{
     try {
        return await axios.get(USER_API.GET_LAWYER_CHAT_PROFILE(lawyerId))
+    } catch (error) {
+        throw error
+    }
+}
+
+export const addBankAccount=async(data:any)=>{
+    try {
+        return await axios.post(LAWYER_API.ADD_BANK_ACCOUNT,data)
+    } catch (error) {
+        throw error
+    }
+}
+
+export const addReview=async(lawyerId:string,data:Review)=>{
+    try {
+        return await axios.post(USER_API.ADD_REVIEW(lawyerId),data)
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getReview=async(lawyerId:string)=>{
+    try {
+      return await axios.get(USER_API.GET_REVIEW(lawyerId))
     } catch (error) {
         throw error
     }

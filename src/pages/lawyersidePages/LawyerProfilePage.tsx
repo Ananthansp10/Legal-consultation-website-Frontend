@@ -29,11 +29,12 @@ import {
   Camera
 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
-import Navbar from "../../components/lawyer/Navbar"
+import LawyerNavbar from "../../components/lawyer/Navbar"
 import { editLawyerProfile, getLawyerProfile } from "../../services/lawyer/lawyerProfileService"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import { RootState } from "../../redux/store"
+import { checkBankDetails } from "../../services/lawyer/lawyerService"
 
 
 export default function LawyerProfilePage() {
@@ -79,11 +80,12 @@ interface ProffessionalInfo{
   startTime:string;
   endTime:string;
   education:[Education];
-  documents:[string];
+  documents:string[];
 }
   
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
   const [proffessionalInfo,setProffessionalInfo]=useState<ProffessionalInfo | null>(null)
+  const [bankDetailsExist,setBankDetailsExist]=useState(false)
 
   function fetchLawyer(){
     getLawyerProfile(lawyer._id).then((response)=>{
@@ -106,31 +108,25 @@ interface ProffessionalInfo{
   language: string[];
   profileImage: string | null;
   profileImageFile?: File;
+  fee :string;
 }
 
-interface editPersonalInfo {
-  name: string;
-  email: string;
-  profileImage: string;
-}
-
-interface EditForm {
-  name: string;
-  email: string;
-  address: {
-    city: string;
-    state: string;
-  };
-}
+  useEffect(()=>{
+    checkBankDetails(lawyer._id).then((response)=>{
+      if(response.data.success){
+        setBankDetailsExist(true)
+      }
+    })
+  },[])
 
 
 
 
   // Edit form state
-  const [editForm, setEditForm] = useState<EditFormType & { profileImageFile?: File }>(personalInfo!)
+  const [editForm, setEditForm] = useState<EditFormType & { profileImageFile?: File }>({...personalInfo!,fee:proffessionalInfo?.fee!})
 
   const handleEditClick = () => {
-    setEditForm(personalInfo!)
+    setEditForm({...personalInfo!,fee:proffessionalInfo?.fee!})
     setShowEditModal(true)
   }
 
@@ -146,6 +142,9 @@ interface EditForm {
     data.append("city",editForm.address.city)
     data.append("state",editForm.address.state)
     data.append("country",editForm.address.country)
+    if(editForm.fee){
+      data.append("fee",editForm.fee)
+    }
     if(editForm.profileImage){
       data.append('imagePreview',editForm.profileImage)
     }
@@ -163,17 +162,28 @@ interface EditForm {
     })
   }
 
-  const handleInputChange = (path: string, value: string) => {
+
+type AnyRecord = Record<string, unknown>;
+
+const handleInputChange = (path: string, value: string) => {
   setEditForm((prevForm) => {
     if (!prevForm) return prevForm;
 
     const keys = path.split(".");
     const updatedForm: EditFormType & { profileImageFile?: File } = { ...prevForm };
-    let temp: any = updatedForm;
+
+    let temp: AnyRecord = updatedForm as unknown as AnyRecord;
 
     for (let i = 0; i < keys.length - 1; i++) {
-      temp[keys[i]] = { ...temp[keys[i]] };
-      temp = temp[keys[i]];
+      const key = keys[i];
+
+      const current = temp[key];
+      temp[key] =
+        typeof current === "object" && current !== null
+          ? { ...(current as object) }
+          : {};
+
+      temp = temp[key] as AnyRecord;
     }
 
     temp[keys[keys.length - 1]] = value;
@@ -229,7 +239,7 @@ interface EditForm {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <Navbar/>
+      <LawyerNavbar/>
       
      {/* Edit Modal */}
 {showEditModal && (
@@ -386,6 +396,15 @@ interface EditForm {
               className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-slate-700">Fee</label>
+            <input
+              type="text"
+              value={editForm?.fee || ''}
+              onChange={(e) => handleInputChange('fee', e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
 
           {/* Languages */}
           <div className="space-y-2 md:col-span-2">
@@ -467,24 +486,15 @@ interface EditForm {
                 <span className="hidden sm:inline">Documents</span>
                 <span className="sm:hidden">Docs</span>
               </button>
-              <button
-                onClick={() => setActiveTab("wallet")}
+              {!bankDetailsExist && <button
+                onClick={() =>navigate('/lawyer/add-bank-details')}
                 className={`flex items-center justify-center px-4 py-2 rounded-xl transition-all duration-200 ${
                   activeTab === "wallet" ? "bg-blue-500 text-white" : "text-slate-600 hover:bg-slate-100"
                 }`}
               >
                 <Wallet className="w-4 h-4 mr-2" />
-                Wallet
-              </button>
-              <button
-                onClick={() => setActiveTab("security")}
-                className={`flex items-center justify-center px-4 py-2 rounded-xl transition-all duration-200 ${
-                  activeTab === "security" ? "bg-blue-500 text-white" : "text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                <Shield className="w-4 h-4 mr-2" />
-                Security
-              </button>
+                Add Bank Details
+              </button>}
             </div>
           </div>
 
@@ -687,25 +697,7 @@ interface EditForm {
               <h3 className="font-semibold text-slate-800">Bar Council ID</h3>
               <CheckCircle className="w-5 h-5 text-green-500" />
             </div>
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Verified
-              </span>
-              <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  View
-                </button>
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </button>
-              </div>
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center transition-colors">
-                <Upload className="w-4 h-4 mr-1" />
-                Upload New
-              </button>
-            </div>
+            <img src={proffessionalInfo?.documents[0]} alt="" />
           </div>
         </div>
 
@@ -716,25 +708,7 @@ interface EditForm {
               <h3 className="font-semibold text-slate-800">Law Degree</h3>
               <CheckCircle className="w-5 h-5 text-green-500" />
             </div>
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Verified
-              </span>
-              <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  View
-                </button>
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </button>
-              </div>
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center transition-colors">
-                <Upload className="w-4 h-4 mr-1" />
-                Upload New
-              </button>
-            </div>
+            <img src={proffessionalInfo?.documents[1]} alt="" />
           </div>
         </div>
 
@@ -745,57 +719,9 @@ interface EditForm {
               <h3 className="font-semibold text-slate-800">ID Proof (Aadhar)</h3>
               <CheckCircle className="w-5 h-5 text-green-500" />
             </div>
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Verified
-              </span>
-              <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  View
-                </button>
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </button>
-              </div>
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center transition-colors">
-                <Upload className="w-4 h-4 mr-1" />
-                Upload New
-              </button>
-            </div>
+            <img src={proffessionalInfo?.documents[3]} alt="" />
           </div>
         </div>
-
-        {/* PAN Card */}
-        <div className="glass-card border-slate-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 bg-white/30 backdrop-blur-md border">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-slate-800">PAN Card</h3>
-              <CheckCircle className="w-5 h-5 text-green-500" />
-            </div>
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Verified
-              </span>
-              <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  View
-                </button>
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </button>
-              </div>
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center transition-colors">
-                <Upload className="w-4 h-4 mr-1" />
-                Upload New
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* Professional Certificate */}
         <div className="glass-card border-slate-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 bg-white/30 backdrop-blur-md border">
           <div className="p-6">
@@ -803,273 +729,12 @@ interface EditForm {
               <h3 className="font-semibold text-slate-800">Professional Certificate</h3>
               <CheckCircle className="w-5 h-5 text-green-500" />
             </div>
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Verified
-              </span>
-              <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  View
-                </button>
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </button>
-              </div>
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center transition-colors">
-                <Upload className="w-4 h-4 mr-1" />
-                Upload New
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Court Registration */}
-        <div className="glass-card border-slate-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 bg-white/30 backdrop-blur-md border">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-slate-800">Court Registration</h3>
-              <CheckCircle className="w-5 h-5 text-green-500" />
-            </div>
-            <div className="space-y-3">
-              <span className="inline-block px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                Verified
-              </span>
-              <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  View
-                </button>
-                <button className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition-colors flex items-center justify-center">
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </button>
-              </div>
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center transition-colors">
-                <Upload className="w-4 h-4 mr-1" />
-                Upload New
-              </button>
-            </div>
+            <img src={proffessionalInfo?.documents[2]} alt="" />
           </div>
         </div>
       </div>
     </div>
   )}
-
-          {/* Wallet Tab */}
-          {activeTab === "wallet" && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="glass-card border-slate-200 rounded-2xl shadow-lg">
-                  <div className="p-6 text-center">
-                    <Wallet className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-                    <p className="text-sm text-slate-600 mb-1">Current Balance</p>
-                    <p className="text-3xl font-bold text-slate-800">$12,450.00</p>
-                  </div>
-                </div>
-                <div className="glass-card border-slate-200 rounded-2xl shadow-lg">
-                  <div className="p-6 text-center">
-                    <CreditCard className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                    <p className="text-sm text-slate-600 mb-1">Total Earnings</p>
-                    <p className="text-3xl font-bold text-slate-800">$45,230.00</p>
-                  </div>
-                </div>
-                <div className="glass-card border-slate-200 rounded-2xl shadow-lg">
-                  <div className="p-6 text-center">
-                    <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg glass-button flex items-center justify-center transition-colors">
-                      <Wallet className="w-4 h-4 mr-2" />
-                      Withdraw Funds
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="glass-card border-slate-200 rounded-2xl shadow-lg">
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-slate-800 mb-4">Transaction History</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-slate-200">
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Date</th>
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Description</th>
-                          <th className="text-left py-3 px-4 font-medium text-slate-700">Type</th>
-                          <th className="text-right py-3 px-4 font-medium text-slate-700">Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="hover:bg-slate-50 border-b border-slate-100">
-                          <td className="py-3 px-4">Dec 15, 2023</td>
-                          <td className="py-3 px-4">Legal Consultation - Smith vs. Johnson</td>
-                          <td className="py-3 px-4">
-                            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Credit</span>
-                          </td>
-                          <td className="py-3 px-4 text-right text-green-600">+$500.00</td>
-                        </tr>
-                        <tr className="hover:bg-slate-50 border-b border-slate-100">
-                          <td className="py-3 px-4">Dec 12, 2023</td>
-                          <td className="py-3 px-4">Withdrawal to Bank Account</td>
-                          <td className="py-3 px-4">
-                            <span className="bg-slate-100 text-slate-800 px-3 py-1 rounded-full text-sm">Debit</span>
-                          </td>
-                          <td className="py-3 px-4 text-right text-red-600">-$2,000.00</td>
-                        </tr>
-                        <tr className="hover:bg-slate-50">
-                          <td className="py-3 px-4">Dec 10, 2023</td>
-                          <td className="py-3 px-4">Contract Review - ABC Corp</td>
-                          <td className="py-3 px-4">
-                            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Credit</span>
-                          </td>
-                          <td className="py-3 px-4 text-right text-green-600">+$1,200.00</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Security Tab */}
-          {activeTab === "security" && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="glass-card border-slate-200 rounded-2xl shadow-lg">
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-slate-800 mb-2">Change Password</h3>
-                    <p className="text-slate-600 mb-4">Update your password to keep your account secure</p>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label htmlFor="current-password" className="block text-sm font-medium text-slate-700">
-                          Current Password
-                        </label>
-                        <input
-                          id="current-password"
-                          type="password"
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="new-password" className="block text-sm font-medium text-slate-700">
-                          New Password
-                        </label>
-                        <input
-                          id="new-password"
-                          type="password"
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="confirm-password" className="block text-sm font-medium text-slate-700">
-                          Confirm New Password
-                        </label>
-                        <input
-                          id="confirm-password"
-                          type="password"
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                      <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center transition-colors">
-                        <Key className="w-4 h-4 mr-2" />
-                        Update Password
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="glass-card border-slate-200 rounded-2xl shadow-lg">
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-slate-800 mb-2">Two-Factor Authentication</h3>
-                    <p className="text-slate-600 mb-4">Add an extra layer of security to your account</p>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-slate-800">Enable 2FA</p>
-                          <p className="text-sm text-slate-600">Secure your account with 2FA</p>
-                        </div>
-                        <button
-                          onClick={() => setTwoFactorEnabled(!twoFactorEnabled)}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            twoFactorEnabled ? "bg-blue-500" : "bg-slate-200"
-                          }`}
-                        >
-                          <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                              twoFactorEnabled ? "translate-x-6" : "translate-x-1"
-                            }`}
-                          />
-                        </button>
-                      </div>
-                      {twoFactorEnabled && (
-                        <div className="p-4 bg-green-50 rounded-lg">
-                          <p className="text-sm text-green-800">Two-factor authentication is enabled</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="glass-card border-slate-200 rounded-2xl shadow-lg">
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-slate-800 mb-4">Recent Login Activity</h3>
-                  <div className="space-y-4">
-                    {[
-                      {
-                        date: "Dec 15, 2023 2:30 PM",
-                        location: "New York, NY",
-                        ip: "192.168.1.1",
-                        device: "Chrome on Windows",
-                        icon: Monitor,
-                      },
-                      {
-                        date: "Dec 14, 2023 9:15 AM",
-                        location: "New York, NY",
-                        ip: "192.168.1.1",
-                        device: "Safari on iPhone",
-                        icon: Smartphone,
-                      },
-                      {
-                        date: "Dec 13, 2023 6:45 PM",
-                        location: "New York, NY",
-                        ip: "192.168.1.1",
-                        device: "Chrome on Windows",
-                        icon: Monitor,
-                      },
-                    ].map((activity, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <activity.icon className="w-5 h-5 text-slate-500" />
-                          <div>
-                            <p className="font-medium text-slate-800">{activity.device}</p>
-                            <p className="text-sm text-slate-600">
-                              {activity.location} • {activity.ip}
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-sm text-slate-600">{activity.date}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="glass-card border-red-100 border-2 rounded-2xl shadow-lg">
-                <div className="p-6">
-                  <h3 className="flex items-center text-xl font-semibold text-red-600 mb-2">
-                    <AlertTriangle className="w-5 h-5 mr-2" />
-                    Danger Zone
-                  </h3>
-                  <p className="text-slate-600 mb-4">Permanently delete your account and all associated data</p>
-                  <button className="border border-red-200 text-red-600 hover:bg-red-50 bg-transparent px-4 py-2 rounded-lg flex items-center transition-colors">
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Deactivate Account
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>):(
         <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="bg-white/30 backdrop-blur-md border border-slate-200 shadow-xl rounded-2xl p-12 max-w-xl w-full">

@@ -36,7 +36,7 @@ interface GetProfileData{
 }
 
 
-const Navbar: React.FC<NavProps> = ({navLink}) => {
+const UserNavbar: React.FC<NavProps> = ({navLink}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(navLink);
@@ -222,4 +222,4 @@ const Navbar: React.FC<NavProps> = ({navLink}) => {
   );
 };
 
-export default Navbar;
+export default UserNavbar;

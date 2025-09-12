@@ -13,7 +13,7 @@ export interface RazorpayOrder {
   receipt: string;
   status: "created" | "attempted" | "paid";
   attempts: number;
-  notes: Record<string, any>;
+  notes: Record<string, string>;
   created_at?: number;
 }
 
@@ -55,5 +55,13 @@ export function openRazorpayCheckout(order: RazorpayOrder): Promise<AxiosRespons
       toast.error("Payment Failed");
       reject(response.error);
     });
+
+  // rzp.on("payment.success", (response) => {
+  //   console.log("Success:", response.razorpay_payment_id);
+  // });
+
+  // rzp.on("payment.failed", (response:RazorpayPaymentFailedResponse) => {
+  //   console.error("Failed:", response.error.reason);
+  // });
   });
 }

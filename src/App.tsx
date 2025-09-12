@@ -49,6 +49,11 @@ import SubscriptionPlanPage from './pages/lawyersidePages/SubscriptionPlanPage';
 import ProfilePage from './components/admin/ProfilePage';
 import ChatViewPage from './pages/usersidePages/ChatViewPage';
 import ChatPage from './pages/usersidePages/ChatePage';
+import LawyerChatListPage from './pages/lawyersidePages/LawyerChatListPage';
+import LawyerChatViewPage from './pages/lawyersidePages/LawyerChatViewPage';
+import AddBankDetailsPage from './pages/lawyersidePages/AddBankDetailsPage';
+import AddFeedbackPage from './pages/usersidePages/AddFeedbackPage';
+import ReviewListing from './components/reusableComponents/ReviewListing';
 
 function App() {
   return (
@@ -91,8 +96,9 @@ function App() {
               <Route path='/user/appointments' element={<UserAppointmentPage/>}/>
               <Route path='/user/chat-view-page/:lawyerId' element={<ChatViewPage/>}/>
               <Route path='/user/chat' element={<ChatPage/>}/>
+              <Route path='/feedback/:lawyerId' element={<AddFeedbackPage/>}/>
+              <Route path='/reviews/:lawyerId' element={<ReviewListing/>}/>
           </Route>
-
 
            <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>
               <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
@@ -103,6 +109,10 @@ function App() {
               <Route path='/lawyer/appointments' element={<AppointmentPage/>}/>
               <Route path='/lawyer/slot-list-page' element={<SlotListPage/>}/>
               <Route path='/lawyer/subscription-plans' element={<SubscriptionPlanPage/>}/>
+              <Route path='/lawyer/chat-list' element={<LawyerChatListPage/>}/>
+              <Route path='/lawyer/chat-view/:userId' element={<LawyerChatViewPage/>}/>
+              <Route path='/lawyer/add-bank-details' element={<AddBankDetailsPage/>}/>
+              <Route path='/lawyer/reviews/:lawyerId/:userType' element={<ReviewListing/>}/>
           </Route>
 
           <Route path='/admin' element={<AdminWelcomePage/>}/>
@@ -114,12 +124,12 @@ function App() {
               <Route path="lawyer-verification" element={<LawyerVerification />} />
               <Route path="lawyers" element={<LawyerListing />} />
               <Route path="users" element={<UserListing />} />
+              <Route path='specialization' element={<SpecializationPage/>}/>
+              <Route path='admin/appointments' element={<AppointmentListingPage/>}/>
+              <Route path='reported-accounts' element={<ReportedAccountsPage/>}/>
+              <Route path='admin/subscription-plans' element={<SubscriptionPlanManagement/>}/>
+              <Route path='profile-view' element={<ProfilePage/>}/>
             </Route>
-            <Route path='/specialization' element={<SpecializationPage/>}/>
-            <Route path='/profile-view' element={<ProfilePage/>}/>
-            <Route path='/admin/appointments' element={<AppointmentListingPage/>}/>
-            <Route path='/reported-accounts' element={<ReportedAccountsPage/>}/>
-            <Route path='/admin/subscription-plans' element={<SubscriptionPlanManagement/>}/>
           </Route>
           
         </Routes>

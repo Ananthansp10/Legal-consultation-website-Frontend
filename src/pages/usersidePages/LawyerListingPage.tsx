@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Search, MapPin, Star, Calendar, Phone, Mail, Briefcase, Scale, Home, Users, Shield, Building } from 'lucide-react';
-import Navbar from '../../components/userside/Navbar';
+import UserNavbar from '../../components/userside/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { filterLawyerBySpecialization, getLawyers, searchLawyer } from '../../services/user/userService';
 
@@ -71,7 +71,7 @@ function LawyerListingPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sticky Navigation */}
-        <Navbar navLink='Lawyers'/>
+        <UserNavbar navLink='Lawyers'/>
       {/* Search and Filter Section */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

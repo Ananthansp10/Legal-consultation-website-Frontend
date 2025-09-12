@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Camera, Calendar, Clock, Plus, X, Upload, ArrowLeft, Check, FileText } from 'lucide-react';
-import Navbar from '../../components/lawyer/Navbar';
+import LawyerNavbar from '../../components/lawyer/Navbar';
 import { addLawyerProfile } from '../../services/lawyer/lawyerProfileService';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -305,7 +305,7 @@ function LawyerProfileAddPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Navbar/>
+      <LawyerNavbar/>
       <div className="sticky z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200 mt-5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">

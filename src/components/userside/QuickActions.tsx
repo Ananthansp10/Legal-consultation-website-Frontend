@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, Users, FileText, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const QuickActions: React.FC = () => {
   const actions = [
@@ -19,19 +20,20 @@ const QuickActions: React.FC = () => {
     },
     {
       id: 3,
-      title: 'Manage Documents',
-      description: 'Upload and organize your files',
-      icon: FileText,
-      color: 'bg-amber-600 hover:bg-amber-700'
-    },
-    {
-      id: 4,
       title: 'Legal Resources',
       description: 'Access helpful legal information',
       icon: Search,
       color: 'bg-purple-600 hover:bg-purple-700'
     }
   ];
+
+  const navigate=useNavigate()
+
+  function goToPage(id:number){
+    if(id==1 || id==2){
+      navigate('/user/lawyers')
+    }
+  }
 
   return (
     <div className="mb-8">
@@ -41,6 +43,7 @@ const QuickActions: React.FC = () => {
           const IconComponent = action.icon;
           return (
             <button
+              onClick={()=>goToPage(action.id)}
               key={action.id}
               className={`${action.color} text-white p-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-left group`}
             >

@@ -16,17 +16,17 @@ const sidebarItems = [
   { path: '/admin-dashboard/lawyer-verification', icon: UserCheck, label: 'Lawyer Verification' },
   { path: '/admin-dashboard/lawyers', icon: UserCircle, label: 'Lawyers' },
   { path: '/admin-dashboard/users', icon: Users, label: 'Users' },
-  { path: '/admin/appointments', icon: Calendar, label: 'Appointments' },
-  { path: '/specialization', icon: Calendar, label: 'Specialization'},
-  { path: '/reported-accounts', icon: FileText, label: 'Reports' },
-  { path: '/admin/subscription-plans', icon: DollarSign, label: 'Plans' },
+  { path: '/admin-dashboard/admin/appointments', icon: Calendar, label: 'Appointments' },
+  { path: '/admin-dashboard/specialization', icon: Calendar, label: 'Specialization'},
+  { path: '/admin-dashboard/reported-accounts', icon: FileText, label: 'Reports' },
+  { path: '/admin-dashboard/admin/subscription-plans', icon: DollarSign, label: 'Plans' },
   { path: '/revenue', icon: DollarSign, label: 'Revenue' },
   { path: '/settings', icon: Settings, label: 'Settings' }
 ];
 
 const Sidebar: React.FC = () => {
   return (
-    <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-white/70 backdrop-blur-md border-r border-slate-200 z-40">
+    <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-white/70 backdrop-blur-md border-r border-slate-200 z-40 mt-3">
       <div className="p-4">
         <nav className="space-y-2">
           {sidebarItems.map((item) => (

@@ -1,5 +1,5 @@
 import { Edit, Clock, Calendar, AlertCircle, Filter, Power, PowerOff } from 'lucide-react';
-import Navbar from '../../components/lawyer/Navbar';
+import LawyerNavbar from '../../components/lawyer/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { getSlot, updateRuleStatus } from '../../services/lawyer/lawyerService';
 import { useSelector } from 'react-redux';
@@ -87,7 +87,7 @@ function SlotListPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <Navbar />
+      <LawyerNavbar />
       <div className="bg-white shadow-sm border-b border-slate-200 mt-7">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">

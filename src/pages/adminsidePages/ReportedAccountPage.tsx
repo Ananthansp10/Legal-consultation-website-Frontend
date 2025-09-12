@@ -100,8 +100,7 @@ const ReportedAccountsPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 py-8 px-4">
-        <Navbar/>
-      <div className="max-w-7xl mx-auto mt-12">
+      <div className="max-w-7xl mx-auto mt-1">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Reported Accounts
@@ -141,7 +140,6 @@ const ReportedAccountsPage = () => {
 
           {/* Search & Filter Bar */}
           <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search Input */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -153,7 +151,6 @@ const ReportedAccountsPage = () => {
               />
             </div>
 
-            {/* Status Filter */}
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <select

@@ -54,7 +54,7 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response:AxiosResponse<CheckAuthResponse> = await isValidUser(allowedRoles[0]);
+        const response:AxiosResponse<CheckAuthResponse> = await isValidUser(allowedRoles);
         if (response.data.success) {
           setIsAuth(true);
         }else{

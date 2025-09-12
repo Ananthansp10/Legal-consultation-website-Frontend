@@ -17,10 +17,10 @@ import {
   Award,
   AlertCircle
 } from "lucide-react"
-import Navbar from "../../components/userside/Navbar"
-import { useNavigate, useParams } from "react-router-dom"
+import UserNavbar from "../../components/userside/Navbar"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { getLawyerDetails} from "../../services/user/userService"
+import { getLawyerDetails, getReview} from "../../services/user/userService"
 import { toast } from "react-toastify"
 import ReportModal from "../../components/reusableComponents/ReportModal"
 import { useSelector } from "react-redux"
@@ -69,9 +69,19 @@ export interface LawyerProfileData{
     lawyerId:string;
     personalInfo:PersonalInfo;
     proffessionalInfo:ProffessionalInfo;
-    rating ? :number;
-    reviewCount ? :number;
-    reviews ? :[string]
+}
+
+interface Review{
+  userName:string;
+  date:string;
+  feedback:string;
+  rating:number;
+}
+
+interface ReviewsData{
+  reviewsCount:number;
+  rating:number;
+  reviews:Review[]
 }
 
 export default function LawyerViewPage() {
@@ -82,6 +92,8 @@ export default function LawyerViewPage() {
   const [lawyerData,setLawyerData]=useState<LawyerProfileData>()
   const [showReportModal,setShowReportModal]=useState(false)
 
+  const [review,setReview]=useState<ReviewsData | null>(null)
+
   useEffect(()=>{
     getLawyerDetails(lawyerId!).then((response)=>{
       setLawyerData(response.data.data)
@@ -89,6 +101,12 @@ export default function LawyerViewPage() {
   },[lawyerId])
 
   const navigate=useNavigate()
+
+  useEffect(()=>{
+    getReview(lawyerId!).then((response)=>{
+      setReview(response.data.data)
+    })
+  },[])
 
   function report(){
     setShowReportModal(true)
@@ -112,7 +130,7 @@ export default function LawyerViewPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-       <Navbar navLink="Lawyers"/>
+       <UserNavbar navLink="Lawyers"/>
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white mt-12">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -162,9 +180,9 @@ export default function LawyerViewPage() {
 
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-6 text-slate-600">
                       <div className="flex items-center gap-1">
-                        {renderStars(lawyerData?.rating ?? 123)}
+                        {renderStars(review?.rating ?? 123)}
                         <span className="ml-1 font-semibold">{}</span>
-                        <span className="text-sm">({lawyerData?.reviewCount} reviews)</span>
+                        <span className="text-sm">({review?.reviewsCount} reviews)</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Scale className="w-4 h-4" />
@@ -351,25 +369,27 @@ export default function LawyerViewPage() {
                 <h2 className="text-2xl font-semibold text-slate-800 mb-6">Client Reviews & Ratings</h2>
 
                 <div className="text-center mb-6 p-4 bg-blue-50 rounded-lg">
-                  <div className="flex items-center justify-center gap-1 mb-2">{renderStars(lawyerData?.rating ?? 123)}</div>
-                  <p className="text-2xl font-bold text-slate-800">{lawyerData?.rating}/5</p>
-                  <p className="text-sm text-slate-600">Based on {lawyerData?.reviewCount} reviews</p>
+                  <div className="flex items-center justify-center gap-1 mb-2">{renderStars(review?.rating || 0)}</div>
+                  <p className="text-2xl font-bold text-slate-800">{review?.rating}/5</p>
+                  <p className="text-sm text-slate-600">Based on {review?.reviewsCount} reviews</p>
                 </div>
 
-                {/* <div className="space-y-4">
-                  {lawyerData?.reviews?.map((review, index:number) => (
+                <div className="space-y-4">
+                  {review?.reviews?.slice(0,3).map((review, index:number) => (
                     <div key={index} className="border-b border-slate-100 pb-4 last:border-b-0">
                       <div className="flex items-center justify-between mb-2">
-                        <p className="font-medium text-slate-800">{review?.username}</p>
+                        <p className="font-medium text-slate-800">{review?.userName}</p>
                         <p className="text-xs text-slate-500">{review?.date}</p>
                       </div>
                       <div className="flex items-center gap-1 mb-2">{renderStars(review?.rating)}</div>
-                      <p className="text-sm text-slate-600">{review?.comment}</p>
+                      <p className="text-sm text-slate-600">{review?.feedback}</p>
                     </div>
                   ))}
-                </div> */}
+                </div>
 
-                <button className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
+                <Link to={`/reviews/${lawyerId}`} className="float-right text-blue-500 font-semibold">View All</Link>
+
+                <button onClick={()=>navigate(`/feedback/${lawyerData?.lawyerId}`)} className="w-full mt-10 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2">
                   <MessageCircle className="w-4 h-4" />
                   Write a Review
                 </button>

@@ -13,5 +13,12 @@ export const LAWYER_API={
   GET_SUBSCRIPTION_PLANS: `/lawyer/subscription-plans`,
   CREATE_RAZORPAY_ORDER:  '/lawyer/create-razorpay-order',
   VERIFY_RAZORPAY_PAYMENT: '/lawyer/verify-payment',
-  ADD_PLAN: (lawyerId:string,planId:string)=> `/lawyer/add-plan/${lawyerId}/${planId}`
+  ADD_PLAN: (lawyerId:string,planId:string)=> `/lawyer/add-plan/${lawyerId}/${planId}`,
+  GET_ALL_CHATS: (lawyerId:string)=> `/lawyer/get-all-chats/${lawyerId}`,
+  GET_CHAT: (lawyerId:string,userId:string)=> `/lawyer/get-chat/${lawyerId}/${userId}`,
+  GET_USER_CHAT_PROFILE: (userId:string)=> `/lawyer/get-user-chat-profile/${userId}`,
+  UPDATE_CHAT_READ_STATUS: (lawyerId:string,userId:string)=> `/lawyer/update-chat-read-status/${lawyerId}/${userId}`,
+  ADD_BANK_ACCOUNT: '/lawyer/add-bank-account',
+  GET_SUMMARY: (lawyerId:string)=> `/lawyer/get-summary/${lawyerId}`,
+  CHECK_BANK_DETAILS: (lawyerId:string)=> `/lawyer/check-bank-details/${lawyerId}`
 }

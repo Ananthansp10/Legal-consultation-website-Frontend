@@ -1,4 +1,4 @@
-import Navbar from '../../components/userside/Navbar';
+import UserNavbar from '../../components/userside/Navbar';
 import WelcomeSection from '../../components/userside/WelcomeSection';
 import BannerSlider from '../../components/userside/BannerSlider';
 import UpcomingAppointments from '../../components/userside/UpcommingAppointments';
@@ -52,7 +52,7 @@ function Dashboard() {
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
-      <Navbar navLink='Home'/>
+      <UserNavbar navLink='Home'/>
       
       <main className="pt-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -73,7 +73,7 @@ function Dashboard() {
             </div>
 
             {/* Right Column - Sidebar */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 mb-3">
               <RecentActivities />
             </div>
           </div>

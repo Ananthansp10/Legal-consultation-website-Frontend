@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check, X, Star, Shield, Users, Zap, Crown, Award, Briefcase } from 'lucide-react';
-import Navbar from '../../components/lawyer/Navbar';
+import LawyerNavbar from '../../components/lawyer/Navbar';
 import { addPlan, createRazorpayOrder, getSubscriptionPlans } from '../../services/lawyer/lawyerService';
 import { openRazorpayCheckout } from '../../config/razorpayCheckout';
 import { toast } from 'react-toastify';
@@ -144,6 +144,7 @@ function SubscriptionPlanPage() {
 
   function executePayment(planId:string,price:number){
     createRazorpayOrder(planId,price).then((response)=>{
+      console.log(response)
       openRazorpayCheckout(response.data.data).then((response)=>{
         addPlan(lawyerId!,planId).then(()=>{
           toast.success("Payment successfull")
@@ -171,7 +172,7 @@ function SubscriptionPlanPage() {
       <div className="absolute top-40 right-20 w-32 h-32 bg-blue-200/30 rounded-full blur-xl animate-pulse delay-1000"></div>
       <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-green-200/30 rounded-full blur-xl animate-pulse delay-2000"></div>
       
-      <Navbar />
+      <LawyerNavbar />
       
       <div className="relative z-10 container mx-auto px-6 py-12">
         <header className="text-center mb-16">

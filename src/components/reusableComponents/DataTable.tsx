@@ -84,12 +84,12 @@ const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetc
     function getProfile(id:string){
       if(type=='user'){
         getUserProfile(id).then((response)=>{
-          navigate('/profile-view',{state:{profile:response.data.data}})
+          navigate('/admin-dashboard/profile-view',{state:{profile:response.data.data}})
         })
       }else{
         getLawyerProfile(id).then((response)=>{
           let data={...response.data.data,type:'lawyer'}
-          navigate('/profile-view',{state:{profile:data}})
+          navigate('/admin-dashboard/profile-view',{state:{profile:data}})
         })
       }
     }

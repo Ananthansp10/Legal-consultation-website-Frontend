@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
 import { getProfileImage } from '../../services/lawyer/lawyerProfileService';
 
-const Navbar: React.FC = () => {
+const LawyerNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileImage,setProfileImage]=useState('')
@@ -46,6 +46,14 @@ const Navbar: React.FC = () => {
 
     if(link=='Subscription Plans'){
       navigate('/lawyer/subscription-plans')
+    }
+
+    if(link=='Chat'){
+      navigate('/lawyer/chat-list')
+    }
+
+    if(link=='Reviews'){
+      navigate(`/lawyer/reviews/${lawyer?._id}/lawyer`)
     }
   }
 
@@ -192,4 +200,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default LawyerNavbar;

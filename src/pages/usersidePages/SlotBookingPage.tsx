@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Scale, Clock, Calendar, MapPin, ChevronLeft, ChevronRight, X, Video, Users } from 'lucide-react';
-import Navbar from '../../components/userside/Navbar';
+import UserNavbar from '../../components/userside/Navbar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { bookAppointment, getLawyerDetails, getLawyerSlots } from '../../services/user/userService';
 import { useSelector } from 'react-redux';
@@ -94,7 +94,8 @@ interface LawyerProfileData{
         date:selectedDate?.toLocaleDateString('en-CA')!,
         time:selectedTime,
         consultationMode: consultationMode,
-        problem: problem
+        problem: problem,
+        fee:parseInt(lawyer?.proffessionalInfo.fee!)
       }
     ).then((response)=>{
       toast.success(response.data.message)
@@ -231,7 +232,7 @@ interface LawyerProfileData{
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-8">
-        <Navbar navLink='Lawyers'/>
+        <UserNavbar navLink='Lawyers'/>
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <button className="flex items-center gap-2 text-[#64748b] hover:text-[#3b82f6] transition-colors duration-200">

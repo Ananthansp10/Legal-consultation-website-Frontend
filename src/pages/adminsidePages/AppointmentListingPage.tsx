@@ -140,10 +140,7 @@ function AppointmentListingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
-      <div className='mb-12'>
-        <Navbar/>
-      </div>
-      <div className="max-w-7xl mx-auto mt-20">
+      <div className="max-w-7xl mx-auto mt-5">
         {/* Main Container Card */}
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
           {/* Header Section */}

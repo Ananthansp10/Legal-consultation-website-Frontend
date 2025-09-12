@@ -18,5 +18,7 @@ export const USER_API={
   REPORT_LAWYER: `/user/report-lawyer`,
   GET_USER_CHAT: (userId:string,lawyerId:string)=> `/user/get-user-chat/${userId}/${lawyerId}`,
   GET_USER_ALL_CHATS: (userId:string)=> `/user/get-user-all-chats/${userId}`,
-  GET_LAWYER_CHAT_PROFILE: (lawyerId:string)=> `/user/get-lawyer-chat-profile/${lawyerId}`
+  GET_LAWYER_CHAT_PROFILE: (lawyerId:string)=> `/user/get-lawyer-chat-profile/${lawyerId}`,
+  ADD_REVIEW: (lawyerId:string)=> `/user/add-review/${lawyerId}`,
+  GET_REVIEW: (lawyerId:string)=> `/user/get-review/${lawyerId}`
 }

@@ -98,3 +98,51 @@ export const addPlan=async(lawyerId:string,planId:string)=>{
     throw error
   }
 }
+
+export const getAllChats=async(lawyerId:string)=>{
+  try {
+    return await axios.get(LAWYER_API.GET_ALL_CHATS(lawyerId))
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getChat=async(lawyerId:string,userId:string)=>{
+  try {
+    return await axios.get(LAWYER_API.GET_CHAT(lawyerId,userId))
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getUserChatProfile=async(userId:string)=>{
+  try {
+    return await axios.get(LAWYER_API.GET_USER_CHAT_PROFILE(userId))
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateChatReadStatus=async(lawyerId:string,userId:string)=>{
+  try {
+    await axios.post(LAWYER_API.UPDATE_CHAT_READ_STATUS(lawyerId,userId))
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getSummary=async(lawyerId:string)=>{
+  try {
+    return await axios.get(LAWYER_API.GET_SUMMARY(lawyerId))
+  } catch (error) {
+    throw error
+  }
+}
+
+export const checkBankDetails=async(lawyerId:string)=>{
+  try {
+    return await axios.get(LAWYER_API.CHECK_BANK_DETAILS(lawyerId))
+  } catch (error) {
+    throw error
+  }
+}

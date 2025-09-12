@@ -1,11 +1,11 @@
 import { Circle, Send, Paperclip, Smile, Check, CheckCheck } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { connectSocket } from '../../config/socket';
 import { Socket } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { getLawyerChatProfile, getUserChat } from '../../services/user/userService';
+import { getChat, getUserChatProfile, updateChatReadStatus } from '../../services/lawyer/lawyerService';
 
 interface Messages{
   senderId:string;
@@ -15,23 +15,22 @@ interface Messages{
   createdAt:Date
 }
 
-interface LawyerProfile{
+interface UserProfile{
   name:string;
   profileImage:string;
-  specialization:string;
-  courtName:string;
+  country:string;
+  state:string;
 }
 
-function ChatViewPage() {
+function LawyerChatViewPage() {
 
   const [message,setMessage]=useState('')
   const [socket,setSocket]=useState<Socket | null>(null)
   const [chats,setChats]=useState<Messages[]>([])
-  const [lawyerProfile,setLawyerProfile]=useState<LawyerProfile>()
+  const [userProfile,setUserProfile]=useState<UserProfile>()
 
-  const {lawyerId}=useParams()
-  const userId=useSelector((state:RootState)=>state.auth.user?.id)
-  console.log(lawyerId,userId)
+  const {userId}=useParams()
+  const lawyerId=useSelector((state:RootState)=>state.lawyerAuth.lawyer?._id)
 
   useEffect(()=>{
     let sock=connectSocket()
@@ -41,11 +40,11 @@ function ChatViewPage() {
       console.log("connected",sock.id)
     })
 
-    sock.emit("register",userId)
+    sock.emit("register",lawyerId)
 
     sock.on("receive_message",async(chat)=>{
-      setChats((prevChat)=>[...prevChat,{...chat.message,isRead:chat.receiverId==userId ? true : chat.isRead}])
-      sock.emit("update_read_status",{userId,lawyerId})
+        setChats((prevChat)=>[...prevChat,{...chat.message,isRead:chat.receiverId==lawyerId ? true : chat.isRead}])
+        sock.emit("update_lawyer_chat_status",{lawyerId,userId})
     })
 
      return (()=>{
@@ -55,21 +54,25 @@ function ChatViewPage() {
   },[])
 
   useEffect(()=>{
-    getUserChat(userId!,lawyerId!).then((response)=>{
+    socket?.emit("update_lawyer_chat_status",{lawyerId,userId})
+  },[chats])
+
+  function fetchChat(){
+    getChat(lawyerId!,userId!).then((response)=>{
       setChats(response.data.data || [])
     })
-  },[])
+  }
 
   useEffect(()=>{
-    socket?.emit("update_read_status",{userId,lawyerId})
-  },[chats])
+    fetchChat()
+  },[])
 
   function sendMessage(){
     if(message.trim() === '') return;
     
     const newMessage = {
-      senderId:userId!,
-      receiverId:lawyerId!,
+      senderId:lawyerId!,
+      receiverId:userId!,
       message:message,
       isRead:false,
       createdAt:new Date()
@@ -78,20 +81,27 @@ function ChatViewPage() {
     setChats((prevChat)=>[...prevChat,newMessage])
 
     socket?.emit("send_message",{
-      senderId:userId,
-      receiverId:lawyerId,
+      senderId:lawyerId,
+      receiverId:userId,
       message:newMessage
     })
     setMessage('')
   }
 
   useEffect(()=>{
-    getLawyerChatProfile(lawyerId!).then((response)=>{
-      setLawyerProfile(response.data.data)
+    getUserChatProfile(userId!).then((response)=>{
+      setUserProfile(response.data.data)
     })
   },[])
 
-  const isMyMessage = (senderId: string) => senderId === userId;
+  useEffect(()=>{
+    async function update(){
+        await updateChatReadStatus(lawyerId!,userId!)
+    }
+    update()
+  },[])
+
+  const isMyMessage = (senderId: string) => senderId === lawyerId;
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 font-inter">
@@ -99,8 +109,8 @@ function ChatViewPage() {
         <div className="flex items-center space-x-3">
           <div className="relative">
             <img
-              src={lawyerProfile?.profileImage}
-              alt={lawyerProfile?.name}
+              src={userProfile?.profileImage}
+              alt={userProfile?.name}
               className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-gray-100"
             />
             <div className="absolute -bottom-1 -right-1">
@@ -112,9 +122,9 @@ function ChatViewPage() {
             </div>
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg font-semibold text-gray-900 truncate">{lawyerProfile?.name}</h2>
+            <h2 className="text-lg font-semibold text-gray-900 truncate">{userProfile?.name}</h2>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">{lawyerProfile?.courtName}, {lawyerProfile?.specialization}</span>
+              <span className="text-sm text-gray-600">{userProfile?.country}, {userProfile?.state}</span>
               <span className="text-xs text-gray-400">•</span>
               <span className="text-sm font-medium text-green-600">Online</span>
             </div>
@@ -219,4 +229,4 @@ function ChatViewPage() {
   );
 }
 
-export default ChatViewPage;
+export default LawyerChatViewPage;

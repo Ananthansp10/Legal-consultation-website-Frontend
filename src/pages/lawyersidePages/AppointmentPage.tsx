@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { toast } from 'react-toastify';
 import ConfirmModal from '../../components/reusableComponents/ConfirmModal';
-import Navbar from '../../components/lawyer/Navbar';
+import LawyerNavbar from '../../components/lawyer/Navbar';
+import Pagination from '../../components/reusableComponents/Pagination';
 
 export interface User {
   _id: string;
@@ -161,6 +162,13 @@ function AppointmentPage() {
     })
   },[activeFilter])
 
+  const [currentPage,setCurrentPage]=useState(1)
+  const itemsPerPage=2
+  const totalPages=Math.ceil(appointments.length/itemsPerPage)
+  const startIndex=(currentPage-1) * itemsPerPage
+  const endIndex=startIndex+itemsPerPage
+  const data=appointments.slice(startIndex,endIndex)
+
   //const filteredAppointments = appointments?.filter(apt => ['Pending', 'Accepted','Booked','Cancelled','Rejected'].includes(apt.status));
 
 
@@ -183,7 +191,7 @@ function AppointmentPage() {
       </div>
 
       <div className="relative z-10">
-         <Navbar/>
+         <LawyerNavbar/>
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -213,7 +221,7 @@ function AppointmentPage() {
           
           {/* Appointments List */}
           <div className="space-y-6">
-            {appointments?.length === 0 ? (
+            {data?.length === 0 ? (
               <div className="text-center py-16">
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/40 shadow-lg p-12">
                   <div className="text-gray-400 mb-4">
@@ -224,7 +232,7 @@ function AppointmentPage() {
                 </div>
               </div>
             ) : (
-              appointments?.map(appointment => (
+              data?.map(appointment => (
                 <AppointmentCard
                   key={appointment._id}
                   appointment={appointment}
@@ -235,6 +243,7 @@ function AppointmentPage() {
           </div>
         </div>
       </div>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
     </div>
   );
 }

@@ -11,7 +11,7 @@ import {
   Save,
   X
 } from 'lucide-react';
-import Navbar from './Navbar';
+import UserNavbar from './Navbar';
 import { useSelector } from 'react-redux';
 import { addProfile } from '../../services/user/profileService';
 import { toast } from 'react-toastify';
@@ -35,6 +35,21 @@ interface FormData {
   zipCode: string;
 }
 
+interface FormErrors {
+  fullName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  proffession: string;
+  company: string;
+  profileImage: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+}
 
 const UserProfileForm: React.FC = () => {
   const user:userDetails | null=useSelector((state:RootState)=>state.auth.user)!
@@ -55,11 +70,152 @@ const UserProfileForm: React.FC = () => {
     zipCode: ''
   });
 
+  const [errors, setErrors] = useState<FormErrors>({
+    fullName: '',
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    gender: '',
+    proffession: '',
+    company: '',
+    profileImage: '',
+    streetAddress: '',
+    city: '',
+    state: '',
+    country: '',
+    zipCode: ''
+  });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate=useNavigate()
+
+  const validateField = (name: string, value: string | File | null): string => {
+    switch (name) {
+      case 'fullName':
+        if (!value || (typeof value === 'string' && value.trim().length < 2)) {
+          return 'Full name must be at least 2 characters long';
+        }
+        if (typeof value === 'string' && !/^[a-zA-Z\s]+$/.test(value)) {
+          return 'Full name should only contain letters and spaces';
+        }
+        break;
+
+      case 'email':
+        if (!value || typeof value !== 'string') {
+          return 'Email is required';
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          return 'Please enter a valid email address';
+        }
+        break;
+
+      case 'phone':
+        if (!value || typeof value !== 'string') {
+          return 'Phone number is required';
+        }
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        const cleanPhone = value.replace(/[\s\-\(\)]/g, '');
+        if (!phoneRegex.test(cleanPhone) || cleanPhone.length < 10) {
+          return 'Please enter a valid phone number (minimum 10 digits)';
+        }
+        break;
+
+      case 'dateOfBirth':
+        if (!value || typeof value !== 'string') {
+          return 'Date of birth is required';
+        }
+        const today = new Date();
+        const birthDate = new Date(value);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        if (birthDate > today) {
+          return 'Date of birth cannot be in the future';
+        }
+        if (age < 18) {
+          return 'You must be at least 13 years old';
+        }
+        if (age > 120) {
+          return 'Please enter a valid date of birth';
+        }
+        break;
+
+      case 'gender':
+        if (!value || typeof value !== 'string') {
+          return 'Please select your gender';
+        }
+        break;
+
+      case 'proffession':
+        if (!value || (typeof value === 'string' && value.trim().length < 2)) {
+          return 'Profession must be at least 2 characters long';
+        }
+        break;
+
+      case 'company':
+        if (!value || (typeof value === 'string' && value.trim().length < 2)) {
+          return 'Company name must be at least 2 characters long';
+        }
+        break;
+
+      case 'profileImage':
+        if (value && value instanceof File) {
+          const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+          if (!validTypes.includes(value.type)) {
+            return 'Please upload a valid image file (JPG, PNG, GIF)';
+          }
+          if (value.size > 10 * 1024 * 1024) { // 10MB
+            return 'Image size should be less than 10MB';
+          }
+        }
+        break;
+
+      case 'streetAddress':
+        if (!value || (typeof value === 'string' && value.trim().length < 5)) {
+          return 'Street address must be at least 5 characters long';
+        }
+        break;
+
+      case 'city':
+        if (!value || (typeof value === 'string' && value.trim().length < 2)) {
+          return 'City name must be at least 2 characters long';
+        }
+        if (typeof value === 'string' && !/^[a-zA-Z\s\-\']+$/.test(value)) {
+          return 'City name should only contain letters, spaces, hyphens, and apostrophes';
+        }
+        break;
+
+      case 'state':
+        if (!value || (typeof value === 'string' && value.trim().length < 2)) {
+          return 'State name must be at least 2 characters long';
+        }
+        break;
+
+      case 'country':
+        if (!value || (typeof value === 'string' && value.trim().length < 2)) {
+          return 'Country name must be at least 2 characters long';
+        }
+        if (typeof value === 'string' && !/^[a-zA-Z\s\-\']+$/.test(value)) {
+          return 'Country name should only contain letters, spaces, hyphens, and apostrophes';
+        }
+        break;
+
+      case 'zipCode':
+        if (!value || typeof value !== 'string') {
+          return 'Zip code is required';
+        }
+        const zipRegex = /^[a-zA-Z0-9\s\-]{3,10}$/;
+        if (!zipRegex.test(value)) {
+          return 'Please enter a valid zip code';
+        }
+        break;
+
+      default:
+        break;
+    }
+    return '';
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -67,14 +223,45 @@ const UserProfileForm: React.FC = () => {
       ...prev,
       [name]: value
     }));
+
+    // Clear error when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+
+    // Validate on blur for better UX
+    const error = validateField(name, value);
+    if (error) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: error
+      }));
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      const error = validateField('profileImage', file);
+      if (error) {
+        setErrors(prev => ({
+          ...prev,
+          profileImage: error
+        }));
+        return;
+      }
+
       setFormData(prev => ({
         ...prev,
         profileImage: file
+      }));
+
+      setErrors(prev => ({
+        ...prev,
+        profileImage: ''
       }));
 
       const reader = new FileReader();
@@ -85,8 +272,47 @@ const UserProfileForm: React.FC = () => {
     }
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {
+      fullName: '',
+      email: '',
+      phone: '',
+      dateOfBirth: '',
+      gender: '',
+      proffession: '',
+      company: '',
+      profileImage: '',
+      streetAddress: '',
+      city: '',
+      state: '',
+      country: '',
+      zipCode: ''
+    };
+
+    let isValid = true;
+
+    // Validate all fields
+    Object.keys(formData).forEach((key) => {
+      const fieldName = key as keyof FormData;
+      const error = validateField(fieldName, formData[fieldName]);
+      if (error) {
+        newErrors[fieldName] = error;
+        isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      // toast.error('Please fix all validation errors before submitting');
+      return;
+    }
+
     setIsSubmitting(true);
 
     const data = new FormData()
@@ -113,6 +339,9 @@ const UserProfileForm: React.FC = () => {
     addProfile(data).then((response)=>{
       toast.success(response.data.message)
       navigate('/user/profile')
+    }).catch((error) => {
+      toast.error('Failed to save profile. Please try again.');
+      console.error(error);
     })
 
     setIsSubmitting(false);
@@ -136,6 +365,21 @@ const UserProfileForm: React.FC = () => {
         country: '',
         zipCode: ''
       });
+      setErrors({
+        fullName: '',
+        email: '',
+        phone: '',
+        dateOfBirth: '',
+        gender: '',
+        proffession: '',
+        company: '',
+        profileImage: '',
+        streetAddress: '',
+        city: '',
+        state: '',
+        country: '',
+        zipCode: ''
+      });
       setImagePreview(null);
     }
   };
@@ -144,7 +388,7 @@ const UserProfileForm: React.FC = () => {
     <div className="min-h-screen bg-[#f8fafc] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto mt-12">
         <div className="bg-white rounded-xl shadow-xl p-6 md:p-10 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4">
-          <Navbar navLink=''/>
+          <UserNavbar navLink=''/>
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#1e293b] mb-2">Add Profile</h1>
             <p className="text-[#64748b] text-lg">
@@ -172,10 +416,16 @@ const UserProfileForm: React.FC = () => {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.fullName 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                    }`}
                     placeholder="Enter your full name"
-                    required
                   />
+                  {errors.fullName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+                  )}
                 </div>
 
                 {/* Email */}
@@ -191,12 +441,18 @@ const UserProfileForm: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                        errors.email 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                       placeholder="your.email@example.com"
-                      required
                       readOnly
                     />
                   </div>
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
                 </div>
 
                 {/* Phone */}
@@ -212,11 +468,17 @@ const UserProfileForm: React.FC = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                        errors.phone 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                       placeholder="+1 (555) 123-4567"
-                      required
                     />
                   </div>
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                  )}
                 </div>
 
                 {/* Date of Birth */}
@@ -232,10 +494,16 @@ const UserProfileForm: React.FC = () => {
                       name="dateOfBirth"
                       value={formData.dateOfBirth}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
-                      required
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                        errors.dateOfBirth 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                     />
                   </div>
+                  {errors.dateOfBirth && (
+                    <p className="text-red-500 text-xs mt-1">{errors.dateOfBirth}</p>
+                  )}
                 </div>
 
                 {/* Gender */}
@@ -248,14 +516,20 @@ const UserProfileForm: React.FC = () => {
                     name="gender"
                     value={formData.gender}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-[#e2e8f0] rounded-lg bg-white text-[#334155] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
-                    required
+                    className={`w-full px-4 py-2 border rounded-lg bg-white text-[#334155] focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.gender 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                    }`}
                   >
                     <option value="" disabled>Select gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
                   </select>
+                  {errors.gender && (
+                    <p className="text-red-500 text-xs mt-1">{errors.gender}</p>
+                  )}
                 </div>
 
                 {/* Profession */}
@@ -271,11 +545,17 @@ const UserProfileForm: React.FC = () => {
                       name="proffession"
                       value={formData.proffession}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                        errors.proffession 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                       placeholder="Software Engineer"
-                      required
                     />
                   </div>
+                  {errors.proffession && (
+                    <p className="text-red-500 text-xs mt-1">{errors.proffession}</p>
+                  )}
                 </div>
 
                 {/* Company */}
@@ -291,11 +571,17 @@ const UserProfileForm: React.FC = () => {
                       name="company"
                       value={formData.company}
                       onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                        errors.company 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                       placeholder="Company Name"
-                      required
                     />
                   </div>
+                  {errors.company && (
+                    <p className="text-red-500 text-xs mt-1">{errors.company}</p>
+                  )}
                 </div>
               </div>
 
@@ -315,7 +601,11 @@ const UserProfileForm: React.FC = () => {
                     />
                     <label
                       htmlFor="profileImage"
-                      className="flex items-center justify-center w-24 h-24 border-2 border-dashed border-[#e2e8f0] rounded-lg cursor-pointer hover:border-[#3b82f6] transition-colors duration-200"
+                      className={`flex items-center justify-center w-24 h-24 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200 ${
+                        errors.profileImage 
+                          ? 'border-red-500' 
+                          : 'border-[#e2e8f0] hover:border-[#3b82f6]'
+                      }`}
                     >
                       {imagePreview ? (
                         <img
@@ -337,6 +627,9 @@ const UserProfileForm: React.FC = () => {
                     </p>
                   </div>
                 </div>
+                {errors.profileImage && (
+                  <p className="text-red-500 text-xs mt-1">{errors.profileImage}</p>
+                )}
               </div>
             </div>
 
@@ -361,10 +654,16 @@ const UserProfileForm: React.FC = () => {
                     name="streetAddress"
                     value={formData.streetAddress}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.streetAddress 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                    }`}
                     placeholder="123 Main Street, Apt 4B"
-                    required
                   />
+                  {errors.streetAddress && (
+                    <p className="text-red-500 text-xs mt-1">{errors.streetAddress}</p>
+                  )}
                 </div>
 
                 <div>
@@ -377,10 +676,16 @@ const UserProfileForm: React.FC = () => {
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.city 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                    }`}
                     placeholder="New York"
-                    required
                   />
+                  {errors.city && (
+                    <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                  )}
                 </div>
 
                 <div>
@@ -393,10 +698,16 @@ const UserProfileForm: React.FC = () => {
                     name="state"
                     value={formData.state}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.state 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                    }`}
                     placeholder="NY"
-                    required
                   />
+                  {errors.state && (
+                    <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                  )}
                 </div>
 
                 <div>
@@ -409,10 +720,16 @@ const UserProfileForm: React.FC = () => {
                     name="country"
                     value={formData.country}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.country 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                    }`}
                     placeholder="United States"
-                    required
                   />
+                  {errors.country && (
+                    <p className="text-red-500 text-xs mt-1">{errors.country}</p>
+                  )}
                 </div>
 
                 <div>
@@ -425,10 +742,16 @@ const UserProfileForm: React.FC = () => {
                     name="zipCode"
                     value={formData.zipCode}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] transition-all duration-200"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      errors.zipCode 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                    }`}
                     placeholder="10001"
-                    required
                   />
+                  {errors.zipCode && (
+                    <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Calendar, Clock, Video, MapPin, Briefcase, User } from 'lucide-react';
-import Navbar from '../../components/userside/Navbar';
+import UserNavbar from '../../components/userside/Navbar';
 import { cancelAppointment, getAppointments, resheduleAppointment } from '../../services/user/userService';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import ConfirmModal from '../../components/reusableComponents/ConfirmModal';
 import { fa } from 'zod/v4/locales';
 import { useNavigate } from 'react-router-dom';
+import Pagination from '../../components/reusableComponents/Pagination';
 
 function UserAppointmentPage() {
   const [activeTab, setActiveTab] = useState('Pending');
@@ -93,6 +94,13 @@ function UserAppointmentPage() {
       navigate(`/user/slot-booking/${lawyerId}`)
     })
   }
+
+  const [currentPage,setCurrentPage]=useState(1)
+  const itemsPerPage=2
+  const totalPages=Math.ceil(appointments.length/itemsPerPage)
+  const startIndex=(currentPage-1) * itemsPerPage
+  const endIndex=startIndex + itemsPerPage
+  const data=appointments.slice(startIndex,endIndex)
 
   const AppointmentCard = ({ appointment, isCompleted = false }:AppointmentCardData) => (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg hover:ring-1 hover:ring-blue-100 transition-all duration-300 p-6 mb-4">
@@ -293,7 +301,7 @@ function UserAppointmentPage() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <Navbar navLink='My Appointments'/>
+        <UserNavbar navLink='My Appointments'/>
         <div className="text-center mb-12 mt-12">
           <div className="flex items-center justify-center mb-4">
             <div className="p-3 bg-blue-100 rounded-full">
@@ -382,7 +390,7 @@ function UserAppointmentPage() {
           </div>
           
           <div className="space-y-4">
-            {appointments?.map(appointment => (
+            {data?.map(appointment => (
               <AppointmentCard 
                 key={appointment?._id} 
                 appointment={appointment} 
@@ -405,6 +413,7 @@ function UserAppointmentPage() {
           </div>
         )}
       </div>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
       {showModal && <ConfirmModal message='Are you sure want to Cancel this Appointment' onConfirm={()=>appointmentCancel(appointmentId)} onCancel={()=>setShowModal(false)}/>}
       {showModal && reshedule && <ConfirmModal message='Are you sure want to Reshedule this Appointment' onConfirm={()=>appointmentReshedule()} onCancel={()=>setShowModal(false)}/>}
     </div>
