@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Calendar, Clock, User, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { getAppointments } from '../../services/admin/adminService';
-import Navbar from '../../components/admin/Navbar';
+import Pagination from '../../components/reusableComponents/Pagination';
 
 interface Appointment {
   userName: string;
@@ -129,6 +129,13 @@ function AppointmentListingPage() {
     })
   },[activeFilter])
 
+  const [currentPage,setCurrentPage]=useState(1)
+  const itemsPerPage=3
+  const totalPages=Math.ceil(appointments.length/itemsPerPage)
+  const startIndex=(currentPage-1) * itemsPerPage
+  const endIndex=startIndex + itemsPerPage
+  const data=appointments.slice(startIndex,endIndex)
+
   const filterTabs = [
     { key: 'All' as const, label: 'All'},
     { key: 'Pending' as const, label: 'Pending'},
@@ -183,7 +190,7 @@ function AppointmentListingPage() {
 
           {/* Appointments Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {appointments?.map((appointment) => (
+            {data?.map((appointment) => (
               <AppointmentCard
                 appointment={appointment}
               />
@@ -206,7 +213,7 @@ function AppointmentListingPage() {
             </div>
           )}
         </div>
-
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
       </div>
     </div>
   );

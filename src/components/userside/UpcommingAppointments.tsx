@@ -68,7 +68,7 @@ const UpcomingAppointments: React.FC = () => {
 
               <div className="flex flex-col space-y-2">
                 {appointment.mode === 'online' && (
-                  <button className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                  <button onClick={()=>navigate(`/user/video-call/${appointment._id}`)} className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                     <Video className="w-4 h-4" />
                     <span>Join Meeting</span>
                   </button>

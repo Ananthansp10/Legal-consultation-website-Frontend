@@ -20,8 +20,8 @@ const sidebarItems = [
   { path: '/admin-dashboard/specialization', icon: Calendar, label: 'Specialization'},
   { path: '/admin-dashboard/reported-accounts', icon: FileText, label: 'Reports' },
   { path: '/admin-dashboard/admin/subscription-plans', icon: DollarSign, label: 'Plans' },
-  { path: '/revenue', icon: DollarSign, label: 'Revenue' },
-  { path: '/settings', icon: Settings, label: 'Settings' }
+  // { path: '/revenue', icon: DollarSign, label: 'Revenue' },
+  { path: '/admin-dashboard/company-report', icon: Settings, label: 'Company Report' }
 ];
 
 const Sidebar: React.FC = () => {

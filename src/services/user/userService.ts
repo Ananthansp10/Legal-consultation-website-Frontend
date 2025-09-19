@@ -80,9 +80,9 @@ export const bookAppointment=async(data:AppointmentData)=>{
     }
 }
 
-export const getAppointments=async(userId:string,appointmentStatus:string)=>{
+export const getAppointments=async(userId:string,appointmentStatus:string,startIndex:number,limit:number)=>{
     try {
-       return await axios.get(USER_API.GET_APPOINTMENTS(userId,appointmentStatus))
+       return await axios.get(USER_API.GET_APPOINTMENTS(userId,appointmentStatus,startIndex,limit))
     } catch (error) {
         throw error
     }

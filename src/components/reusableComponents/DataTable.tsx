@@ -22,9 +22,13 @@ interface DataTableProps {
   data: DataItem[];
   type:string;
   fetchData:Function;
+  currentPage:number;
+  totalPages:number;
+  setCurrentPage:any;
+  startIndex:number;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetchData }) => {
+const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetchData, currentPage, totalPages, setCurrentPage, startIndex }) => {
 
     const [filteredData,setFilteredData]=useState<DataItem[]>(data)
 
@@ -43,13 +47,6 @@ const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetc
             })
         }
     }
-
-    const [currentPage,setCurrentPage]=useState(1)
-    const itemsPerPage=2
-    const totalPages=Math.ceil(filteredData.length/itemsPerPage)
-    const startIndex=(currentPage-1) * itemsPerPage
-    const lastIndex=startIndex + itemsPerPage
-    let currentData=filteredData.slice(startIndex,lastIndex)
 
     const [search,setSearch]=useState('')
 
@@ -166,7 +163,7 @@ const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetc
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {currentData.map((item, index) => (
+                {filteredData.map((item, index) => (
                   <tr
                     key={item._id}
                     className={`hover:bg-gray-50 transition-colors duration-150 ease-in-out ${
@@ -220,10 +217,10 @@ const DataTable: React.FC<DataTableProps> = ({ title, subtitle, data, type, fetc
         {/* Table Footer */}
         <div className="bg-white px-6 py-4 border-t border-gray-200 rounded-b-lg">
           <div className="text-sm text-gray-500">
-            Showing {currentData.length} {currentData.length === 1 ? 'entry' : 'entries'}
+            Showing {filteredData.length} {filteredData.length === 1 ? 'entry' : 'entries'}
           </div>
         </div>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+        <Pagination currentPage={currentPage} totalPages={totalPages || 0} onPageChange={setCurrentPage}/>
       </div>
     </div>
   );

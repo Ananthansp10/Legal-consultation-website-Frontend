@@ -146,7 +146,7 @@ function SubscriptionPlanPage() {
     createRazorpayOrder(planId,price).then((response)=>{
       console.log(response)
       openRazorpayCheckout(response.data.data).then((response)=>{
-        addPlan(lawyerId!,planId).then(()=>{
+        addPlan(lawyerId!,planId,price).then(()=>{
           toast.success("Payment successfull")
           setTimeout(() => {
              setIsModalOpen(false)
@@ -265,7 +265,7 @@ function SubscriptionPlanPage() {
                   {/* Pricing */}
                   <div className="mb-8">
                     <div className="text-4xl font-bold text-slate-800 mb-2">
-                      {formatPrice(plan.price, plan.currency || '$', plan.duration)}
+                      {formatPrice(plan.price, plan.currency || '₹', plan.duration)}
                     </div>
                     {plan.price > 0 && (
                       <div className={`text-sm font-medium ${colorScheme.accent}`}>

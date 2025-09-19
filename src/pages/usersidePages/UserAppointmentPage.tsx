@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Calendar, Clock, Video, MapPin, Briefcase, User } from 'lucide-react';
+import { Calendar, Clock, Video, MapPin, Briefcase, User, X, CreditCard } from 'lucide-react';
 import UserNavbar from '../../components/userside/Navbar';
 import { cancelAppointment, getAppointments, resheduleAppointment } from '../../services/user/userService';
 import { useSelector } from 'react-redux';
@@ -9,7 +9,6 @@ import { handlePayment } from '../../config/razorpay';
 import { User as userDetails } from '../../interface/userInterface/userInterface';
 import { toast } from 'react-toastify';
 import ConfirmModal from '../../components/reusableComponents/ConfirmModal';
-import { fa } from 'zod/v4/locales';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../components/reusableComponents/Pagination';
 
@@ -32,11 +31,20 @@ function UserAppointmentPage() {
     mode:string;
     status:string;
     payment:string;
+    problem:string;
+    paymentDate?: string;
+    paymentMode?: string;
   }
 
   interface AppointmentCardData{
     appointment:AppointmentsData;
     isCompleted ? :boolean
+  }
+
+  interface PaymentHistoryModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    appointment: AppointmentsData;
   }
 
   const user:userDetails | null=useSelector((state:RootState)=>state.auth.user)
@@ -46,14 +54,23 @@ function UserAppointmentPage() {
   const [appointmentId,setAppointmentId]=useState('')
   const [reshedule,setReshedule]=useState(false)
   const [lawyerId,setLawyerId]=useState('')
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [selectedAppointment, setSelectedAppointment] = useState<AppointmentsData | null>(null)
 
   const navigate=useNavigate()
 
+  const [currentPage,setCurrentPage]=useState(1)
+  const itemsPerPage=2
+  const [totalPages,setTotalPages]=useState(0)
+  const startIndex=(currentPage-1) * itemsPerPage
+
   useEffect(()=>{
-    getAppointments(user?.id!,activeTab).then((response)=>{
+    getAppointments(user?.id!,activeTab,startIndex,itemsPerPage).then((response)=>{
+      console.log(response.data)
       setAppointments(response.data.data)
+      setTotalPages(Math.ceil(response.data.totalAppointments/itemsPerPage))
     })
-  },[activeTab])
+  },[activeTab,currentPage])
 
   function generateRazorpay(id:string,fee:number){
     createRazorpayOrder({id:id,fee:fee}).then((response)=>{
@@ -95,15 +112,124 @@ function UserAppointmentPage() {
     })
   }
 
-  const [currentPage,setCurrentPage]=useState(1)
-  const itemsPerPage=2
-  const totalPages=Math.ceil(appointments.length/itemsPerPage)
-  const startIndex=(currentPage-1) * itemsPerPage
-  const endIndex=startIndex + itemsPerPage
-  const data=appointments.slice(startIndex,endIndex)
+  function handleCardClick(appointment: AppointmentsData) {
+    if (appointment.status === 'Booked' || appointment.status=='Completed' || appointment.status=='Cancelled') {
+      setSelectedAppointment(appointment);
+      setShowPaymentModal(true);
+    }
+  }
+
+  const PaymentHistoryModal = ({ isOpen, onClose, appointment }: PaymentHistoryModalProps) => {
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-blue-100 rounded-full">
+                <CreditCard className="w-5 h-5 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-800">Payment History</h3>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="p-6">
+            <div className="space-y-4">
+              {/* Appointment ID */}
+              <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                <span className="text-sm font-medium text-gray-600">Appointment ID</span>
+                <span className="text-sm text-gray-900 font-mono">{appointment._id.slice(-8)}</span>
+              </div>
+
+              {/* Payment Status */}
+              <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                <span className="text-sm font-medium text-gray-600">Payment Status</span>
+                <span className={`text-sm px-2 py-1 rounded-full ${
+                  appointment.payment === 'Success'
+                    ? 'bg-green-100 text-green-700' 
+                    : appointment.payment === 'Failed' 
+                    ? 'bg-red-100 text-red-700'
+                    : 'bg-yellow-100 text-yellow-700'
+                }`}>
+                  {appointment.payment || 'Refunded'}
+                </span>
+              </div>
+
+              {/* Payment Mode */}
+              <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                <span className="text-sm font-medium text-gray-600">Payment Mode</span>
+                <span className="text-sm text-gray-900">
+                  {appointment.paymentMode || 'Online Payment'}
+                </span>
+              </div>
+
+              {/* Payment Date */}
+              <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                <span className="text-sm font-medium text-gray-600">Payment Date</span>
+                <span className="text-sm text-gray-900">
+                  {appointment.paymentDate}
+                </span>
+              </div>
+
+              {/* Amount */}
+              <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                <span className="text-sm font-medium text-gray-600">Amount Paid</span>
+                <span className="text-sm text-gray-900 font-semibold">
+                  ₹{appointment.lawyer.fee}
+                </span>
+              </div>
+
+              {/* Lawyer Details */}
+              <div className="bg-gray-50 rounded-lg p-4 mt-4">
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Consultation Details</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Lawyer</span>
+                    <span className="text-gray-900">{appointment.lawyer.name}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Date & Time</span>
+                    <span className="text-gray-900">{appointment.date} at {appointment.time}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Mode</span>
+                    <span className="text-gray-900 capitalize">{appointment.mode}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex justify-end p-6 border-t border-gray-200">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const AppointmentCard = ({ appointment, isCompleted = false }:AppointmentCardData) => (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-lg hover:ring-1 hover:ring-blue-100 transition-all duration-300 p-6 mb-4">
+    <div 
+      className={`bg-white rounded-xl shadow-md hover:shadow-lg hover:ring-1 hover:ring-blue-100 transition-all duration-300 p-6 mb-4 ${
+        appointment.status === 'Booked' ? 'cursor-pointer' : appointment.status === 'Completed' ? 'cursor-pointer' : appointment.status === 'Cancelled' ? 'cursor-pointer' : ''
+      }`}
+      onClick={() => handleCardClick(appointment)}
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-4">
           <div className="relative">
@@ -130,6 +256,8 @@ function UserAppointmentPage() {
             </div>
             
             <p className="text-slate-600 text-sm mb-3">{appointment.lawyer.specialization[0]}</p>
+
+            <p className="text-slate-600 text-sm mb-3">{appointment.problem}</p>
             
             <div className="flex items-center space-x-4 text-sm text-slate-500 mb-3">
               <div className="flex items-center space-x-1">
@@ -156,7 +284,7 @@ function UserAppointmentPage() {
               
               {/* Conditional button based on appointment status */}
               {appointment.status === 'Pending' ? (
-                <div className="flex items-center space-x-2 ps-12">
+                <div className="flex items-center space-x-2 ps-12" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={()=>resheduleModal(appointment._id,appointment.lawyer._id)}
                       className="bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
@@ -172,7 +300,7 @@ function UserAppointmentPage() {
                   </div>
               ) : appointment.status === 'Accepted' ? (
                 // Pay Now or Repay button for accepted appointments + Cancel and Reschedule buttons
-                <div className="flex items-center justify-between w-full ml-4">
+                <div className="flex items-center justify-between w-full ml-4" onClick={(e) => e.stopPropagation()}>
                   <button onClick={()=>generateRazorpay(appointment._id,Number(appointment.lawyer.fee))}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       appointment.payment === 'Failed' 
@@ -198,8 +326,9 @@ function UserAppointmentPage() {
                 </div>
               ) : appointment.status === 'Booked' && appointment.mode=='online' ? (
                 // Join Link button + Cancel and Reschedule buttons for booked appointments
-                <div className="flex items-center justify-between w-full ml-4">
-                  <button 
+                <div className="flex items-center justify-between w-full ml-4" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    onClick={()=>navigate(`/user/video-call/${appointment._id}`)}
                     className="bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-all"
                   >
                     Join Link
@@ -220,7 +349,7 @@ function UserAppointmentPage() {
                 </div>
               ) : appointment.status === 'Booked' ? (
                 // Cancel and Reschedule buttons for offline booked appointments
-                <div className="flex items-center space-x-2 ps-12">
+                <div className="flex items-center space-x-2 ps-12" onClick={(e) => e.stopPropagation()}>
                   {/* <button
                     className="bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                   >
@@ -247,6 +376,29 @@ function UserAppointmentPage() {
           </div>
         </div>
       </div>
+      
+      {/* Click hint for booked appointments */}
+      {appointment.status === 'Booked' && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <p className="text-xs text-blue-600 text-center">
+            💡 Click to view payment history
+          </p>
+        </div>
+      )}
+      {appointment.status === 'Cancelled' && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <p className="text-xs text-blue-600 text-center">
+            💡 Click to view payment history
+          </p>
+        </div>
+      )}
+      {appointment.status === 'Completed' && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <p className="text-xs text-blue-600 text-center">
+            💡 Click to view payment history
+          </p>
+        </div>
+      )}
     </div>
   );
 
@@ -385,12 +537,12 @@ function UserAppointmentPage() {
           <div className="flex items-center mb-6">
             <h2 className="text-2xl font-semibold text-slate-800">{getTabTitle(activeTab)}</h2>
             <div className={`ml-3 px-2 py-1 text-xs font-medium rounded-full ${getTabColor(activeTab)}`}>
-              {appointments?.length}
+              {appointments?.length || 0}
             </div>
           </div>
           
           <div className="space-y-4">
-            {data?.map(appointment => (
+            {appointments?.map(appointment => (
               <AppointmentCard 
                 key={appointment?._id} 
                 appointment={appointment} 
@@ -413,9 +565,21 @@ function UserAppointmentPage() {
           </div>
         )}
       </div>
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+      <Pagination currentPage={currentPage} totalPages={totalPages || 0} onPageChange={setCurrentPage}/>
       {showModal && <ConfirmModal message='Are you sure want to Cancel this Appointment' onConfirm={()=>appointmentCancel(appointmentId)} onCancel={()=>setShowModal(false)}/>}
       {showModal && reshedule && <ConfirmModal message='Are you sure want to Reshedule this Appointment' onConfirm={()=>appointmentReshedule()} onCancel={()=>setShowModal(false)}/>}
+      
+      {/* Payment History Modal */}
+      {selectedAppointment && (
+        <PaymentHistoryModal 
+          isOpen={showPaymentModal}
+          onClose={() => {
+            setShowPaymentModal(false);
+            setSelectedAppointment(null);
+          }}
+          appointment={selectedAppointment}
+        />
+      )}
     </div>
   );
 }

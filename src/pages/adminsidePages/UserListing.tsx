@@ -19,19 +19,25 @@ interface User {
 const UserListing: React.FC = () => {
   const [users, setUsers] = useState<User[]>([])
 
+  const [currentPage,setCurrentPage]=useState(1)
+  const itemsPerPage=2
+  const [totalPages,setTotalPages]=useState(0)
+  const startIndex=(currentPage-1) * itemsPerPage
+
   function fetchUsers(){
-    getUsers().then((response)=>{
+    getUsers(startIndex,itemsPerPage).then((response)=>{
       setUsers(response.data.data)
+      setTotalPages(Math.ceil(response.data.totalData)/itemsPerPage)
     })
   }
 
   useEffect(()=>{
     fetchUsers()
-  },[])
+  },[currentPage])
 
   return (
     <div>
-      <DataTable title='Users Manangement' subtitle='Manage and view users' data={users} type='user' fetchData={fetchUsers} />
+      <DataTable title='Users Manangement' subtitle='Manage and view users' data={users} type='user' fetchData={fetchUsers} currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} startIndex={startIndex}/>
     </div>
 
   );

@@ -2,11 +2,11 @@
 
 
 export const ADMIN_API={
-    GET_USERS: "/admin/getusers",
+    GET_USERS: (startIndex:number,limit:number)=> `/admin/getusers/${startIndex}/${limit}`,
     UPDATE_USER_STATUS: (userId: string, status: string) => `/admin/user/${userId}/${status}`,
     UNVERIFIED_LAWYERS: "/admin/unverifiedLawyers",
     VERIFY_LAWYER: (lawyerId: string, status: string, reason: string | null) => `/admin/verification/${lawyerId}/${status}/${reason ?? "null"}`,
-    GET_LAWYERS: "/admin/getlawyers",
+    GET_LAWYERS: (startIndex:number,limit:number)=> `/admin/getlawyers?page=${startIndex}&limit=${limit}`,
     UPDATE_LAWYER_STATUS: (lawyerId: string, status: string) => `/admin/lawyer/${lawyerId}/${status}`,
     ADD_SPECIALIZATION: "/admin/add-specialization",
     GET_SPECIALIZATION: "/admin/get-specialization",
@@ -25,5 +25,7 @@ export const ADMIN_API={
     FILTER_USER: (status:string)=> `/admin/filter-user/${status}`,
     FILTER_LAWYER: (status:string)=> `/admin/filter-lawyer/${status}`,
     GET_USER_PROFILE: (userId:string)=> `/admin/get-user-profile/${userId}`,
-    GET_LAWYER_PROFILE: (lawyerId:string)=> `/admin/get-lawyer-profile/${lawyerId}`
+    GET_LAWYER_PROFILE: (lawyerId:string)=> `/admin/get-lawyer-profile/${lawyerId}`,
+    GET_SUMMARY_REPORT: `/admin/get-summary-report`,
+    GET_REPORTS: '/admin/get-reports'
 }

@@ -52,7 +52,6 @@ const SummaryDashboard = () => {
       revenue:date.revenue
     }
   })
-   console.log(chartData)
 
   return (
     <div className="mb-8">

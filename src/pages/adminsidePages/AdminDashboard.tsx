@@ -1,108 +1,102 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Users, UserCheck, Calendar, AlertTriangle, TrendingUp, MessageSquare, Star } from 'lucide-react';
 import StatCard from '../../components/admin/StatCard';
 import GlassCard from '../../components/admin/GlassCard';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { getSummaryReport } from '../../services/admin/adminService';
+import { StringValidation } from 'zod';
 
 const AdminDashboard: React.FC = () => {
-  // Mock data
-  const revenueData = [
-    { month: 'Jan', revenue: 4000 },
-    { month: 'Feb', revenue: 3000 },
-    { month: 'Mar', revenue: 5000 },
-    { month: 'Apr', revenue: 4500 },
-    { month: 'May', revenue: 6000 },
-    { month: 'Jun', revenue: 5500 },
-  ];
 
-  const appointmentData = [
-    { day: 'Mon', appointments: 12 },
-    { day: 'Tue', appointments: 19 },
-    { day: 'Wed', appointments: 15 },
-    { day: 'Thu', appointments: 22 },
-    { day: 'Fri', appointments: 18 },
-    { day: 'Sat', appointments: 8 },
-    { day: 'Sun', appointments: 5 },
-  ];
+  function getColour(avg:number){
+    if(avg>=90 && avg<100){
+      return '#ef4444'
+    }
+    if(avg>=1 && avg<=10){
+      return '#f59e0b'
+    }
+    if(avg<=0){
+      return '#10b981'
+    }
+    return '#3b82f6'
+  }
 
-  const specialityData = [
-    { name: 'Corporate Law', value: 35, color: '#3b82f6' },
-    { name: 'Criminal Law', value: 25, color: '#10b981' },
-    { name: 'Family Law', value: 20, color: '#f59e0b' },
-    { name: 'Real Estate', value: 20, color: '#ef4444' },
-  ];
+  interface RevenueData{
+    month:number;
+    revenue:number;
+  }
 
-  const topLawyers = [
-    { 
-      name: 'Dr. Sarah Johnson', 
-      speciality: 'Corporate Law', 
-      consultations: 145, 
-      rating: 4.9,
-      profileImage: 'https://images.pexels.com/photos/5490276/pexels-photo-5490276.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    { 
-      name: 'John Martinez', 
-      speciality: 'Criminal Law', 
-      consultations: 128, 
-      rating: 4.8,
-      profileImage: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    { 
-      name: 'Emily Chen', 
-      speciality: 'Family Law', 
-      consultations: 98, 
-      rating: 4.7,
-      profileImage: 'https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-  ];
+  interface RevenueChart{
+    _id:RevenueData,
+    revenue:number;
+  }
 
-  const topUsers = [
-    { 
-      name: 'Alice Cooper', 
-      consultations: 24, 
-      location: 'New York, NY',
-      profileImage: 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    { 
-      name: 'Bob Wilson', 
-      consultations: 18, 
-      location: 'Los Angeles, CA',
-      profileImage: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    { 
-      name: 'Carol Davis', 
-      consultations: 15, 
-      location: 'Chicago, IL',
-      profileImage: 'https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-  ];
+  interface WeeklyAppointmentsData{
+    dayName:string;
+    appointmentsCount:number;
+  }
 
-  const recentMessages = [
-    { 
-      user: 'Alice Cooper', 
-      message: 'Need help with contract review...', 
-      time: '2 min ago',
-      profileImage: 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    { 
-      user: 'Bob Wilson', 
-      message: 'Question about divorce proceedings...', 
-      time: '5 min ago',
-      profileImage: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    { 
-      user: 'Carol Davis', 
-      message: 'Real estate closing issues...', 
-      time: '10 min ago',
-      profileImage: 'https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    { 
-      user: 'David Brown', 
-      message: 'Criminal defense consultation...', 
-      time: '15 min ago',
-      profileImage: 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-  ];
+  interface SpecializationData{
+    specializationName:string;
+    average:number;
+  }
+
+  interface TopLawyersData{
+    name:string;
+    profileImage:string;
+    specialization:string;
+    totalConsultation:number;
+    rating:number;
+  }
+
+  interface TopUserData{
+    name:string;
+    profileImage:string;
+    state:string;
+    country:string;
+    totalConsultation:number
+  }
+
+  interface StateChartData{
+    _id:string;
+    consultations:number;
+  }
+
+  interface CountryChartData{
+    _id:string;
+    consultations:number;
+  }
+
+  interface SummaryReport{
+    totalUsers:number;
+    totalLawyers:number;
+    todaysAppointments:number;
+    pendingVerification:number;
+    revenueChart:RevenueChart[];
+    weeklyAppointments:WeeklyAppointmentsData[];
+    specializationChart:SpecializationData[];
+    topLawyers:TopLawyersData[];
+    topUsers:TopUserData[];
+    stateChart:StateChartData[];
+    countryChart:CountryChartData[];
+  }
+
+  const months=["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+  const [summaryReport,setSummaryReport]=useState<SummaryReport | null>(null)
+
+  useEffect(()=>{
+    getSummaryReport().then((response)=>{
+      setSummaryReport(response.data.data)
+    })
+  },[])
+
+  const revenueChartObj=summaryReport?.revenueChart.map((data)=>{
+    return{
+      month:months[data._id.month-1],
+      revenue:data.revenue
+    }
+  })
 
   return (
     <div className="space-y-6">
@@ -116,25 +110,25 @@ const AdminDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Lawyers"
-          value="156"
+          value={summaryReport?.totalLawyers || 0}
           icon={UserCheck}
           trend={{ value: 12, isPositive: true }}
         />
         <StatCard
           title="Active Users"
-          value="2,847"
+          value={summaryReport?.totalUsers || 0}
           icon={Users}
           trend={{ value: 8, isPositive: true }}
         />
         <StatCard
           title="Appointments Today"
-          value="24"
+          value={summaryReport?.todaysAppointments || 0}
           icon={Calendar}
           trend={{ value: -3, isPositive: false }}
         />
         <StatCard
           title="Pending Verifications"
-          value="8"
+          value={summaryReport?.pendingVerification || 0}
           icon={AlertTriangle}
           trend={{ value: 5, isPositive: false }}
         />
@@ -150,7 +144,7 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={revenueData}>
+          <LineChart data={revenueChartObj || []}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis dataKey="month" stroke="#64748b" />
             <YAxis stroke="#64748b" />
@@ -172,12 +166,12 @@ const AdminDashboard: React.FC = () => {
         <GlassCard className="p-6">
           <h3 className="text-lg font-semibold text-slate-800 mb-6">Weekly Appointments</h3>
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={appointmentData}>
+            <BarChart data={summaryReport?.weeklyAppointments}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="day" stroke="#64748b" />
+              <XAxis dataKey="dayName" stroke="#64748b" />
               <YAxis stroke="#64748b" />
               <Tooltip />
-              <Bar dataKey="appointments" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="appointmentsCount" fill="#3b82f6" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </GlassCard>
@@ -188,17 +182,17 @@ const AdminDashboard: React.FC = () => {
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
-                data={specialityData}
+                data={summaryReport?.specializationChart || []}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                label={({ specializationName, average }) => `${specializationName}: ${(average)}%`}
                 outerRadius={80}
                 fill="#8884d8"
-                dataKey="value"
+                dataKey="average"
               >
-                {specialityData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                {summaryReport?.specializationChart.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getColour(entry.average)} />
                 ))}
               </Pie>
               <Tooltip />
@@ -213,7 +207,7 @@ const AdminDashboard: React.FC = () => {
         <GlassCard className="p-6">
           <h3 className="text-lg font-semibold text-slate-800 mb-6">Top Performing Lawyers</h3>
           <div className="space-y-4">
-            {topLawyers.map((lawyer, index) => (
+            {summaryReport?.topLawyers.map((lawyer, index) => (
               <div key={index} className="flex items-center space-x-4 p-4 bg-white/50 rounded-xl hover:bg-white/70 transition-all duration-200">
                 <img
                   src={lawyer.profileImage}
@@ -222,14 +216,14 @@ const AdminDashboard: React.FC = () => {
                 />
                 <div className="flex-1">
                   <h4 className="font-semibold text-slate-800">{lawyer.name}</h4>
-                  <p className="text-sm text-slate-600">{lawyer.speciality}</p>
+                  <p className="text-sm text-slate-600">{lawyer.specialization}</p>
                   <div className="flex items-center space-x-2 mt-1">
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
                     <span className="text-sm text-slate-600">{lawyer.rating}</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-slate-800">{lawyer.consultations}</p>
+                  <p className="font-semibold text-slate-800">{lawyer.totalConsultation}</p>
                   <p className="text-sm text-slate-600">consultations</p>
                 </div>
               </div>
@@ -241,7 +235,7 @@ const AdminDashboard: React.FC = () => {
         <GlassCard className="p-6">
           <h3 className="text-lg font-semibold text-slate-800 mb-6">Most Active Users</h3>
           <div className="space-y-4">
-            {topUsers.map((user, index) => (
+            {summaryReport?.topUsers.map((user, index) => (
               <div key={index} className="flex items-center space-x-4 p-4 bg-white/50 rounded-xl hover:bg-white/70 transition-all duration-200">
                 <img
                   src={user.profileImage}
@@ -250,10 +244,10 @@ const AdminDashboard: React.FC = () => {
                 />
                 <div className="flex-1">
                   <h4 className="font-semibold text-slate-800">{user.name}</h4>
-                  <p className="text-sm text-slate-600">{user.location}</p>
+                  <p className="text-sm text-slate-600">{user.country},{user.state}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-slate-800">{user.consultations}</p>
+                  <p className="font-semibold text-slate-800">{user.totalConsultation}</p>
                   <p className="text-sm text-slate-600">consultations</p>
                 </div>
               </div>
@@ -262,32 +256,151 @@ const AdminDashboard: React.FC = () => {
         </GlassCard>
       </div>
 
-      {/* Recent Messages */}
-      <GlassCard className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-slate-800">Recent Messages</h3>
-          <MessageSquare className="w-5 h-5 text-slate-400" />
-        </div>
-        <div className="space-y-4">
-          {recentMessages.map((message, index) => (
-            <div key={index} className="flex items-start space-x-3 p-3 hover:bg-white/50 rounded-lg transition-colors duration-200">
-              <img
-                src={message.profileImage}
-                alt={message.user}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-slate-800 text-sm">{message.user}</p>
-                <p className="text-slate-600 text-sm truncate">{message.message}</p>
-                <p className="text-xs text-slate-400 mt-1">{message.time}</p>
-              </div>
+      {/* Geographical Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* State Insights */}
+        <GlassCard className="p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-blue-500/20 p-2 rounded-lg">
+              <TrendingUp className="w-5 h-5 text-blue-600" />
             </div>
-          ))}
-        </div>
-        <button className="w-full mt-4 text-blue-500 hover:text-blue-600 text-sm font-medium">
-          💬 View All Messages
-        </button>
-      </GlassCard>
+            <div>
+              <h3 className="text-lg font-semibold text-slate-800">State Insights</h3>
+              <p className="text-slate-600 text-sm">Consultations by Indian states</p>
+            </div>
+          </div>
+          
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={summaryReport?.stateChart}
+              margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+            >
+              <defs>
+                <linearGradient id="stateGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.5} />
+              <XAxis 
+                dataKey="_id"
+                tick={{ fontSize: 12, fill: '#64748b' }}
+                angle={-45}
+                textAnchor="end"
+                height={80}
+              />
+              <YAxis 
+                tick={{ fontSize: 12, fill: '#64748b' }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+              <Bar 
+                dataKey="consultations" 
+                fill="url(#stateGradient)"
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </GlassCard>
+
+        {/* Country Insights */}
+        <GlassCard className="p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-emerald-500/20 p-2 rounded-lg">
+              <Users className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-slate-800">Country Insights</h3>
+              <p className="text-slate-600 text-sm">Global consultation distribution</p>
+            </div>
+          </div>
+          
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <defs>
+                <linearGradient id="countryGradient0" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#10B981" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="#059669" stopOpacity={0.6}/>
+                </linearGradient>
+                <linearGradient id="countryGradient1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6}/>
+                </linearGradient>
+                <linearGradient id="countryGradient2" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="#7C3AED" stopOpacity={0.6}/>
+                </linearGradient>
+                <linearGradient id="countryGradient3" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="#D97706" stopOpacity={0.6}/>
+                </linearGradient>
+                <linearGradient id="countryGradient4" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#EF4444" stopOpacity={0.8}/>
+                  <stop offset="100%" stopColor="#DC2626" stopOpacity={0.6}/>
+                </linearGradient>
+              </defs>
+              <Pie
+                data={summaryReport?.countryChart}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={120}
+                paddingAngle={2}
+                dataKey="consultations"
+              >
+                {[0, 1, 2, 3, 4].map((index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={`url(#countryGradient${index})`}
+                    stroke="#ffffff"
+                    strokeWidth={2}
+                  />
+                ))}
+              </Pie>
+              <Tooltip 
+                formatter={(value: any, name: any, props: any) => [
+                  `${value} consultations (${value * 10 > 100 ? 100 : value * 10}%)`,
+                  props.payload.country
+                ]}
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+          
+          {/* Legend */}
+          <div className="mt-4 space-y-2">
+            {summaryReport?.countryChart.map((item, index) => (
+              <div key={item._id} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor:'red' }}
+                  />
+                  <span className="text-sm font-medium text-slate-700">{item._id}</span>
+                </div>
+                <div className="text-sm text-slate-600">
+                  {item.consultations * 10 > 100 ? 100 : item.consultations * 10}% ({item.consultations})
+                </div>
+              </div>
+            ))}
+          </div>
+        </GlassCard>
+      </div>
     </div>
   );
 };

@@ -19,9 +19,9 @@ export const verifyLawyer=async(lawyerId:string,status:string,reason:string | nu
     }
 }
 
-export const getLawyers=async()=>{
+export const getLawyers=async(startIndex:number,limit:number)=>{
     try {
-       let result=await axios.get(ADMIN_API.GET_LAWYERS,{params:{role:'admin'}})
+       let result=await axios.get(ADMIN_API.GET_LAWYERS(startIndex,limit),{params:{role:'admin'}})
        return result;
     } catch (error) {
         throw error;

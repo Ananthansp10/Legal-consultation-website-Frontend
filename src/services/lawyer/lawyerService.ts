@@ -51,9 +51,9 @@ export const updateRuleStatus=async(ruleId:string,ruleStatus:boolean)=>{
   }
 }
 
-export const getAppointments=async(lawyerId:string,appointmentStatus:string)=>{
+export const getAppointments=async(lawyerId:string,appointmentStatus:string,startIndex:number,limit:number)=>{
   try {
-    return axios.get(LAWYER_API.GET_APPOINTMENTS(lawyerId,appointmentStatus))
+    return axios.get(LAWYER_API.GET_APPOINTMENTS(lawyerId,appointmentStatus,startIndex,limit))
   } catch (error) {
     throw error
   }
@@ -91,9 +91,9 @@ export const verifyRazorpayPayment=async(data:RazorpayPaymentData)=>{
   }
 }
 
-export const addPlan=async(lawyerId:string,planId:string)=>{
+export const addPlan=async(lawyerId:string,planId:string,price:number)=>{
   try {
-    return await axios.post(LAWYER_API.ADD_PLAN(lawyerId,planId))
+    return await axios.post(LAWYER_API.ADD_PLAN(lawyerId,planId,price))
   } catch (error) {
     throw error
   }

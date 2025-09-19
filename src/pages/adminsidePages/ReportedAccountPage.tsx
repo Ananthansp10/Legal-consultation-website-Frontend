@@ -5,6 +5,7 @@ import { getReportedAccounts, updateReportedAccountStatus } from '../../services
 import { updateUserStatus } from '../../services/admin/userListingService';
 import { updateLawyerStatus } from '../../services/admin/lawyerListingService';
 import { toast } from 'react-toastify';
+import Pagination from '../../components/reusableComponents/Pagination';
 
 interface ReportedAccount {
   _id: string;
@@ -91,6 +92,13 @@ const ReportedAccountsPage = () => {
     setIsModalOpen(false);
     setSelectedAccount(null);
   };
+
+  const [currentPage,setCurrentPage]=useState(1)
+  const itemsPerPage=3
+  const totalPages=Math.ceil(reports.length/itemsPerPage)
+  const startIndex=(currentPage-1) * itemsPerPage
+  const endIndex=startIndex + itemsPerPage
+  const data=reports.slice(startIndex,endIndex)
 
   const tabs = [
     { key: 'All' as const, label: 'All', count: reports.length },
@@ -183,7 +191,7 @@ const ReportedAccountsPage = () => {
 
           {/* Reported Accounts Cards */}
           <div className="space-y-4">
-            {reports.map((account) => {
+            {data.map((account) => {
               const statusConfig = getStatusConfig(account.status);
               
               return (
@@ -252,6 +260,7 @@ const ReportedAccountsPage = () => {
                 </div>
               );
             })}
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
           </div>
 
           {/* Empty State */}

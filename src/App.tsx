@@ -54,6 +54,9 @@ import LawyerChatViewPage from './pages/lawyersidePages/LawyerChatViewPage';
 import AddBankDetailsPage from './pages/lawyersidePages/AddBankDetailsPage';
 import AddFeedbackPage from './pages/usersidePages/AddFeedbackPage';
 import ReviewListing from './components/reusableComponents/ReviewListing';
+import CompanyReportPage from './pages/adminsidePages/CompanyReportPage';
+import VideoCallPage from './components/reusableComponents/VideoCallPage';
+import UserVideoCallPage from './pages/usersidePages/UserVideoCallPage';
 
 function App() {
   return (
@@ -98,6 +101,7 @@ function App() {
               <Route path='/user/chat' element={<ChatPage/>}/>
               <Route path='/feedback/:lawyerId' element={<AddFeedbackPage/>}/>
               <Route path='/reviews/:lawyerId' element={<ReviewListing/>}/>
+              <Route path='/user/video-call/:appointmentId' element={<UserVideoCallPage/>}/>
           </Route>
 
            <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>
@@ -113,6 +117,7 @@ function App() {
               <Route path='/lawyer/chat-view/:userId' element={<LawyerChatViewPage/>}/>
               <Route path='/lawyer/add-bank-details' element={<AddBankDetailsPage/>}/>
               <Route path='/lawyer/reviews/:lawyerId/:userType' element={<ReviewListing/>}/>
+              <Route path='/lawyer/video-call/:appointmentId' element={<VideoCallPage/>}/>
           </Route>
 
           <Route path='/admin' element={<AdminWelcomePage/>}/>
@@ -129,6 +134,7 @@ function App() {
               <Route path='reported-accounts' element={<ReportedAccountsPage/>}/>
               <Route path='admin/subscription-plans' element={<SubscriptionPlanManagement/>}/>
               <Route path='profile-view' element={<ProfilePage/>}/>
+              <Route path='company-report' element={<CompanyReportPage/>}/>
             </Route>
           </Route>
           

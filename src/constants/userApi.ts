@@ -11,7 +11,7 @@ export const USER_API={
   FILTER_BY_SPECIALIZATION: (specialization: string) => `/user/filter-lawyer/${specialization}`,
   SEARCH_LAWYER: (name: string) => `/user/search-lawyer/${name}`,
   BOOK_APPOINTMENT: "/user/book-appointment",
-  GET_APPOINTMENTS: (userId:string,appointmentStatus:string)=> `/user/get-appointments/${userId}/${appointmentStatus}`,
+  GET_APPOINTMENTS: (userId:string,appointmentStatus:string,startIndex:number,limit:number)=> `/user/get-appointments/${userId}/${appointmentStatus}/${startIndex}/${limit}`,
   CANCEL_APPOINTMENT: (appointmentId:string)=> `/user/cancel-appointment/${appointmentId}`,
   GET_TODAYS_APPOINTMENTS: (userId:string)=> `/user/get-todays-appointments/${userId}`,
   RESHEDULE_APPOINTMENT: (appointmentId:string)=> `/user/reshedule-appointment/${appointmentId}`,

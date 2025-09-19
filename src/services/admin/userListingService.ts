@@ -3,9 +3,9 @@ import { axiosInstance as axios } from "../../config/axiox"
 import { ApiResponse } from "../../interface/userInterface/axiosResponseInterface";
 import { ADMIN_API } from "../../constants/adminApi";
 
-export const getUsers=async()=>{
+export const getUsers=async(startIndex:number,limit:number)=>{
     try {
-        let result=await axios.get(ADMIN_API.GET_USERS)
+        let result=await axios.get(ADMIN_API.GET_USERS(startIndex,limit))
         return result;
     } catch (error) {
         throw error;

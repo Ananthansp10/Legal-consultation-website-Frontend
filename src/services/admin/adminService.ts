@@ -129,3 +129,19 @@ export const getLawyerProfile=async(lawyerId:string)=>{
         throw error
     }
 }
+
+export const getSummaryReport=async()=>{
+    try {
+       return await axios.get(ADMIN_API.GET_SUMMARY_REPORT)
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getReports=async()=>{
+    try {
+       return await axios.get(ADMIN_API.GET_REPORTS) 
+    } catch (error) {
+       throw error 
+    }
+}
