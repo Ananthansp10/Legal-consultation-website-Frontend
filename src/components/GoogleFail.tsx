@@ -2,14 +2,14 @@ import { AlertCircle, RefreshCw, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 function GoogleFail() {
-  let navigate=useNavigate()
+  let navigate = useNavigate()
 
   const handleTryAgain = () => {
     window.open("http://localhost:5000/api/user/auth/google", "_self")
   };
 
   const handleGoBack = () => {
-   navigate('/auth/signin')
+    navigate('/auth/signin')
   };
 
   return (
@@ -34,7 +34,7 @@ function GoogleFail() {
                         <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-red-200 rounded-full animate-pulse opacity-60 delay-200"></div>
                         <div className="absolute top-1/2 -right-3 w-3 h-3 bg-red-200 rounded-full animate-pulse opacity-50 delay-500"></div>
                       </div>
-                      
+
                       {/* Google Colors Decoration */}
                       <div className="flex justify-center space-x-2 mt-4">
                         <div className="w-3 h-3 bg-red-500 rounded-full opacity-60"></div>
@@ -45,7 +45,7 @@ function GoogleFail() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Subtle background pattern */}
                 <div className="absolute inset-0 opacity-5">
                   <div className="w-full h-full" style={{

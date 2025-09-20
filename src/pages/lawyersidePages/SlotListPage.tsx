@@ -46,7 +46,7 @@ function SlotListPage() {
   const lawyerId: string | undefined = useSelector((state: RootState) => state?.lawyerAuth?.lawyer?._id);
 
   const [slots, setSlots] = useState<Array<SlotData>>();
-  const [filterStatus,  setFilterStatus] = useState<'all' | 'enabled' | 'disabled' | string>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'enabled' | 'disabled' | string>('all');
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -56,8 +56,8 @@ function SlotListPage() {
     });
   };
 
-  function fetchRules(type:string){
-    getSlot(lawyerId!,type).then((response) => {
+  function fetchRules(type: string) {
+    getSlot(lawyerId!, type).then((response) => {
       setSlots(response.data.data);
     });
   }
@@ -72,15 +72,15 @@ function SlotListPage() {
 
   const handleToggleStatus = (slotId: string, currentStatus: boolean) => {
     console.log(currentStatus)
-    updateRuleStatus(slotId,currentStatus).then((response)=>{
+    updateRuleStatus(slotId, currentStatus).then((response) => {
       toast.success(response.data.message)
       fetchRules('all')
-    }).catch((error)=>{
+    }).catch((error) => {
       toast.error("Something went wrong")
     })
   };
 
-  function filterRule(type:string){
+  function filterRule(type: string) {
     setFilterStatus(type)
     fetchRules(type)
   }
@@ -115,31 +115,28 @@ function SlotListPage() {
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => filterRule('all')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  filterStatus === 'all'
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200 ${filterStatus === 'all'
                     ? 'bg-blue-600 text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+                  }`}
               >
                 All
               </button>
               <button
                 onClick={() => filterRule('enabled')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  filterStatus === 'enabled'
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200 ${filterStatus === 'enabled'
                     ? 'bg-green-600 text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+                  }`}
               >
                 Enabled
               </button>
               <button
                 onClick={() => filterRule('disabled')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  filterStatus === 'disabled'
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-200 ${filterStatus === 'disabled'
                     ? 'bg-red-600 text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+                  }`}
               >
                 Disabled
               </button>
@@ -154,9 +151,8 @@ function SlotListPage() {
           {slots?.map((slot) => (
             <div
               key={slot._id}
-              className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border hover:border-slate-300 overflow-hidden group ${
-                slot.status ? 'border-slate-200' : 'border-red-200 opacity-75'
-              }`}
+              className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border hover:border-slate-300 overflow-hidden group ${slot.status ? 'border-slate-200' : 'border-red-200 opacity-75'
+                }`}
             >
               {/* Card Header */}
               <div className="p-6 pb-4">
@@ -183,11 +179,10 @@ function SlotListPage() {
 
                 {/* Status Badge */}
                 <div className="mb-4">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                    slot.status
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${slot.status
                       ? 'bg-green-100 text-green-800 border border-green-200'
                       : 'bg-red-100 text-red-800 border border-red-200'
-                  }`}>
+                    }`}>
                     {slot.status ? 'Active' : 'Inactive'}
                   </span>
                 </div>
@@ -244,11 +239,10 @@ function SlotListPage() {
 
                 <button
                   onClick={() => handleToggleStatus(slot?._id, slot.status)}
-                  className={`inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 border ${
-                    slot.status
+                  className={`inline-flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 border ${slot.status
                       ? 'text-red-700 bg-red-50 hover:bg-red-100 border-red-200 hover:border-red-300'
                       : 'text-green-700 bg-green-50 hover:bg-green-100 border-green-200 hover:border-green-300'
-                  }`}
+                    }`}
                 >
                   {slot.status ? (
                     <>

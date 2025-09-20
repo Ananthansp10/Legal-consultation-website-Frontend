@@ -15,30 +15,30 @@ import Pagination from '../../components/reusableComponents/Pagination';
 function UserAppointmentPage() {
   const [activeTab, setActiveTab] = useState('Pending');
 
-  interface LawyerData{
-    _id:string;
-    name:string;
-    specialization:string[];
-    profileImage:string;
-    fee:string;
+  interface LawyerData {
+    _id: string;
+    name: string;
+    specialization: string[];
+    profileImage: string;
+    fee: string;
   }
 
-  interface AppointmentsData{
-    _id:string;
-    lawyer:LawyerData;
-    date:string;
-    time:string;
-    mode:string;
-    status:string;
-    payment:string;
-    problem:string;
+  interface AppointmentsData {
+    _id: string;
+    lawyer: LawyerData;
+    date: string;
+    time: string;
+    mode: string;
+    status: string;
+    payment: string;
+    problem: string;
     paymentDate?: string;
     paymentMode?: string;
   }
 
-  interface AppointmentCardData{
-    appointment:AppointmentsData;
-    isCompleted ? :boolean
+  interface AppointmentCardData {
+    appointment: AppointmentsData;
+    isCompleted?: boolean
   }
 
   interface PaymentHistoryModalProps {
@@ -47,73 +47,73 @@ function UserAppointmentPage() {
     appointment: AppointmentsData;
   }
 
-  const user:userDetails | null=useSelector((state:RootState)=>state.auth.user)
+  const user: userDetails | null = useSelector((state: RootState) => state.auth.user)
 
-  const [appointments,setAppointments]=useState<Array<AppointmentsData>>([])
-  const [showModal,setShowModal]=useState(false)
-  const [appointmentId,setAppointmentId]=useState('')
-  const [reshedule,setReshedule]=useState(false)
-  const [lawyerId,setLawyerId]=useState('')
+  const [appointments, setAppointments] = useState<Array<AppointmentsData>>([])
+  const [showModal, setShowModal] = useState(false)
+  const [appointmentId, setAppointmentId] = useState('')
+  const [reshedule, setReshedule] = useState(false)
+  const [lawyerId, setLawyerId] = useState('')
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentsData | null>(null)
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
-  const [currentPage,setCurrentPage]=useState(1)
-  const itemsPerPage=2
-  const [totalPages,setTotalPages]=useState(0)
-  const startIndex=(currentPage-1) * itemsPerPage
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 2
+  const [totalPages, setTotalPages] = useState(0)
+  const startIndex = (currentPage - 1) * itemsPerPage
 
-  useEffect(()=>{
-    getAppointments(user?.id!,activeTab,startIndex,itemsPerPage).then((response)=>{
+  useEffect(() => {
+    getAppointments(user?.id!, activeTab, startIndex, itemsPerPage).then((response) => {
       console.log(response.data)
       setAppointments(response.data.data)
-      setTotalPages(Math.ceil(response.data.totalAppointments/itemsPerPage))
+      setTotalPages(Math.ceil(response.data.totalAppointments / itemsPerPage))
     })
-  },[activeTab,currentPage])
+  }, [activeTab, currentPage])
 
-  function generateRazorpay(id:string,fee:number){
-    createRazorpayOrder({id:id,fee:fee}).then((response)=>{
-      handlePayment(response.data.data,user!,id).then((response)=>{
+  function generateRazorpay(id: string, fee: number) {
+    createRazorpayOrder({ id: id, fee: fee }).then((response) => {
+      handlePayment(response.data.data, user!, id).then((response) => {
         toast.success(response.data.message)
         setActiveTab('Upcoming')
-      }).catch((error)=>{
+      }).catch((error) => {
         toast.error(error.response.data.message)
         setActiveTab('Accepted')
       })
     })
   }
 
-  function cancelModal(id:string){
+  function cancelModal(id: string) {
     setAppointmentId(id)
     setShowModal(true)
   }
 
-  function appointmentCancel(id:string){
-    cancelAppointment(id).then((response)=>{
+  function appointmentCancel(id: string) {
+    cancelAppointment(id).then((response) => {
       toast.success(response.data.message)
       setActiveTab('Cancelled')
       setShowModal(false)
-    }).catch((error)=>{
+    }).catch((error) => {
       toast.error(error.response.data.message)
     })
   }
 
-  function resheduleModal(id:string,lawyerId:string){
+  function resheduleModal(id: string, lawyerId: string) {
     setAppointmentId(id)
     setLawyerId(lawyerId)
     setReshedule(true)
     setShowModal(true)
   }
 
-  function appointmentReshedule(){
-    resheduleAppointment(appointmentId).then((response)=>{
+  function appointmentReshedule() {
+    resheduleAppointment(appointmentId).then((response) => {
       navigate(`/user/slot-booking/${lawyerId}`)
     })
   }
 
   function handleCardClick(appointment: AppointmentsData) {
-    if (appointment.status === 'Booked' || appointment.status=='Completed' || appointment.status=='Cancelled') {
+    if (appointment.status === 'Booked' || appointment.status == 'Completed' || appointment.status == 'Cancelled') {
       setSelectedAppointment(appointment);
       setShowPaymentModal(true);
     }
@@ -153,13 +153,12 @@ function UserAppointmentPage() {
               {/* Payment Status */}
               <div className="flex justify-between items-center py-3 border-b border-gray-100">
                 <span className="text-sm font-medium text-gray-600">Payment Status</span>
-                <span className={`text-sm px-2 py-1 rounded-full ${
-                  appointment.payment === 'Success'
-                    ? 'bg-green-100 text-green-700' 
-                    : appointment.payment === 'Failed' 
+                <span className={`text-sm px-2 py-1 rounded-full ${appointment.payment === 'Success'
+                  ? 'bg-green-100 text-green-700'
+                  : appointment.payment === 'Failed'
                     ? 'bg-red-100 text-red-700'
                     : 'bg-yellow-100 text-yellow-700'
-                }`}>
+                  }`}>
                   {appointment.payment || 'Refunded'}
                 </span>
               </div>
@@ -223,42 +222,40 @@ function UserAppointmentPage() {
     );
   };
 
-  const AppointmentCard = ({ appointment, isCompleted = false }:AppointmentCardData) => (
-    <div 
-      className={`bg-white rounded-xl shadow-md hover:shadow-lg hover:ring-1 hover:ring-blue-100 transition-all duration-300 p-6 mb-4 ${
-        appointment.status === 'Booked' ? 'cursor-pointer' : appointment.status === 'Completed' ? 'cursor-pointer' : appointment.status === 'Cancelled' ? 'cursor-pointer' : ''
-      }`}
+  const AppointmentCard = ({ appointment, isCompleted = false }: AppointmentCardData) => (
+    <div
+      className={`bg-white rounded-xl shadow-md hover:shadow-lg hover:ring-1 hover:ring-blue-100 transition-all duration-300 p-6 mb-4 ${appointment.status === 'Booked' ? 'cursor-pointer' : appointment.status === 'Completed' ? 'cursor-pointer' : appointment.status === 'Cancelled' ? 'cursor-pointer' : ''
+        }`}
       onClick={() => handleCardClick(appointment)}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-4">
           <div className="relative">
-            <img 
-              src={appointment.lawyer.profileImage} 
+            <img
+              src={appointment.lawyer.profileImage}
               alt={appointment.lawyer.name}
               className="w-12 h-12 rounded-full object-cover border-2 border-gray-100"
             />
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
-          
+
           <div className="flex-1">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-semibold text-slate-800">{appointment.lawyer.name}</h3>
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                appointment.status === 'Completed' ? 'bg-green-100 text-green-700' :
+              <span className={`px-3 py-1 rounded-full text-xs font-medium ${appointment.status === 'Completed' ? 'bg-green-100 text-green-700' :
                 appointment.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                appointment.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
-                appointment.status === 'Rejected' ? 'bg-red-100 text-red-700' :
-                'bg-blue-100 text-blue-700'
-              }`}>
+                  appointment.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
+                    appointment.status === 'Rejected' ? 'bg-red-100 text-red-700' :
+                      'bg-blue-100 text-blue-700'
+                }`}>
                 {appointment.status}
               </span>
             </div>
-            
+
             <p className="text-slate-600 text-sm mb-3">{appointment.lawyer.specialization[0]}</p>
 
             <p className="text-slate-600 text-sm mb-3">{appointment.problem}</p>
-            
+
             <div className="flex items-center space-x-4 text-sm text-slate-500 mb-3">
               <div className="flex items-center space-x-1">
                 <Calendar className="w-4 h-4" />
@@ -269,7 +266,7 @@ function UserAppointmentPage() {
                 <span>{appointment.time}</span>
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-1 text-sm">
                 {appointment.mode == 'online' ? (
@@ -281,32 +278,31 @@ function UserAppointmentPage() {
                   {appointment.mode}
                 </span>
               </div>
-              
+
               {/* Conditional button based on appointment status */}
               {appointment.status === 'Pending' ? (
                 <div className="flex items-center space-x-2 ps-12" onClick={(e) => e.stopPropagation()}>
-                    <button
-                      onClick={()=>resheduleModal(appointment._id,appointment.lawyer._id)}
-                      className="bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                    >
-                      Reschedule
-                    </button>
-                    <button 
-                      onClick={()=>cancelModal(appointment._id)}
-                      className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => resheduleModal(appointment._id, appointment.lawyer._id)}
+                    className="bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                  >
+                    Reschedule
+                  </button>
+                  <button
+                    onClick={() => cancelModal(appointment._id)}
+                    className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
               ) : appointment.status === 'Accepted' ? (
                 // Pay Now or Repay button for accepted appointments + Cancel and Reschedule buttons
                 <div className="flex items-center justify-between w-full ml-4" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={()=>generateRazorpay(appointment._id,Number(appointment.lawyer.fee))}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      appointment.payment === 'Failed' 
-                        ? 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700'
-                        : 'bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700'
-                    }`}
+                  <button onClick={() => generateRazorpay(appointment._id, Number(appointment.lawyer.fee))}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${appointment.payment === 'Failed'
+                      ? 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700'
+                      : 'bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700'
+                      }`}
                   >
                     {appointment.payment === 'Failed' ? `Repay ${appointment.lawyer.fee}` : `Pay ${appointment.lawyer.fee}`}
                   </button>
@@ -317,18 +313,18 @@ function UserAppointmentPage() {
                     >
                       Reschedule
                     </button> */}
-                    <button onClick={()=>cancelModal(appointment._id)}
+                    <button onClick={() => cancelModal(appointment._id)}
                       className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                     >
                       Cancel
                     </button>
                   </div>
                 </div>
-              ) : appointment.status === 'Booked' && appointment.mode=='online' ? (
+              ) : appointment.status === 'Booked' && appointment.mode == 'online' ? (
                 // Join Link button + Cancel and Reschedule buttons for booked appointments
                 <div className="flex items-center justify-between w-full ml-4" onClick={(e) => e.stopPropagation()}>
                   <button
-                    onClick={()=>navigate(`/user/video-call/${appointment._id}`)}
+                    onClick={() => navigate(`/user/video-call/${appointment._id}`)}
                     className="bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-all"
                   >
                     Join Link
@@ -339,8 +335,8 @@ function UserAppointmentPage() {
                     >
                       Reschedule
                     </button> */}
-                    <button 
-                      onClick={()=>cancelModal(appointment._id)}
+                    <button
+                      onClick={() => cancelModal(appointment._id)}
                       className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                     >
                       Cancel
@@ -356,7 +352,7 @@ function UserAppointmentPage() {
                     Reschedule
                   </button> */}
                   <button
-                    onClick={()=>cancelModal(appointment._id)}
+                    onClick={() => cancelModal(appointment._id)}
                     className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                   >
                     Cancel
@@ -376,7 +372,7 @@ function UserAppointmentPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Click hint for booked appointments */}
       {appointment.status === 'Booked' && (
         <div className="mt-3 pt-3 border-t border-gray-100">
@@ -385,7 +381,7 @@ function UserAppointmentPage() {
           </p>
         </div>
       )}
-      {appointment.status === 'Cancelled' && (
+      {appointment.status === 'Cancelled' && appointment.paymentDate && (
         <div className="mt-3 pt-3 border-t border-gray-100">
           <p className="text-xs text-blue-600 text-center">
             💡 Click to view payment history
@@ -423,7 +419,7 @@ function UserAppointmentPage() {
 
   const getTabTitle = (tabName: string) => {
     switch (tabName) {
-       case 'Pending':
+      case 'Pending':
         return 'Pending Appointments';
       case 'Accepted':
         return 'Accepted Appointments';
@@ -453,7 +449,7 @@ function UserAppointmentPage() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <UserNavbar navLink='My Appointments'/>
+        <UserNavbar navLink='My Appointments' />
         <div className="text-center mb-12 mt-12">
           <div className="flex items-center justify-center mb-4">
             <div className="p-3 bg-blue-100 rounded-full">
@@ -468,63 +464,57 @@ function UserAppointmentPage() {
         <div className="flex justify-center mb-8">
           <div className="bg-white/70 backdrop-blur-sm rounded-full p-1 shadow-sm border border-gray-200">
             <div className="flex flex-wrap justify-center gap-1">
-              <button 
+              <button
                 onClick={() => setActiveTab('Pending')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'Pending'
-                    ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-md ring-2 ring-yellow-100'
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'Pending'
+                  ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-md ring-2 ring-yellow-100'
+                  : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
                 Pending
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab('Accepted')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'Accepted'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md ring-2 ring-blue-100'
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'Accepted'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md ring-2 ring-blue-100'
+                  : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
-               Accepted
+                Accepted
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab('Upcoming')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'Upcoming'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md ring-2 ring-blue-100'
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'Upcoming'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md ring-2 ring-blue-100'
+                  : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
-               Upcoming
+                Upcoming
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab('Completed')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'Completed'
-                    ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md ring-2 ring-green-100'
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'Completed'
+                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md ring-2 ring-green-100'
+                  : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
                 Completed
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab('Cancelled')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'Cancelled'
-                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md ring-2 ring-red-100'
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'Cancelled'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md ring-2 ring-red-100'
+                  : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
                 Cancelled
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab('Rejected')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'Rejected'
-                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md ring-2 ring-red-100'
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeTab === 'Rejected'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md ring-2 ring-red-100'
+                  : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
                 Rejected
               </button>
@@ -540,13 +530,13 @@ function UserAppointmentPage() {
               {appointments?.length || 0}
             </div>
           </div>
-          
+
           <div className="space-y-4">
             {appointments?.map(appointment => (
-              <AppointmentCard 
-                key={appointment?._id} 
-                appointment={appointment} 
-                isCompleted={activeTab === 'Completed'} 
+              <AppointmentCard
+                key={appointment?._id}
+                appointment={appointment}
+                isCompleted={activeTab === 'Completed'}
               />
             ))}
           </div>
@@ -565,13 +555,13 @@ function UserAppointmentPage() {
           </div>
         )}
       </div>
-      <Pagination currentPage={currentPage} totalPages={totalPages || 0} onPageChange={setCurrentPage}/>
-      {showModal && <ConfirmModal message='Are you sure want to Cancel this Appointment' onConfirm={()=>appointmentCancel(appointmentId)} onCancel={()=>setShowModal(false)}/>}
-      {showModal && reshedule && <ConfirmModal message='Are you sure want to Reshedule this Appointment' onConfirm={()=>appointmentReshedule()} onCancel={()=>setShowModal(false)}/>}
-      
+      <Pagination currentPage={currentPage} totalPages={totalPages || 0} onPageChange={setCurrentPage} />
+      {showModal && <ConfirmModal message='Are you sure want to Cancel this Appointment' onConfirm={() => appointmentCancel(appointmentId)} onCancel={() => setShowModal(false)} />}
+      {showModal && reshedule && <ConfirmModal message='Are you sure want to Reshedule this Appointment' onConfirm={() => appointmentReshedule()} onCancel={() => setShowModal(false)} />}
+
       {/* Payment History Modal */}
       {selectedAppointment && (
-        <PaymentHistoryModal 
+        <PaymentHistoryModal
           isOpen={showPaymentModal}
           onClose={() => {
             setShowPaymentModal(false);

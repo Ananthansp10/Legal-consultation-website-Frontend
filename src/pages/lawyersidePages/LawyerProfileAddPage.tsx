@@ -27,7 +27,7 @@ interface FormData {
   state: string;
   country: string;
   languages: string[];
-  
+
   // Professional Information
   practiceAreas: string[];
   barRegistrationNumber: string;
@@ -39,7 +39,7 @@ interface FormData {
   timeSlotStart: string;
   timeSlotEnd: string;
   education: Education[];
-  
+
   // Documents
   documents: {
     barCouncilId: File | null;
@@ -55,12 +55,12 @@ const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 
 function LawyerProfileAddPage() {
 
-  const lawyer=useSelector((state:RootState)=>state.lawyerAuth.lawyer)
+  const lawyer = useSelector((state: RootState) => state.lawyerAuth.lawyer)
 
   const [formData, setFormData] = useState<FormData>({
     profileImage: null,
-    fullName:lawyer?.name!,
-    email:lawyer?.email!,
+    fullName: lawyer?.name!,
+    email: lawyer?.email!,
     phone: '',
     dateOfBirth: '',
     gender: '',
@@ -70,7 +70,7 @@ function LawyerProfileAddPage() {
     country: '',
     languages: [],
     practiceAreas: [],
-    barRegistrationNumber:'',
+    barRegistrationNumber: '',
     yearsOfExperience: '',
     consultationFee: '',
     lawFirm: '',
@@ -89,7 +89,7 @@ function LawyerProfileAddPage() {
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -177,7 +177,7 @@ function LawyerProfileAddPage() {
   const updateEducation = (id: string, field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      education: prev.education.map(edu => 
+      education: prev.education.map(edu =>
         edu.id === id ? { ...edu, [field]: value } : edu
       )
     }));
@@ -185,57 +185,57 @@ function LawyerProfileAddPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const data=new FormData()
+    const data = new FormData()
 
-    data.append("lawyerId",lawyer?._id!)
-    data.append("name",formData.fullName)
-    data.append("email",formData.email)
-    data.append("phoneNumber",formData.phone)
-    data.append("DOB",formData.dateOfBirth)
-    data.append("gender",formData.gender)
-    data.append("street",formData.street)
-    data.append("state",formData.state)
-    data.append("country",formData.country)
-    data.append("city",formData.city)
-    formData.languages.forEach((lan)=>{
-      data.append("language[]",lan)
+    data.append("lawyerId", lawyer?._id!)
+    data.append("name", formData.fullName)
+    data.append("email", formData.email)
+    data.append("phoneNumber", formData.phone)
+    data.append("DOB", formData.dateOfBirth)
+    data.append("gender", formData.gender)
+    data.append("street", formData.street)
+    data.append("state", formData.state)
+    data.append("country", formData.country)
+    data.append("city", formData.city)
+    formData.languages.forEach((lan) => {
+      data.append("language[]", lan)
     })
-    if(formData.profileImage){
-      data.append("profileImage",formData.profileImage)
+    if (formData.profileImage) {
+      data.append("profileImage", formData.profileImage)
     }
-    formData.practiceAreas.forEach((area)=>{
-      data.append("practiceAreas[]",area)
+    formData.practiceAreas.forEach((area) => {
+      data.append("practiceAreas[]", area)
     })
-    data.append("barRegisterNumber",formData.barRegistrationNumber)
-    data.append("experience",formData.yearsOfExperience)
-    data.append("courtName",formData.lawFirm)
-    data.append("workLocation",formData.workLocation)
-    data.append("fee",formData.consultationFee)
-    formData.education.forEach((edu,index)=>{
-      data.append(`education[${index}][degree]`,edu.degree)
-      data.append(`education[${index}][university]`,edu.university)
-      data.append(`education[${index}][year]`,edu.year)
+    data.append("barRegisterNumber", formData.barRegistrationNumber)
+    data.append("experience", formData.yearsOfExperience)
+    data.append("courtName", formData.lawFirm)
+    data.append("workLocation", formData.workLocation)
+    data.append("fee", formData.consultationFee)
+    formData.education.forEach((edu, index) => {
+      data.append(`education[${index}][degree]`, edu.degree)
+      data.append(`education[${index}][university]`, edu.university)
+      data.append(`education[${index}][year]`, edu.year)
     })
-    formData.availableDays.forEach((day)=>{
-      data.append("availableDays[]",day)
+    formData.availableDays.forEach((day) => {
+      data.append("availableDays[]", day)
     })
 
-    data.append("startTime",formData.timeSlotStart)
-    data.append("endTime",formData.timeSlotEnd)
+    data.append("startTime", formData.timeSlotStart)
+    data.append("endTime", formData.timeSlotEnd)
 
-    if(formData.documents.barCouncilId){
-      data.append("barCouncilCertificate",formData.documents.barCouncilId)
+    if (formData.documents.barCouncilId) {
+      data.append("barCouncilCertificate", formData.documents.barCouncilId)
     }
-    if(formData.documents.degreeCertificate){
-      data.append("degreeCertificate",formData.documents.degreeCertificate)
+    if (formData.documents.degreeCertificate) {
+      data.append("degreeCertificate", formData.documents.degreeCertificate)
     }
-    if(formData.documents.experienceCertificate){
-      data.append("experienceCertificate",formData.documents.experienceCertificate)
+    if (formData.documents.experienceCertificate) {
+      data.append("experienceCertificate", formData.documents.experienceCertificate)
     }
-    if(formData.documents.idProof){
-      data.append("idProof",formData.documents.idProof)
+    if (formData.documents.idProof) {
+      data.append("idProof", formData.documents.idProof)
     }
-    addLawyerProfile(data).then((response)=>{
+    addLawyerProfile(data).then((response) => {
       toast.success(response.data.message)
       navigate('/lawyer-profile-page')
     })
@@ -247,17 +247,17 @@ function LawyerProfileAddPage() {
   };
 
   // Document upload component
-  const DocumentUploadCard = ({ 
-    docKey, 
-    label, 
-    required = false 
-  }: { 
-    docKey: keyof FormData['documents']; 
-    label: string; 
-    required?: boolean; 
+  const DocumentUploadCard = ({
+    docKey,
+    label,
+    required = false
+  }: {
+    docKey: keyof FormData['documents'];
+    label: string;
+    required?: boolean;
   }) => {
     const file = formData.documents[docKey];
-    
+
     return (
       <div className="relative border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
         <div className="flex flex-col items-center space-y-2">
@@ -305,7 +305,7 @@ function LawyerProfileAddPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <LawyerNavbar/>
+      <LawyerNavbar />
       <div className="sticky z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200 mt-5">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -331,7 +331,7 @@ function LawyerProfileAddPage() {
           {/* Personal Information */}
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
             <h2 className="text-xl font-semibold text-slate-900 mb-6">Personal Information</h2>
-            
+
             {/* Profile Image */}
             <div className="flex justify-center mb-8">
               <div className="relative">
@@ -474,11 +474,10 @@ function LawyerProfileAddPage() {
                     key={language}
                     type="button"
                     onClick={() => handleLanguageToggle(language)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      formData.languages.includes(language)
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${formData.languages.includes(language)
                         ? 'bg-blue-500 text-white'
                         : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                    }`}
+                      }`}
                   >
                     {language}
                   </button>
@@ -500,11 +499,10 @@ function LawyerProfileAddPage() {
                     key={area}
                     type="button"
                     onClick={() => handlePracticeAreaToggle(area)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      formData.practiceAreas.includes(area)
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${formData.practiceAreas.includes(area)
                         ? 'bg-blue-500 text-white'
                         : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                    }`}
+                      }`}
                   >
                     {area}
                   </button>
@@ -635,7 +633,7 @@ function LawyerProfileAddPage() {
                   <span className="text-sm">Add Education</span>
                 </button>
               </div>
-              
+
               {formData.education.map((edu, index) => (
                 <div key={edu.id} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-slate-50 rounded-lg">
                   <div>
@@ -682,27 +680,27 @@ function LawyerProfileAddPage() {
           {/* Document Upload */}
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
             <h2 className="text-xl font-semibold text-slate-900 mb-6">Document Upload</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <DocumentUploadCard 
-                docKey="barCouncilId" 
-                label="Bar Council ID" 
-                required={true} 
+              <DocumentUploadCard
+                docKey="barCouncilId"
+                label="Bar Council ID"
+                required={true}
               />
-              <DocumentUploadCard 
-                docKey="degreeCertificate" 
-                label="Degree Certificate" 
-                required={true} 
+              <DocumentUploadCard
+                docKey="degreeCertificate"
+                label="Degree Certificate"
+                required={true}
               />
-              <DocumentUploadCard 
-                docKey="experienceCertificate" 
-                label="Experience Certificate" 
-                required={false} 
+              <DocumentUploadCard
+                docKey="experienceCertificate"
+                label="Experience Certificate"
+                required={false}
               />
-              <DocumentUploadCard 
-                docKey="idProof" 
-                label="ID Proof" 
-                required={true} 
+              <DocumentUploadCard
+                docKey="idProof"
+                label="ID Proof"
+                required={true}
               />
             </div>
           </div>

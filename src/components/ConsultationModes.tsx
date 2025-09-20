@@ -35,18 +35,18 @@ const ConsultationModes = () => {
           {modes.map((mode, index) => {
             const Icon = mode.icon;
             const colorClass = mode.color === 'blue' ? 'blue' : 'green';
-            
+
             return (
               <div key={index} className="group bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <div className="flex items-start space-x-6">
                   <div className={`w-16 h-16 bg-${colorClass}-500/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-${colorClass}-500/20 transition-colors duration-300`}>
                     <Icon className={`h-8 w-8 text-${colorClass}-500`} />
                   </div>
-                  
+
                   <div className="flex-1">
                     <h3 className="text-2xl font-bold text-slate-800 mb-4">{mode.title}</h3>
                     <p className="text-slate-600 mb-6 leading-relaxed">{mode.description}</p>
-                    
+
                     <div className="space-y-3">
                       {mode.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center space-x-3">
@@ -55,7 +55,7 @@ const ConsultationModes = () => {
                         </div>
                       ))}
                     </div>
-                    
+
                     <button className={`mt-6 px-8 py-3 bg-${colorClass}-500 hover:bg-${colorClass}-600 text-white rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-${colorClass}-500/25`}>
                       Choose This Mode
                     </button>

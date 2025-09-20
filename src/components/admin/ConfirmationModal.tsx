@@ -88,7 +88,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <div className={`w-16 h-16 ${config.iconBg} rounded-full flex items-center justify-center mx-auto mb-4`}>
           <Icon className={`w-8 h-8 ${config.iconColor}`} />
         </div>
-        
+
         <p className="text-slate-600 mb-6 leading-relaxed">
           {message}
         </p>

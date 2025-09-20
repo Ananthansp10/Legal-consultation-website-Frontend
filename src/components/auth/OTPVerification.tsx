@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { otpService, resendOtp } from '../../services/user/otpService';
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import { User } from '../../interface/userInterface/userInterface';
 import { useApi } from '../../hooks/UseApi';
 
@@ -13,8 +13,8 @@ const OTPVerification = () => {
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const {data:otpData,error:otpError,loading:otpLoading,execute:otpExecute}=useApi(otpService)
-  const {data:resendData,error:resendError,loading:resendLoading,execute:resendExecute}=useApi(resendOtp)
+  const { data: otpData, error: otpError, loading: otpLoading, execute: otpExecute } = useApi(otpService)
+  const { data: resendData, error: resendError, loading: resendLoading, execute: resendExecute } = useApi(resendOtp)
 
   useEffect(() => {
     if (timer > 0) {
@@ -45,13 +45,13 @@ const OTPVerification = () => {
     }
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const otpValue = otp.join('');
-    let userDetails=localStorage.getItem('userDetails')
-    let userData:User | undefined
-    if(userDetails){
-      userData=JSON.parse(userDetails)
+    let userDetails = localStorage.getItem('userDetails')
+    let userData: User | undefined
+    if (userDetails) {
+      userData = JSON.parse(userDetails)
     }
     // otpService({userDetails:userData!,otp:otpValue}).then((response)=>{
     //   if(userData?.forgotPassword){
@@ -67,64 +67,64 @@ const OTPVerification = () => {
     //     toast.error(error.message)
     // })
 
-      await otpExecute({userDetails:userData!,otp:otpValue})
+    await otpExecute({ userDetails: userData!, otp: otpValue })
   };
 
-  useEffect(()=>{
-    if(otpError){
+  useEffect(() => {
+    if (otpError) {
       toast.error(otpError.message)
     }
-  },[otpError])
+  }, [otpError])
 
-  useEffect(()=>{
-    if(otpData){
-      if(otpData.forgotPassword){
+  useEffect(() => {
+    if (otpData) {
+      if (otpData.forgotPassword) {
         navigate('/auth/new-password')
-      }else{
+      } else {
         localStorage.removeItem('userDetails')
         toast.success(otpData.message)
-        setTimeout(()=>{
-           navigate('/auth/signin')
-        },2000)
+        setTimeout(() => {
+          navigate('/auth/signin')
+        }, 2000)
       }
     }
-  },[otpData])
+  }, [otpData])
 
-  const handleResend = async() => {
+  const handleResend = async () => {
     setCanResend(false);
     setOtp(['', '', '', '', '', '']);
-    let userDetails:string | null=localStorage.getItem('userDetails')
-    if(userDetails){
-    //    resendOtp(JSON.parse(userDetails)).then((response)=>{
-    //   if(response.data.success){
-    //     toast.success(response.data.message)
-    //     setTimer(120);
-    //   }
-    // }).catch((error)=>{
-    //   toast.error(error.response.data.message)
-    // })
+    let userDetails: string | null = localStorage.getItem('userDetails')
+    if (userDetails) {
+      //    resendOtp(JSON.parse(userDetails)).then((response)=>{
+      //   if(response.data.success){
+      //     toast.success(response.data.message)
+      //     setTimer(120);
+      //   }
+      // }).catch((error)=>{
+      //   toast.error(error.response.data.message)
+      // })
 
       await resendExecute(JSON.parse(userDetails))
     }
   };
 
-  useEffect(()=>{
-    if(resendError){
+  useEffect(() => {
+    if (resendError) {
       toast.error(resendError.message)
     }
-  },[resendError])
+  }, [resendError])
 
-  useEffect(()=>{
-    if(resendData){
+  useEffect(() => {
+    if (resendData) {
       toast.success(resendData.message)
       setTimer(120)
     }
-  },[resendData])
+  }, [resendData])
 
   return (
     <div className="min-h-screen flex">
       {/* Back to Home Button */}
-      <Link 
+      <Link
         to="/"
         className="fixed top-4 left-4 z-50 flex items-center space-x-2 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-white/20 text-slate-600 hover:text-blue-500 transition-all duration-200"
       >
@@ -192,7 +192,7 @@ const OTPVerification = () => {
               <div className="text-slate-600">
                 Didn't receive the code?
               </div>
-              
+
               {canResend ? (
                 <button
                   onClick={handleResend}
@@ -206,9 +206,9 @@ const OTPVerification = () => {
                   Resend code in {timer}s
                 </div>
               )}
-              
+
               <div>
-                <Link 
+                <Link
                   to="/auth/signin"
                   className="inline-flex items-center space-x-2 text-blue-500 hover:text-blue-600 font-medium transition-colors duration-200"
                 >

@@ -63,7 +63,7 @@ function SignupForm() {
     }
   };
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
@@ -118,13 +118,13 @@ function SignupForm() {
       if (formData.lawDegree) data.append('files', formData.lawDegree);
       if (formData.barCertificate) data.append('files', formData.barCertificate);
 
-        register(data).then((response:AxiosResponse)=>{
-          toast.success(response.data.message)
-          navigate('/auth/lawyer/signin')
-        }).catch((error)=>{
-          toast.error(error.response.data.message)
-        })
-      }
+      register(data).then((response: AxiosResponse) => {
+        toast.success(response.data.message)
+        navigate('/auth/lawyer/signin')
+      }).catch((error) => {
+        toast.error(error.response.data.message)
+      })
+    }
   };
 
   const handleDrag = (e: React.DragEvent, type: string) => {
@@ -166,13 +166,12 @@ function SignupForm() {
     <div className="space-y-2">
       <label className="block text-sm font-medium text-white/90">{label}</label>
       <div
-        className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 ${
-          dragActive === type
+        className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 ${dragActive === type
             ? 'border-blue-400 bg-blue-400/10'
             : file
-            ? 'border-green-400 bg-green-400/10'
-            : 'border-white/30 hover:border-white/50'
-        }`}
+              ? 'border-green-400 bg-green-400/10'
+              : 'border-white/30 hover:border-white/50'
+          }`}
         onDragEnter={(e) => handleDrag(e, type)}
         onDragLeave={(e) => handleDrag(e, type)}
         onDragOver={(e) => handleDrag(e, type)}
@@ -273,7 +272,7 @@ function SignupForm() {
               </div>
             </div>
           </div>
-          
+
           <div className="space-y-6">
             <blockquote className="text-xl font-light italic border-l-4 border-blue-400 pl-6">
               "Justice delayed is justice denied."
@@ -301,19 +300,17 @@ function SignupForm() {
             <div className="flex items-center justify-between mb-4">
               {[1, 2, 3].map((step) => (
                 <div key={step} className="flex items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                    step < currentStep 
-                      ? 'bg-green-500 text-white' 
-                      : step === currentStep 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-white/20 text-white/60'
-                  }`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${step < currentStep
+                      ? 'bg-green-500 text-white'
+                      : step === currentStep
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-white/20 text-white/60'
+                    }`}>
                     {step < currentStep ? <CheckCircle className="h-5 w-5" /> : step}
                   </div>
                   {step < 3 && (
-                    <div className={`w-20 h-1 mx-2 transition-all duration-300 ${
-                      step < currentStep ? 'bg-green-500' : 'bg-white/20'
-                    }`} />
+                    <div className={`w-20 h-1 mx-2 transition-all duration-300 ${step < currentStep ? 'bg-green-500' : 'bg-white/20'
+                      }`} />
                   )}
                 </div>
               ))}
@@ -437,11 +434,10 @@ function SignupForm() {
                           key={spec}
                           type="button"
                           onClick={() => toggleSpecialization(spec)}
-                          className={`text-left py-2 px-3 rounded-lg text-sm transition-all ${
-                            formData.specialization.includes(spec)
+                          className={`text-left py-2 px-3 rounded-lg text-sm transition-all ${formData.specialization.includes(spec)
                               ? 'bg-blue-600 text-white'
                               : 'bg-white/10 text-white/80 hover:bg-white/20'
-                          }`}
+                            }`}
                         >
                           {spec}
                         </button>
@@ -493,16 +489,16 @@ function SignupForm() {
                 </div>
 
                 <div className="space-y-6">
-                  <FileUploadArea 
-                    type="lawDegree" 
-                    file={formData.lawDegree} 
-                    label="Law Degree Certificate" 
+                  <FileUploadArea
+                    type="lawDegree"
+                    file={formData.lawDegree}
+                    label="Law Degree Certificate"
                   />
-                  
-                  <FileUploadArea 
-                    type="barCertificate" 
-                    file={formData.barCertificate} 
-                    label="Bar Council Certificate" 
+
+                  <FileUploadArea
+                    type="barCertificate"
+                    file={formData.barCertificate}
+                    label="Bar Council Certificate"
                   />
                 </div>
 

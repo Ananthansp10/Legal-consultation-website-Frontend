@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Scale, 
-  Calendar, 
-  MessageCircle, 
-  FileText, 
-  Bell, 
-  Shield, 
-  Users, 
+import {
+  Scale,
+  Calendar,
+  MessageCircle,
+  FileText,
+  Bell,
+  Shield,
+  Users,
   Gavel,
   ChevronRight,
   ArrowRight
@@ -20,7 +20,7 @@ function LawyerWelcomePage() {
     setIsVisible(true);
   }, []);
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const features = [
     {
@@ -45,11 +45,11 @@ function LawyerWelcomePage() {
     }
   ];
 
-  function gotoSignup(){
+  function gotoSignup() {
     navigate('/auth/lawyer/signup')
   }
 
-  function gotoSignin(){
+  function gotoSignin() {
     navigate('/auth/lawyer/signin')
   }
 
@@ -97,26 +97,26 @@ function LawyerWelcomePage() {
               <div className="backdrop-blur-lg bg-white/20 border border-white/30 rounded-3xl p-8 md:p-12 shadow-2xl shadow-blue-500/10 max-w-4xl mx-auto relative">
                 {/* Glassmorphism overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/25 to-white/5 rounded-3xl"></div>
-                
+
                 <div className="relative z-10">
                   <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
                     <Scale className="w-10 h-10 text-white" />
                   </div>
-                  
+
                   <h1 className="text-4xl md:text-6xl font-bold text-slate-800 mb-6 leading-tight">
                     Welcome to <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Legal Connect</span>
                   </h1>
-                  
+
                   <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-3xl mx-auto">
                     The professional platform designed exclusively for legal practitioners to streamline practice management and enhance client relationships
                   </p>
-                  
+
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button onClick={gotoSignup} className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/35 hover:scale-105 flex items-center space-x-2">
                       <span>Get Started</span>
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
-                    
+
                     <button onClick={gotoSignin} className="group backdrop-blur-lg bg-white/30 hover:bg-white/40 border border-white/40 text-slate-700 px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-2">
                       <span>Sign In</span>
                       <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -147,11 +147,11 @@ function LawyerWelcomePage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
                       <feature.icon className="w-8 h-8 text-white" />
                     </div>
-                    
+
                     <h3 className="text-xl font-bold text-slate-800 mb-3 text-center">
                       {feature.title}
                     </h3>
-                    
+
                     <p className="text-slate-600 text-center leading-relaxed">
                       {feature.description}
                     </p>
@@ -169,11 +169,11 @@ function LawyerWelcomePage() {
                     Trusted by Legal Professionals
                   </h2>
                 </div>
-                
+
                 <p className="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto mb-8">
                   Legal Connect empowers law firms and solo practitioners with cutting-edge technology to deliver exceptional client service while streamlining administrative tasks. Join thousands of legal professionals who trust our platform to grow their practice.
                 </p>
-                
+
                 <div className="flex flex-col sm:flex-row gap-8 justify-center items-center text-center">
                   <div className="flex flex-col">
                     <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>

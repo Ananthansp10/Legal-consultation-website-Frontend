@@ -9,19 +9,19 @@ function LawyerForgotPasswordEmailPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setIsLoading(true);
-    sendMail({email:email}).then((response)=>{
-        toast.success(response.data.message)
-        setEmail('')
-    }).catch((error)=>{
-        toast.error(error.response.data.message)
-        setEmail('')
+    sendMail({ email: email }).then((response) => {
+      toast.success(response.data.message)
+      setEmail('')
+    }).catch((error) => {
+      toast.error(error.response.data.message)
+      setEmail('')
     })
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsLoading(false);
@@ -39,14 +39,14 @@ function LawyerForgotPasswordEmailPage() {
         {/* Background with legal imagery */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-slate-800 to-slate-900">
           <div className="absolute inset-0 opacity-20">
-            <img 
-              src="https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1200" 
+            <img
+              src="https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1200"
               alt="Legal background"
               className="w-full h-full object-cover"
             />
           </div>
         </div>
-        
+
         {/* Overlay content */}
         <div className="relative z-10 flex flex-col justify-center items-center text-center p-12 text-white">
           <div className="animate-fade-in-up delay-300">
@@ -153,15 +153,15 @@ function LawyerForgotPasswordEmailPage() {
                 </p>
                 <p className="text-sm text-slate-500 mb-8">
                   Didn't receive the email? Check your spam folder or{' '}
-                  <button 
+                  <button
                     onClick={() => setIsSubmitted(false)}
                     className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
                   >
                     try again
                   </button>
                 </p>
-                <button 
-                  onClick={() =>{setIsSubmitted(false); navigate('/auth/lawyer/signin')}}
+                <button
+                  onClick={() => { setIsSubmitted(false); navigate('/auth/lawyer/signin') }}
                   className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-4 px-6 rounded-xl transition-all duration-200"
                 >
                   Back to Login

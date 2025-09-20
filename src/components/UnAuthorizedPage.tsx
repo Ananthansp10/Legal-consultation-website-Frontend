@@ -1,31 +1,31 @@
-import { ShieldX, ArrowLeft, Lock, AlertTriangle,LogIn } from 'lucide-react';
-import {useNavigate, useSearchParams } from 'react-router-dom';
+import { ShieldX, ArrowLeft, Lock, AlertTriangle, LogIn } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function UnAuthorizedPage() {
-    const [searchParams] = useSearchParams();
-    const role = searchParams.get('role')
-    let navigate=useNavigate()
+  const [searchParams] = useSearchParams();
+  const role = searchParams.get('role')
+  let navigate = useNavigate()
 
-    function gotoLogin(){
-        if(role==='user'){
-            navigate('/auth/signin')
-        }else if(role==='lawyer'){
-          navigate('/auth/lawyer/signin')
-        }else{
-          navigate('/auth/admin/signin')
-        }
+  function gotoLogin() {
+    if (role === 'user') {
+      navigate('/auth/signin')
+    } else if (role === 'lawyer') {
+      navigate('/auth/lawyer/signin')
+    } else {
+      navigate('/auth/admin/signin')
     }
+  }
 
-    function goBack(){
+  function goBack() {
 
-      if(role==='user'){
-            navigate('/user')
-        }else if(role==='lawyer'){
-          navigate('/lawyer')
-        }else{
-          navigate('/admin')
-        }
+    if (role === 'user') {
+      navigate('/user')
+    } else if (role === 'lawyer') {
+      navigate('/lawyer')
+    } else {
+      navigate('/admin')
     }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">

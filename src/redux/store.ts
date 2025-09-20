@@ -3,12 +3,12 @@ import authSlice from "./slices/authSlice";
 import adminAuthSlice from "./slices/adminAuthSlice";
 import lawyerAuthSlice from '../redux/slices/lawyerAuthSlice'
 
-export const store=configureStore({
-    reducer:{
-        auth:authSlice,
-        adminAuth:adminAuthSlice,
-        lawyerAuth:lawyerAuthSlice
+export const store = configureStore({
+    reducer: {
+        auth: authSlice,
+        adminAuth: adminAuthSlice,
+        lawyerAuth: lawyerAuthSlice
     }
 })
 
-export type RootState=ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>

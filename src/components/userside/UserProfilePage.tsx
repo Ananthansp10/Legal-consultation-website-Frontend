@@ -205,7 +205,7 @@ export default function UserProfilePage() {
   return (
     <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <userNavbar navLink="" />
+        <UserNavbar navLink="" />
         <div className="mb-8 mt-12">
           <h1 className="text-3xl font-bold text-[#334155] mb-2">Profile Settings</h1>
           <p className="text-[#64748b]">Manage your account settings and preferences</p>
@@ -216,23 +216,12 @@ export default function UserProfilePage() {
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-1 border border-white/30 shadow-lg inline-flex">
             <button
               onClick={() => setActiveTab("personal")}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
-                activeTab === "personal"
-                  ? "bg-[#3b82f6] text-white shadow-lg transform scale-105"
-                  : "text-[#64748b] hover:text-[#334155] hover:bg-white/20"
-              }`}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${activeTab === "personal"
+                ? "bg-[#3b82f6] text-white shadow-lg transform scale-105"
+                : "text-[#64748b] hover:text-[#334155] hover:bg-white/20"
+                }`}
             >
               Personal Info
-            </button>
-            <button
-              onClick={() => setActiveTab("security")}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
-                activeTab === "security"
-                  ? "bg-[#3b82f6] text-white shadow-lg transform scale-105"
-                  : "text-[#64748b] hover:text-[#334155] hover:bg-white/20"
-              }`}
-            >
-              Security
             </button>
           </div>
         </div>
@@ -400,15 +389,15 @@ export default function UserProfilePage() {
                     {(imagePreview ||
                       (editData.profileImage &&
                         editData.profileImage !== "/placeholder.svg?height=120&width=120")) && (
-                      <button
-                        type="button"
-                        onClick={handleRemoveImage}
-                        className="border border-[#e2e8f0] text-[#64748b] hover:bg-[#f8fafc] px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 bg-transparent flex items-center gap-2"
-                      >
-                        <X className="w-4 h-4" />
-                        Remove
-                      </button>
-                    )}
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="border border-[#e2e8f0] text-[#64748b] hover:bg-[#f8fafc] px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 bg-transparent flex items-center gap-2"
+                        >
+                          <X className="w-4 h-4" />
+                          Remove
+                        </button>
+                      )}
                   </div>
 
                   <p className="text-sm text-[#64748b] text-center">

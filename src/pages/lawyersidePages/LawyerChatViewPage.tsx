@@ -7,99 +7,99 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { getChat, getUserChatProfile, updateChatReadStatus } from '../../services/lawyer/lawyerService';
 
-interface Messages{
-  senderId:string;
-  receiverId:string;
-  message:string;
-  isRead:boolean;
-  createdAt:Date
+interface Messages {
+  senderId: string;
+  receiverId: string;
+  message: string;
+  isRead: boolean;
+  createdAt: Date
 }
 
-interface UserProfile{
-  name:string;
-  profileImage:string;
-  country:string;
-  state:string;
+interface UserProfile {
+  name: string;
+  profileImage: string;
+  country: string;
+  state: string;
 }
 
 function LawyerChatViewPage() {
 
-  const [message,setMessage]=useState('')
-  const [socket,setSocket]=useState<Socket | null>(null)
-  const [chats,setChats]=useState<Messages[]>([])
-  const [userProfile,setUserProfile]=useState<UserProfile>()
+  const [message, setMessage] = useState('')
+  const [socket, setSocket] = useState<Socket | null>(null)
+  const [chats, setChats] = useState<Messages[]>([])
+  const [userProfile, setUserProfile] = useState<UserProfile>()
 
-  const {userId}=useParams()
-  const lawyerId=useSelector((state:RootState)=>state.lawyerAuth.lawyer?._id)
+  const { userId } = useParams()
+  const lawyerId = useSelector((state: RootState) => state.lawyerAuth.lawyer?._id)
 
-  useEffect(()=>{
-    let sock=connectSocket()
+  useEffect(() => {
+    let sock = connectSocket()
     setSocket(sock)
 
-    sock.on("connect",()=>{
-      console.log("connected",sock.id)
+    sock.on("connect", () => {
+      console.log("connected", sock.id)
     })
 
-    sock.emit("register",lawyerId)
+    sock.emit("register", lawyerId)
 
-    sock.on("receive_message",async(chat)=>{
-        setChats((prevChat)=>[...prevChat,{...chat.message,isRead:chat.receiverId==lawyerId ? true : chat.isRead}])
-        sock.emit("update_lawyer_chat_status",{lawyerId,userId})
+    sock.on("receive_message", async (chat) => {
+      setChats((prevChat) => [...prevChat, { ...chat.message, isRead: chat.receiverId == lawyerId ? true : chat.isRead }])
+      sock.emit("update_lawyer_chat_status", { lawyerId, userId })
     })
 
-     return (()=>{
-       sock.off("connect")
-       sock.off("receive_message")
-     })
-  },[])
+    return (() => {
+      sock.off("connect")
+      sock.off("receive_message")
+    })
+  }, [])
 
-  useEffect(()=>{
-    socket?.emit("update_lawyer_chat_status",{lawyerId,userId})
-  },[chats])
+  useEffect(() => {
+    socket?.emit("update_lawyer_chat_status", { lawyerId, userId })
+  }, [chats])
 
-  function fetchChat(){
-    getChat(lawyerId!,userId!).then((response)=>{
+  function fetchChat() {
+    getChat(lawyerId!, userId!).then((response) => {
       setChats(response.data.data || [])
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchChat()
-  },[])
+  }, [])
 
-  function sendMessage(){
-    if(message.trim() === '') return;
-    
+  function sendMessage() {
+    if (message.trim() === '') return;
+
     const newMessage = {
-      senderId:lawyerId!,
-      receiverId:userId!,
-      message:message,
-      isRead:false,
-      createdAt:new Date()
+      senderId: lawyerId!,
+      receiverId: userId!,
+      message: message,
+      isRead: false,
+      createdAt: new Date()
     }
 
-    setChats((prevChat)=>[...prevChat,newMessage])
+    setChats((prevChat) => [...prevChat, newMessage])
 
-    socket?.emit("send_message",{
-      senderId:lawyerId,
-      receiverId:userId,
-      message:newMessage
+    socket?.emit("send_message", {
+      senderId: lawyerId,
+      receiverId: userId,
+      message: newMessage
     })
     setMessage('')
   }
 
-  useEffect(()=>{
-    getUserChatProfile(userId!).then((response)=>{
+  useEffect(() => {
+    getUserChatProfile(userId!).then((response) => {
       setUserProfile(response.data.data)
     })
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    async function update(){
-        await updateChatReadStatus(lawyerId!,userId!)
+  useEffect(() => {
+    async function update() {
+      await updateChatReadStatus(lawyerId!, userId!)
     }
     update()
-  },[])
+  }, [])
 
   const isMyMessage = (senderId: string) => senderId === lawyerId;
 
@@ -135,17 +135,16 @@ function LawyerChatViewPage() {
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto bg-gray-50 px-4 py-6 md:px-6">
         <div className="max-w-4xl mx-auto">
-          {chats.length>0 && chats.map((chat, index) => {
+          {chats.length > 0 && chats.map((chat, index) => {
             const isMine = isMyMessage(chat.senderId);
-            
+
             return (
               <div key={index} className={`flex mb-4 animate-in slide-in-from-bottom-1 duration-300 ${isMine ? 'justify-end' : 'justify-start'}`}>
                 <div className="max-w-xs md:max-w-md lg:max-w-lg">
-                  <div className={`px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md ${
-                    isMine 
-                      ? 'bg-blue-500 text-white rounded-br-md' 
+                  <div className={`px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md ${isMine
+                      ? 'bg-blue-500 text-white rounded-br-md'
                       : 'bg-gray-100 text-gray-900 rounded-bl-md'
-                  }`}>
+                    }`}>
                     <p className="text-sm md:text-base leading-relaxed">
                       {chat.message}
                     </p>
@@ -202,10 +201,10 @@ function LawyerChatViewPage() {
               <Smile className="w-5 h-5" />
             </button>
           </div>
-          
+
           <div className="flex-1 relative">
             <textarea
-              onChange={(e)=>setMessage(e.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
               value={message}
               placeholder="Type your legal question..."
               className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
@@ -219,7 +218,7 @@ function LawyerChatViewPage() {
               }}
             />
           </div>
-          
+
           <button onClick={sendMessage} className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-200 transform hover:scale-105 active:scale-95">
             <Send className="w-5 h-5" />
           </button>

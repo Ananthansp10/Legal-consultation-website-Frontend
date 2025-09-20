@@ -16,18 +16,18 @@ interface Chat {
 }
 
 function LawyerChatListPage() {
-  const [chats,setChats]=useState<Chat[]>([])
+  const [chats, setChats] = useState<Chat[]>([])
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  const lawyerId:string | undefined=useSelector((state:RootState)=>state.lawyerAuth.lawyer?._id)
-  const navigate=useNavigate()
+  const lawyerId: string | undefined = useSelector((state: RootState) => state.lawyerAuth.lawyer?._id)
+  const navigate = useNavigate()
 
   const filteredChats = useMemo(() => {
     if (!searchQuery.trim()) {
       return chats;
     }
-    
+
     return chats.filter(chat =>
       chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
@@ -43,7 +43,7 @@ function LawyerChatListPage() {
     }
   };
 
-  const handleChatClick = (userId:string) => {
+  const handleChatClick = (userId: string) => {
     navigate(`/lawyer/chat-view/${userId}`)
   };
 
@@ -51,19 +51,19 @@ function LawyerChatListPage() {
     const date = new Date(timestamp);
     const now = new Date();
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-    
+
     if (diffInHours < 24) {
-      return date.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
+      return date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
         minute: '2-digit',
-        hour12: true 
+        hour12: true
       });
     } else if (diffInHours < 168) {
       return date.toLocaleDateString('en-US', { weekday: 'short' });
     } else {
-      return date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
       });
     }
   };
@@ -82,11 +82,11 @@ function LawyerChatListPage() {
     document.title = totalUnread > 0 ? `(${totalUnread}) ${baseTitle}` : baseTitle;
   }, [totalUnread]);
 
-  useEffect(()=>{
-    getAllChats(lawyerId!).then((response)=>{
-        setChats(response.data.data || [])
+  useEffect(() => {
+    getAllChats(lawyerId!).then((response) => {
+      setChats(response.data.data || [])
     })
-  },[])
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -99,7 +99,7 @@ function LawyerChatListPage() {
             </div>
             <h1 className="text-xl font-bold text-gray-900">Chats</h1>
           </div>
-          
+
           <div className="flex items-center space-x-3">
             <button
               onClick={handleSearchClick}
@@ -110,7 +110,7 @@ function LawyerChatListPage() {
           </div>
         </div>
       </header>
-      
+
       {/* Search Bar */}
       {isSearchVisible && (
         <div className="bg-white border-b border-gray-200 px-4 py-3">
@@ -128,7 +128,7 @@ function LawyerChatListPage() {
           </div>
         </div>
       )}
-      
+
       {/* Main Content */}
       <main className="max-w-4xl mx-auto mt-7">
         {filteredChats.length === 0 && searchQuery ? (
@@ -152,10 +152,10 @@ function LawyerChatListPage() {
                 <Users className="w-5 h-5 text-gray-600" />
               </div>
             </div>
-            
+
             <h3 className="text-2xl font-bold text-gray-900 mb-3">No chats yet</h3>
             <p className="text-gray-600 text-center max-w-md leading-relaxed mb-8">
-              Start a new conversation to connect with friends, colleagues, or family members. 
+              Start a new conversation to connect with friends, colleagues, or family members.
               Your conversations will appear here.
             </p>
           </div>
@@ -184,7 +184,7 @@ function LawyerChatListPage() {
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                   )}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="font-semibold text-gray-900 truncate">{chat.name}</h3>

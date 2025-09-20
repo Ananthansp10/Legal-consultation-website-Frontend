@@ -2,23 +2,23 @@ import { useEffect, useState } from 'react';
 import { FileDown, DollarSign, Calendar, Users, UserCheck, Filter } from 'lucide-react';
 import { getReports } from '../../services/admin/adminService';
 
-interface SubscriptionReportData{
-    _id:string;
-    specializationCount:number
+interface SubscriptionReportData {
+  _id: string;
+  specializationCount: number
 }
 
-interface StateReportData{
-    _id:string;
-    usersCount:number;
+interface StateReportData {
+  _id: string;
+  usersCount: number;
 }
 
-interface LawyerDetailsData{
-  name:string;
-  specialization:string[];
-  totalRevenue:number;
-  totalAppointments:number;
-  planName:string[];
-  joinDate:Date;
+interface LawyerDetailsData {
+  name: string;
+  specialization: string[];
+  totalRevenue: number;
+  totalAppointments: number;
+  planName: string[];
+  joinDate: Date;
 }
 
 interface KPIData {
@@ -26,9 +26,9 @@ interface KPIData {
   totalAppointments: number;
   totalSubscribedLawyers: number;
   totalUsers: number;
-  subscriptionPlanReport:SubscriptionReportData[];
-  stateReport:StateReportData[];
-  lawyerDetails:LawyerDetailsData[];
+  subscriptionPlanReport: SubscriptionReportData[];
+  stateReport: StateReportData[];
+  lawyerDetails: LawyerDetailsData[];
 }
 
 interface ChartData {
@@ -48,7 +48,7 @@ interface LawyerData {
   joinDate: string;
 }
 
-function convertToDate(date:Date){
+function convertToDate(date: Date) {
   return new Date(date).toISOString().split('T')[0]
 }
 
@@ -173,7 +173,7 @@ const generatePDFReport = (
   lawyerData: LawyerData[]
 ) => {
   const printWindow = window.open('', '_blank');
-  
+
   if (!printWindow) {
     alert('Please allow popups to download the PDF report.');
     return;
@@ -315,12 +315,12 @@ const generatePDFReport = (
     <body>
       <div class="header">
         <h1>Overall Report</h1>
-        <p>Generated on ${new Date().toLocaleDateString('en-IN', { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        })}</p>
+        <p>Generated on ${new Date().toLocaleDateString('en-IN', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })}</p>
       </div>
 
       <div class="kpi-section">
@@ -344,32 +344,32 @@ const generatePDFReport = (
 
       <h2 class="section-title">Monthly Revenue Breakdown</h2>
       <div class="chart-data">
-        ${chartData.monthlyRevenue.map(item => 
-          `<div class="chart-item">
+        ${chartData.monthlyRevenue.map(item =>
+    `<div class="chart-item">
             <span>${item.month}</span>
             <span>₹${item.revenue.toLocaleString()}</span>
           </div>`
-        ).join('')}
+  ).join('')}
       </div>
 
       <h2 class="section-title">Appointments by Specialization</h2>
       <div class="chart-data">
-        ${chartData.appointmentsBySpecialization.map(item => 
-          `<div class="chart-item">
+        ${chartData.appointmentsBySpecialization.map(item =>
+    `<div class="chart-item">
             <span>${item.specialization}</span>
             <span>${item.count} appointments</span>
           </div>`
-        ).join('')}
+  ).join('')}
       </div>
 
       <h2 class="section-title">Lawyer Subscriptions by Plan</h2>
       <div class="chart-data">
-        ${chartData.lawyersByPlan.map(item => 
-          `<div class="chart-item">
+        ${chartData.lawyersByPlan.map(item =>
+    `<div class="chart-item">
             <span>${item.plan}</span>
             <span>${item.count} lawyers</span>
           </div>`
-        ).join('')}
+  ).join('')}
       </div>
 
       <h2 class="section-title">Lawyer Details</h2>
@@ -385,8 +385,8 @@ const generatePDFReport = (
           </tr>
         </thead>
         <tbody>
-          ${lawyerData.map(lawyer => 
-            `<tr>
+          ${lawyerData.map(lawyer =>
+    `<tr>
               <td>${lawyer.name}</td>
               <td>${lawyer.specialization}</td>
               <td><span class="plan-badge plan-${lawyer.plan.toLowerCase()}">${lawyer.plan}</span></td>
@@ -394,7 +394,7 @@ const generatePDFReport = (
               <td>${lawyer.appointments}</td>
               <td>${lawyer.joinDate}</td>
             </tr>`
-          ).join('')}
+  ).join('')}
         </tbody>
       </table>
 
@@ -429,14 +429,14 @@ function CompanyReportPage() {
   const maxLawyers = Math.max(...mockChartData.lawyersByPlan.map(d => d.count));
   const maxUsers = Math.max(...mockChartData.usersByState.map(d => d.count));
 
-  const [reports,setReports]=useState<KPIData | null>()
+  const [reports, setReports] = useState<KPIData | null>()
 
 
-useEffect(()=>{
-    getReports().then((response)=>{
-        setReports(response.data.data)
+  useEffect(() => {
+    getReports().then((response) => {
+      setReports(response.data.data)
     })
-},[])
+  }, [])
 
   const summaryCards = [
     {
@@ -511,7 +511,7 @@ useEffect(()=>{
             <Filter className="h-5 w-5 text-gray-600 mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -613,7 +613,7 @@ useEffect(()=>{
                     const circumference = 2 * Math.PI * 70;
                     const strokeDasharray = circumference;
                     const strokeDashoffset = circumference - (percentage / 100) * circumference;
-                    
+
                     return (
                       <circle
                         key={index}
@@ -701,7 +701,7 @@ useEffect(()=>{
           <div className="px-6 py-4 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">Lawyer Details</h3>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -738,13 +738,12 @@ useEffect(()=>{
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        lawyer.planName[0] === 'Standard Plan' 
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${lawyer.planName[0] === 'Standard Plan'
                           ? 'bg-purple-100 text-purple-800'
                           : lawyer.planName[0] === 'Premium Plan'
-                          ? 'bg-teal-100 text-teal-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
+                            ? 'bg-teal-100 text-teal-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
                         {lawyer.planName[0]}
                       </span>
                     </td>
@@ -752,7 +751,7 @@ useEffect(()=>{
                       ₹{lawyer.totalRevenue.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {Math.floor(lawyer.totalAppointments/2)}
+                      {Math.floor(lawyer.totalAppointments / 2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {convertToDate(lawyer.joinDate)}

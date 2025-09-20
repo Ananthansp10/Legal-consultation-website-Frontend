@@ -16,19 +16,19 @@ function ResetPasswordPage() {
     newPassword: '',
     confirmPassword: ''
   });
-  
+
   const [showPasswords, setShowPasswords] = useState({
     oldPassword: false,
     newPassword: false,
     confirmPassword: false
   });
-  
+
   const [errors, setErrors] = useState({
     oldPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
@@ -40,12 +40,12 @@ function ResetPasswordPage() {
     hasUppercase: false,
     hasSpecialChar: false
   });
- 
 
-  let email:string | undefined=useSelector((state:RootState)=>state.auth?.user?.email)
 
-  const navigate=useNavigate()
-  const dispatch=useDispatch()
+  let email: string | undefined = useSelector((state: RootState) => state.auth?.user?.email)
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const validatePasswordCriteria = (password: string) => {
     const criteria = {
@@ -60,12 +60,12 @@ function ResetPasswordPage() {
 
   const handleInputChange = (field: keyof typeof passwords, value: string) => {
     setPasswords(prev => ({ ...prev, [field]: value }));
-    
+
     // Validate password criteria for new password
     if (field === 'newPassword') {
       validatePasswordCriteria(value);
     }
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -105,36 +105,36 @@ function ResetPasswordPage() {
 
   // Check if form is valid for button activation
   useEffect(() => {
-    const isValid = 
+    const isValid =
       passwords.oldPassword.length > 0 &&
       passwords.newPassword.length > 0 &&
       passwords.confirmPassword.length > 0 &&
       Object.values(passwordCriteria).every(Boolean) &&
       passwords.newPassword === passwords.confirmPassword;
-    
+
     setIsFormValid(isValid);
   }, [passwords, passwordCriteria]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
 
-    interface ResetPasswordResponse{
-      success:boolean;
-      message:string;
+    interface ResetPasswordResponse {
+      success: boolean;
+      message: string;
     }
 
-    resetPassword({email:email!,oldPassword:passwords.oldPassword,newPassword:passwords.newPassword}).then((response:AxiosResponse<ApiResponse<ResetPasswordResponse>>)=>{
-      if(response?.data?.success){
+    resetPassword({ email: email!, oldPassword: passwords.oldPassword, newPassword: passwords.newPassword }).then((response: AxiosResponse<ApiResponse<ResetPasswordResponse>>) => {
+      if (response?.data?.success) {
         setIsSubmitting(false)
         dispatch(logout())
         toast.success(response.data.message)
         navigate('/auth/signin')
       }
-    }).catch((error)=>{
+    }).catch((error) => {
       toast.error(error.response.data.message)
       setIsSubmitting(false)
     })
@@ -333,7 +333,7 @@ function ResetPasswordPage() {
                   {errors.confirmPassword && (
                     <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
                   )}
-                  
+
                   {/* Password Match Indicator */}
                   {passwords.confirmPassword && passwords.newPassword && (
                     <div className="mt-2 flex items-center space-x-2">
@@ -356,11 +356,10 @@ function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !isFormValid}
-                  className={`w-full font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform flex items-center justify-center space-x-2 ${
-                    isFormValid && !isSubmitting
+                  className={`w-full font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform flex items-center justify-center space-x-2 ${isFormValid && !isSubmitting
                       ? 'bg-blue-500 hover:bg-blue-600 text-white hover:scale-[1.02] cursor-pointer'
                       : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                  }`}
+                    }`}
                 >
                   {isSubmitting ? (
                     <>

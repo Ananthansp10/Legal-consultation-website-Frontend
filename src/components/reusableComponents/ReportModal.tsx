@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Upload } from 'lucide-react';
-import { reportAccount} from '../../services/user/userService';
+import { reportAccount } from '../../services/user/userService';
 import { toast } from 'react-toastify';
 
 interface ReportModalProps {
@@ -17,7 +17,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
   reportType,
   reportedId,
   reporterId
-  
+
 }) => {
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
@@ -35,14 +35,14 @@ const ReportModal: React.FC<ReportModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     reportAccount({
-        reportedId:reportedId,
-        userType:reportType=='user' ? 'user' : 'lawyer',
-        reason:reason,
-        description:description,
-        reporterId
-    }).then((response)=>{
-        onClose();
-        toast.success(response.data.message)
+      reportedId: reportedId,
+      userType: reportType == 'user' ? 'user' : 'lawyer',
+      reason: reason,
+      description: description,
+      reporterId
+    }).then((response) => {
+      onClose();
+      toast.success(response.data.message)
     })
   };
 
@@ -77,11 +77,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
       {/* Overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
       <div className="relative w-full max-w-[500px] bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl p-6 animate-in slide-in-from-bottom-4 duration-300">
         {/* Header */}
@@ -94,7 +94,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
               Help us keep the platform safe by reporting inappropriate behavior.
             </p>
           </div>
-          
+
           {/* Close Button */}
           <button
             onClick={onClose}

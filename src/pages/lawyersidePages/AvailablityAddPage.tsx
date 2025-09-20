@@ -91,7 +91,7 @@ function AvailabilityAddPage() {
   });
 
   const [showTooltip, setShowTooltip] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
   const lawyerId: string | undefined = useSelector((state: RootState) => state?.lawyerAuth?.lawyer?._id);
 
@@ -116,7 +116,7 @@ function AvailabilityAddPage() {
 
   // Expanded field-level validation
   const validateForm = (): boolean => {
-    const errors: {[key: string]: string} = {};
+    const errors: { [key: string]: string } = {};
 
     if (!rule.ruleName.trim()) errors.ruleName = 'Rule name is required';
     if (!rule.description.trim()) errors.description = 'Description is required';
@@ -135,7 +135,7 @@ function AvailabilityAddPage() {
     } else {
       const selectedStart = new Date(rule.startDate);
       const today = new Date();
-      today.setHours(0,0,0,0);
+      today.setHours(0, 0, 0, 0);
       if (selectedStart <= today) {
         errors.startDate = 'Start date must be in the future (not today)';
       }
@@ -195,7 +195,7 @@ function AvailabilityAddPage() {
   const updateBreakTime = (id: string, field: 'startTime' | 'endTime', value: string) => {
     setRule(prev => ({
       ...prev,
-      breakTimes: prev.breakTimes.map(bt => 
+      breakTimes: prev.breakTimes.map(bt =>
         bt.id === id ? { ...bt, [field]: value } : bt
       ),
     }));
@@ -278,7 +278,7 @@ function AvailabilityAddPage() {
       days: rule.daysOfWeek,
       breakTimes: breakTimes,
       startTime: rule.startTime,
-      endTime: rule.endTime 
+      endTime: rule.endTime
     };
     addSlot(lawyerId!, ruleData).then((response) => {
       toast.success(response.data.message);
@@ -296,7 +296,7 @@ function AvailabilityAddPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Fixed Navbar */}
       <div className="fixed top-0 left-0 right-0 z-50">
-        <LawyerNavbar/>
+        <LawyerNavbar />
       </div>
       {/* Main Content Container with top padding to account for fixed navbar */}
       <div className="pt-16">
@@ -364,11 +364,10 @@ function AvailabilityAddPage() {
                       key={day.id}
                       type="button"
                       onClick={() => toggleDay(day.id)}
-                      className={`px-4 py-2 rounded-lg border-2 transition-all duration-200 ${
-                        rule.daysOfWeek.includes(day.id)
+                      className={`px-4 py-2 rounded-lg border-2 transition-all duration-200 ${rule.daysOfWeek.includes(day.id)
                           ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-md'
                           : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
-                      }`}
+                        }`}
                     >
                       {day.label}
                     </button>

@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-slate-800">About LegalConnect</h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Connecting clients with experienced legal professionals for quality consultations and expert advice. 
+              Connecting clients with experienced legal professionals for quality consultations and expert advice.
               Our platform makes legal services accessible, transparent, and efficient.
             </p>
             <div className="flex space-x-4">

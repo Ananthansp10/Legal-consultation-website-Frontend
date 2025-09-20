@@ -21,9 +21,8 @@ function LawyerVerificationStatusPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-4">
       <div
-        className={`w-full max-w-3xl bg-white/30 border border-white/40 shadow-2xl rounded-3xl p-8 backdrop-blur-xl transition-all duration-1000 ease-out ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-        }`}
+        className={`w-full max-w-3xl bg-white/30 border border-white/40 shadow-2xl rounded-3xl p-8 backdrop-blur-xl transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}
       >
         {/* Header Icon */}
         <div className="text-center mb-6">

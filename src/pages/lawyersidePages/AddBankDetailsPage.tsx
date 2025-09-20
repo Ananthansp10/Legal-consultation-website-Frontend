@@ -30,7 +30,7 @@ function AddBankDetailsPage() {
     bankName: ''
   });
 
-  const lawyerId:string | undefined=useSelector((state:RootState)=>state.lawyerAuth.lawyer?._id)
+  const lawyerId: string | undefined = useSelector((state: RootState) => state.lawyerAuth.lawyer?._id)
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
@@ -61,7 +61,7 @@ function AddBankDetailsPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
+
     // Format specific fields
     let formattedValue = value;
     if (name === 'ifscCode') {
@@ -97,7 +97,7 @@ function AddBankDetailsPage() {
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTouched(prev => ({ ...prev, [name]: true }));
-    
+
     const error = validateField(name, value);
     setErrors(prev => ({
       ...prev,
@@ -111,7 +111,7 @@ function AddBankDetailsPage() {
 
     const newErrors: FormErrors = {};
     const requiredFields = ['fullName', 'email', 'phoneNumber', 'accountNumber', 'confirmAccountNumber', 'ifscCode'];
-    
+
     requiredFields.forEach(field => {
       const error = validateField(field, formData[field as keyof FormData]);
       if (error) newErrors[field] = error;
@@ -126,18 +126,18 @@ function AddBankDetailsPage() {
 
     if (Object.keys(newErrors).length === 0) {
       addBankAccount({
-        name:formData.fullName,
-        email:formData.email,
-        phoneNumber:formData.phoneNumber,
-        bankAccountNumber:formData.accountNumber,
-        ifscCode:formData.ifscCode,
-        bankName:formData.bankName,
-        lawyerId:lawyerId
-      }).then(()=>{
+        name: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        bankAccountNumber: formData.accountNumber,
+        ifscCode: formData.ifscCode,
+        bankName: formData.bankName,
+        lawyerId: lawyerId
+      }).then(() => {
         setIsSubmitted(true);
       })
     }
-    
+
     setIsSubmitting(false);
   };
 
@@ -150,7 +150,7 @@ function AddBankDetailsPage() {
           </div>
           <h2 className="text-2xl font-semibold text-gray-900 mb-3">Bank Details Saved!</h2>
           <p className="text-gray-600 mb-6">Your bank details have been securely saved and are ready for payouts.</p>
-          <button 
+          <button
             onClick={() => {
               setIsSubmitted(false);
               setFormData({
@@ -195,9 +195,8 @@ function AddBankDetailsPage() {
               value={formData.fullName}
               onChange={handleInputChange}
               onBlur={handleBlur}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                errors.fullName && touched.fullName ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.fullName && touched.fullName ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
               placeholder="Enter your full name"
             />
             {errors.fullName && touched.fullName && (
@@ -220,9 +219,8 @@ function AddBankDetailsPage() {
               value={formData.email}
               onChange={handleInputChange}
               onBlur={handleBlur}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                errors.email && touched.email ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.email && touched.email ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
               placeholder="your.email@example.com"
             />
             {errors.email && touched.email && (
@@ -246,9 +244,8 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={10}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                errors.phoneNumber && touched.phoneNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.phoneNumber && touched.phoneNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
               placeholder="9876543210"
             />
             {errors.phoneNumber && touched.phoneNumber && (
@@ -272,9 +269,8 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={18}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                errors.accountNumber && touched.accountNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.accountNumber && touched.accountNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
               placeholder="123456789012"
             />
             {errors.accountNumber && touched.accountNumber && (
@@ -298,9 +294,8 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={18}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                errors.confirmAccountNumber && touched.confirmAccountNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.confirmAccountNumber && touched.confirmAccountNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
               placeholder="Re-enter account number"
             />
             {errors.confirmAccountNumber && touched.confirmAccountNumber && (
@@ -324,9 +319,8 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={11}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                errors.ifscCode && touched.ifscCode ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-              }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.ifscCode && touched.ifscCode ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
               placeholder="SBIN0123456"
             />
             {errors.ifscCode && touched.ifscCode && (

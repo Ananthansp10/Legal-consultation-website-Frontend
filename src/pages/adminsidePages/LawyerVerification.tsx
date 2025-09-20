@@ -30,7 +30,7 @@ const LawyerVerification: React.FC = () => {
   const [rejectReason, setRejectReason] = useState('');
   const [previewModal, setPreviewModal] = useState<{ isOpen: boolean; url: string; type: 'pdf' | 'image' }>({ isOpen: false, url: '', type: 'image' });
 
-  function fetchData(){
+  function fetchData() {
 
     unverifiedLawyersListing().then((response: AxiosResponse) => {
       setLawyers(response.data.data);
@@ -62,10 +62,10 @@ const LawyerVerification: React.FC = () => {
       setRejectReasonModalOpen(true);
     } else {
       setConfirmModal({ isOpen: false, type: 'approve', lawyer: null });
-      verifyLawyer(confirmModal.lawyer?._id!,confirmModal.type,"null").then((response)=>{
+      verifyLawyer(confirmModal.lawyer?._id!, confirmModal.type, "null").then((response) => {
         toast.success(response.data.message)
         fetchData()
-      }).catch((error)=>{
+      }).catch((error) => {
         toast.error(error.response.data.message)
       })
     }
@@ -74,12 +74,12 @@ const LawyerVerification: React.FC = () => {
   const submitRejection = () => {
     setRejectReasonModalOpen(false);
     setConfirmModal({ isOpen: false, type: 'reject', lawyer: null });
-    verifyLawyer(confirmModal.lawyer?._id!,confirmModal.type,rejectReason).then((response)=>{
-        toast.success(response.data.message)
-        fetchData()
-      }).catch((error)=>{
-        toast.error(error.response.data.message)
-      })
+    verifyLawyer(confirmModal.lawyer?._id!, confirmModal.type, rejectReason).then((response) => {
+      toast.success(response.data.message)
+      fetchData()
+    }).catch((error) => {
+      toast.error(error.response.data.message)
+    })
   };
 
   return (

@@ -29,14 +29,14 @@ const Header = () => {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link 
+            <Link
               to="/auth/signin"
               className="flex items-center space-x-1 px-4 py-2 text-slate-600 hover:text-blue-500 transition-colors duration-200"
             >
               <LogIn className="h-4 w-4" />
               <span>Login</span>
             </Link>
-            <Link 
+            <Link
               to="/auth/signup"
               className="flex items-center space-x-1 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
             >
@@ -65,14 +65,14 @@ const Header = () => {
               <a href="#faq" className="text-slate-600 hover:text-blue-500">FAQ</a>
               <a href="#contact" className="text-slate-600 hover:text-blue-500">Contact</a>
               <hr className="border-slate-200" />
-              <Link 
+              <Link
                 to="/auth/signin"
                 className="flex items-center justify-center space-x-1 py-2 text-slate-600"
               >
                 <LogIn className="h-4 w-4" />
                 <span>Login</span>
               </Link>
-              <Link 
+              <Link
                 to="/auth/signup"
                 className="flex items-center justify-center space-x-1 py-2 bg-blue-500 text-white rounded-lg"
               >

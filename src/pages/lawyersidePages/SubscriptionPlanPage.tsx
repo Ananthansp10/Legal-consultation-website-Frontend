@@ -27,8 +27,8 @@ function SubscriptionPlanPage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [subscriptionPlans, setSubscriptionPlans] = useState<Plan[]>([]);
 
-  const navigate=useNavigate()
-  const lawyerId:string | undefined=useSelector((state:RootState)=>state?.lawyerAuth?.lawyer?._id)
+  const navigate = useNavigate()
+  const lawyerId: string | undefined = useSelector((state: RootState) => state?.lawyerAuth?.lawyer?._id)
 
   const getColorScheme = (index: number, planName: string, duration: number) => {
     const colorSchemes = [
@@ -100,7 +100,7 @@ function SubscriptionPlanPage() {
   const getPlanIcon = (planName: string, planType: string, index: number) => {
     const name = planName.toLowerCase();
     const type = planType.toLowerCase();
-    
+
     if (name.includes('premium') || name.includes('pro') || type.includes('premium')) {
       return <Crown className="w-6 h-6" />;
     } else if (name.includes('basic') || name.includes('starter') || type.includes('basic')) {
@@ -142,18 +142,18 @@ function SubscriptionPlanPage() {
     return `${currency}${price.toLocaleString()} / ${duration} days`;
   };
 
-  function executePayment(planId:string,price:number){
-    createRazorpayOrder(planId,price).then((response)=>{
+  function executePayment(planId: string, price: number) {
+    createRazorpayOrder(planId, price).then((response) => {
       console.log(response)
-      openRazorpayCheckout(response.data.data).then((response)=>{
-        addPlan(lawyerId!,planId,price).then(()=>{
+      openRazorpayCheckout(response.data.data).then((response) => {
+        addPlan(lawyerId!, planId, price).then(() => {
           toast.success("Payment successfull")
           setTimeout(() => {
-             setIsModalOpen(false)
-             navigate('/lawyer-dashboard')
-          },2000);
+            setIsModalOpen(false)
+            navigate('/lawyer-dashboard')
+          }, 2000);
         })
-      }).catch((error)=>{
+      }).catch((error) => {
         setIsModalOpen(false)
         toast.error(error.response.data.message)
       })
@@ -166,14 +166,14 @@ function SubscriptionPlanPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.08),transparent_50%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.08),transparent_50%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.05),transparent_70%)]"></div>
-      
+
       {/* Animated background elements */}
       <div className="absolute top-20 left-10 w-20 h-20 bg-purple-200/30 rounded-full blur-xl animate-pulse"></div>
       <div className="absolute top-40 right-20 w-32 h-32 bg-blue-200/30 rounded-full blur-xl animate-pulse delay-1000"></div>
       <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-green-200/30 rounded-full blur-xl animate-pulse delay-2000"></div>
-      
+
       <LawyerNavbar />
-      
+
       <div className="relative z-10 container mx-auto px-6 py-12">
         <header className="text-center mb-16">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
@@ -183,7 +183,7 @@ function SubscriptionPlanPage() {
             Choose Your Legal Plan
           </h1>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Transform your legal practice with our premium subscription plans. 
+            Transform your legal practice with our premium subscription plans.
             <span className="text-blue-600 font-semibold"> Tailored for professionals who demand excellence.</span>
           </p>
         </header>
@@ -193,13 +193,12 @@ function SubscriptionPlanPage() {
           {subscriptionPlans?.map((plan, index) => {
             const colorScheme = getColorScheme(index, plan.name, plan.duration);
             const planIcon = getPlanIcon(plan.name, plan.planType, index);
-            
+
             return (
               <div
                 key={plan?._id}
-                className={`relative group transform transition-all duration-700 ${
-                  isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                }`}
+                className={`relative group transform transition-all duration-700 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                  }`}
                 style={{
                   transitionDelay: `${index * 150}ms`
                 }}
@@ -220,10 +219,10 @@ function SubscriptionPlanPage() {
                   ${!plan?.status ? 'opacity-60 grayscale' : ''}
                   ${colorScheme ? 'ring-2 ring-yellow-400/30' : ''}
                 `}>
-                  
+
                   {/* Decorative corner accent */}
                   <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl ${colorScheme.gradient} opacity-10 rounded-bl-full rounded-tr-3xl`}></div>
-                  
+
                   {/* Plan Header */}
                   <div className="flex items-center mb-6 relative z-10">
                     <div className={`
@@ -243,8 +242,8 @@ function SubscriptionPlanPage() {
                   <div className="mb-6">
                     <span className={`
                       inline-flex items-center px-4 py-2 rounded-full text-sm font-bold shadow-md
-                      ${plan.status 
-                        ? 'bg-green-100 text-green-700 border-2 border-green-200' 
+                      ${plan.status
+                        ? 'bg-green-100 text-green-700 border-2 border-green-200'
                         : 'bg-red-100 text-red-700 border-2 border-red-200'
                       }
                     `}>
@@ -312,11 +311,11 @@ function SubscriptionPlanPage() {
                       <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                     )}
                     <span className="relative z-10">
-                      {!plan.status 
-                        ? 'Currently Unavailable' 
-                        : plan.price === 0 
-                        ? '✅ Free Plan' 
-                        : '🚀 Get Started Now'}
+                      {!plan.status
+                        ? 'Currently Unavailable'
+                        : plan.price === 0
+                          ? '✅ Free Plan'
+                          : '🚀 Get Started Now'}
                     </span>
                   </button>
                 </div>
@@ -331,8 +330,8 @@ function SubscriptionPlanPage() {
             <p className="text-lg text-slate-700 mb-2">
               <span className="font-bold text-slate-800">Need something custom?</span>
             </p>
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="inline-flex items-center text-blue-600 hover:text-blue-700 font-bold underline decoration-2 underline-offset-4 hover:decoration-blue-700 transition-colors duration-200"
             >
               💬 Contact our support team
@@ -361,7 +360,7 @@ function SubscriptionPlanPage() {
               <div className="text-4xl font-bold text-gray-800 mb-4">
                 {formatPrice(selectedPlan.price, selectedPlan.currency || '₹', selectedPlan.duration)}
               </div>
-              
+
               <div className="space-y-3">
                 {selectedPlan.features.slice(0, 4).map((feature, idx) => (
                   <div key={idx} className="flex items-center text-sm text-gray-700">
@@ -389,7 +388,7 @@ function SubscriptionPlanPage() {
               </button>
               <button
                 onClick={() => {
-                  executePayment(selectedPlan._id,selectedPlan.price)
+                  executePayment(selectedPlan._id, selectedPlan.price)
                 }}
                 className="flex-1 py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-bold hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >

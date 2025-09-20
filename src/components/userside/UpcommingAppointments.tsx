@@ -17,28 +17,28 @@ interface Appointment {
 
 const UpcomingAppointments: React.FC = () => {
 
-  const [appointments,setAppointments]=useState<Appointment[]>([])
-  const navigate=useNavigate()
+  const [appointments, setAppointments] = useState<Appointment[]>([])
+  const navigate = useNavigate()
 
-  const userId:string | undefined=useSelector((state:RootState)=>state.auth.user?.id)
+  const userId: string | undefined = useSelector((state: RootState) => state.auth.user?.id)
 
-  useEffect(()=>{
-    getTodaysAppointments(userId!).then((response)=>{
+  useEffect(() => {
+    getTodaysAppointments(userId!).then((response) => {
       setAppointments(response.data.data)
     })
-  },[])
+  }, [])
 
   return (
     <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/20 mb-8">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-slate-700">Today's Appointments</h2>
-        <button onClick={()=>navigate('/user/appointments')} className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors">
+        <button onClick={() => navigate('/user/appointments')} className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors">
           View All
         </button>
       </div>
 
       <div className="space-y-4">
-        {appointments.length>0 ? appointments?.map((appointment) => (
+        {appointments.length > 0 ? appointments?.map((appointment) => (
           <div
             key={appointment._id}
             className="bg-white/50 backdrop-blur-sm rounded-xl p-4 border border-gray-200/20 hover:shadow-md transition-all duration-200"
@@ -68,7 +68,7 @@ const UpcomingAppointments: React.FC = () => {
 
               <div className="flex flex-col space-y-2">
                 {appointment.mode === 'online' && (
-                  <button onClick={()=>navigate(`/user/video-call/${appointment._id}`)} className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                  <button onClick={() => navigate(`/user/video-call/${appointment._id}`)} className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                     <Video className="w-4 h-4" />
                     <span>Join Meeting</span>
                   </button>
@@ -80,7 +80,7 @@ const UpcomingAppointments: React.FC = () => {
               </div>
             </div>
           </div>
-        )):<h4 className='text-red-500 text-lg font-medium text-center'>No Appointments Today</h4>}
+        )) : <h4 className='text-red-500 text-lg font-medium text-center'>No Appointments Today</h4>}
       </div>
     </div>
   );

@@ -14,15 +14,15 @@ import { RootState } from '../../redux/store';
 const Login: React.FC = () => {
 
   const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Invalid email format'),
-  password: z
-    .string()
-    .min(1, 'Password is required')
-    .min(6, 'Password must be at least 6 characters'),
-});
+    email: z
+      .string()
+      .min(1, 'Email is required')
+      .email('Invalid email format'),
+    password: z
+      .string()
+      .min(1, 'Password is required')
+      .min(6, 'Password must be at least 6 characters'),
+  });
 
   type LoginFormData = z.infer<typeof loginSchema>;
   const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
@@ -34,15 +34,15 @@ const Login: React.FC = () => {
     password: '',
   });
 
-  const adminExist=useSelector((state:RootState)=>state.adminAuth.isAuthenticate)
+  const adminExist = useSelector((state: RootState) => state.adminAuth.isAuthenticate)
 
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
 
-  useEffect(()=>{
-    if(adminExist){
+  useEffect(() => {
+    if (adminExist) {
       navigate('/admin-dashboard')
     }
-  },[])
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,12 +54,12 @@ const Login: React.FC = () => {
         email: fieldErrors.email?.[0],
         password: fieldErrors.password?.[0],
       });
-    }else{
-      signin(formData).then((response)=>{
+    } else {
+      signin(formData).then((response) => {
         dispatch(adminLogin(response.data.data))
         toast.success(response.data.message)
         navigate('/admin-dashboard')
-      }).catch((error)=>{
+      }).catch((error) => {
         toast.error(error.response.data.message)
       })
     }
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
             <div className="absolute bottom-20 left-1/4 w-16 h-16 border border-white rounded-full"></div>
             <div className="absolute bottom-40 right-10 w-20 h-20 border border-white rounded-full"></div>
           </div>
-          
+
           <div className="text-center text-white z-10 max-w-md px-6">
             <div className="flex items-center justify-center mb-8">
               <Scale className="w-16 h-16 text-white" />
@@ -146,7 +146,7 @@ const Login: React.FC = () => {
                       className="w-full pl-11 pr-12 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200"
                       placeholder="Enter your password"
                     />
-                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}

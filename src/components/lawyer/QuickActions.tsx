@@ -58,7 +58,7 @@ const QuickActions: React.FC = () => {
         </h2>
         <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {actions.map((action) => {
           const IconComponent = action.icon;
@@ -70,21 +70,21 @@ const QuickActions: React.FC = () => {
             >
               {/* Subtle background pattern */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               {/* Content */}
               <div className="relative z-10">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/80 backdrop-blur-sm mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg">
                   <IconComponent className={`h-8 w-8 ${action.color} group-hover:scale-110 transition-transform duration-300`} />
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-slate-900 transition-colors duration-300">
                   {action.title}
                 </h3>
-                
+
                 <p className="text-slate-700 group-hover:text-slate-800 transition-colors duration-300 leading-relaxed">
                   {action.description}
                 </p>
-                
+
                 <div className="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/60 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-white/80 transition-all duration-300">
                   <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 17l9.2-9.2M17 17V7H7" />

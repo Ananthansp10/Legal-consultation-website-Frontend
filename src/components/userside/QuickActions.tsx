@@ -27,10 +27,10 @@ const QuickActions: React.FC = () => {
     }
   ];
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
-  function goToPage(id:number){
-    if(id==1 || id==2){
+  function goToPage(id: number) {
+    if (id == 1 || id == 2) {
       navigate('/user/lawyers')
     }
   }
@@ -43,7 +43,7 @@ const QuickActions: React.FC = () => {
           const IconComponent = action.icon;
           return (
             <button
-              onClick={()=>goToPage(action.id)}
+              onClick={() => goToPage(action.id)}
               key={action.id}
               className={`${action.color} text-white p-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-left group`}
             >

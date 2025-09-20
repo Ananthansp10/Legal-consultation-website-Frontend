@@ -26,7 +26,7 @@ export function openRazorpayCheckout(order: RazorpayOrder): Promise<AxiosRespons
       name: "Legal Consultation",
       description: "Subscription Payment",
       order_id: order.id,
-      handler: async function (paymentResponse:RazorpayPaymentResponse) {
+      handler: async function (paymentResponse: RazorpayPaymentResponse) {
         try {
           const response = await verifyRazorpayPayment({
             razorpay_order_id: paymentResponse.razorpay_order_id,
@@ -51,17 +51,17 @@ export function openRazorpayCheckout(order: RazorpayOrder): Promise<AxiosRespons
     const rzp = new (window as any).Razorpay(options);
     rzp.open();
 
-    rzp.on("payment.failed", function (response:RazorpayPaymentFailedResponse) {
+    rzp.on("payment.failed", function (response: RazorpayPaymentFailedResponse) {
       toast.error("Payment Failed");
       reject(response.error);
     });
 
-  // rzp.on("payment.success", (response) => {
-  //   console.log("Success:", response.razorpay_payment_id);
-  // });
+    // rzp.on("payment.success", (response) => {
+    //   console.log("Success:", response.razorpay_payment_id);
+    // });
 
-  // rzp.on("payment.failed", (response:RazorpayPaymentFailedResponse) => {
-  //   console.error("Failed:", response.error.reason);
-  // });
+    // rzp.on("payment.failed", (response:RazorpayPaymentFailedResponse) => {
+    //   console.error("Failed:", response.error.reason);
+    // });
   });
 }

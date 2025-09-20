@@ -84,13 +84,12 @@ const PaymentHistoryModal = ({ isOpen, onClose, appointment }: PaymentHistoryMod
             {/* Payment Status */}
             <div className="flex justify-between items-center py-3 border-b border-gray-100">
               <span className="text-sm font-medium text-gray-600">Payment Status</span>
-              <span className={`text-sm px-2 py-1 rounded-full ${
-                appointment.payment === 'Success' 
-                  ? 'bg-green-100 text-green-700' 
-                  : appointment.payment === 'Failed' 
-                  ? 'bg-red-100 text-red-700'
-                  : 'bg-yellow-100 text-yellow-700'
-              }`}>
+              <span className={`text-sm px-2 py-1 rounded-full ${appointment.payment === 'Success'
+                  ? 'bg-green-100 text-green-700'
+                  : appointment.payment === 'Failed'
+                    ? 'bg-red-100 text-red-700'
+                    : 'bg-yellow-100 text-yellow-700'
+                }`}>
                 {appointment.payment || 'Refunded'}
               </span>
             </div>
@@ -205,7 +204,7 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
     appointment.status === 'Booked' &&
     appointment.date === getTodayDateStr();
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const canShowPaymentHistory = ['Booked', 'Completed', 'Cancelled'].includes(appointment.status);
 
@@ -216,10 +215,9 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
   };
 
   return (
-    <div 
-      className={`bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 mb-6 overflow-hidden ${
-        canShowPaymentHistory ? 'cursor-pointer' : ''
-      }`}
+    <div
+      className={`bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 mb-6 overflow-hidden ${canShowPaymentHistory ? 'cursor-pointer' : ''
+        }`}
       onClick={handleCardClick}
     >
       <div className="p-6">
@@ -290,7 +288,7 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
           <div className="pt-4 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
             <button
               className="w-full bg-green-600 text-white py-2.5 px-4 rounded-lg font-medium"
-              onClick={()=>navigate(`/lawyer/video-call/${appointment._id}`)}
+              onClick={() => navigate(`/lawyer/video-call/${appointment._id}`)}
             >
               Start Meeting
             </button>
@@ -335,16 +333,16 @@ function AppointmentPage() {
   const lawyerId: string | undefined = useSelector((state: RootState) => state.lawyerAuth.lawyer?._id);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages,setTotalPages]=useState(0)
+  const [totalPages, setTotalPages] = useState(0)
   const itemsPerPage = 2;
   const startIndex = (currentPage - 1) * itemsPerPage;
 
   useEffect(() => {
     getAppointments(lawyerId!, activeFilter, startIndex, itemsPerPage).then((response) => {
       setAppointments(response.data.data || []);
-      setTotalPages(Math.ceil(response.data.totalAppointments/itemsPerPage))
+      setTotalPages(Math.ceil(response.data.totalAppointments / itemsPerPage))
     });
-  }, [activeFilter,currentPage]);
+  }, [activeFilter, currentPage]);
 
   const handleCardClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
@@ -370,7 +368,7 @@ function AppointmentPage() {
       </div>
 
       <div className="relative z-10">
-         <LawyerNavbar />
+        <LawyerNavbar />
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -378,7 +376,7 @@ function AppointmentPage() {
             </h1>
             <p className="text-gray-600 text-lg">Manage and track your upcoming appointments</p>
           </div>
-          
+
           {/* Filter Bar */}
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/40 shadow-lg p-4 mb-8 sticky top-4 z-20">
             <div className="flex flex-wrap gap-2 justify-center">
@@ -386,18 +384,17 @@ function AppointmentPage() {
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-6 py-3 rounded-full font-medium text-sm transition-all duration-300 ${
-                    activeFilter === filter
+                  className={`px-6 py-3 rounded-full font-medium text-sm transition-all duration-300 ${activeFilter === filter
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105'
                       : 'text-gray-600 hover:text-gray-800 hover:bg-white/80 hover:shadow-md'
-                  }`}
+                    }`}
                 >
                   {filter}
                 </button>
               ))}
             </div>
           </div>
-          
+
           {/* Appointments List */}
           <div className="space-y-6">
             {appointments?.length === 0 ? (
@@ -424,10 +421,10 @@ function AppointmentPage() {
         </div>
       </div>
       <Pagination currentPage={currentPage} totalPages={totalPages || 0} onPageChange={setCurrentPage} />
-      
+
       {/* Payment History Modal */}
       {selectedAppointment && (
-        <PaymentHistoryModal 
+        <PaymentHistoryModal
           isOpen={showPaymentModal}
           onClose={() => {
             setShowPaymentModal(false);

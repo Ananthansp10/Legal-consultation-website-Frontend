@@ -1,14 +1,14 @@
-export interface SignupInterface{
-    name:string;
-    email:string;
-    password:string;
-    phoneNumber:string;
-    confirmPassword:string;
+export interface SignupInterface {
+  name: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  confirmPassword: string;
 }
 
 export const validateSignup = (data: SignupInterface) => {
 
-  if(!data.name && !data.email && !data.password &&!data.confirmPassword && !data.phoneNumber){
+  if (!data.name && !data.email && !data.password && !data.confirmPassword && !data.phoneNumber) {
     return 'All fields are required'
   }
 
@@ -22,7 +22,7 @@ export const validateSignup = (data: SignupInterface) => {
   if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/.test(data.email))
     return 'Invalid email address';
 
-  if(!data.phoneNumber.trim())
+  if (!data.phoneNumber.trim())
     return 'Phone Number is required';
 
   if (data.password.length < 6)

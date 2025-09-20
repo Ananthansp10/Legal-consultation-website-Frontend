@@ -3,9 +3,9 @@ import { Star, Eye } from 'lucide-react';
 
 const OurLawyers = () => {
   const [activeFilter, setActiveFilter] = useState('All');
-  
+
   const filters = ['All', 'Civil', 'Criminal', 'Family', 'Corporate', 'Immigration'];
-  
+
   const lawyers = [
     {
       id: 1,
@@ -63,8 +63,8 @@ const OurLawyers = () => {
     }
   ];
 
-  const filteredLawyers = activeFilter === 'All' 
-    ? lawyers 
+  const filteredLawyers = activeFilter === 'All'
+    ? lawyers
     : lawyers.filter(lawyer => lawyer.specialization.includes(activeFilter));
 
   return (
@@ -77,18 +77,17 @@ const OurLawyers = () => {
           <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
             Connect with verified, experienced lawyers who specialize in your area of need.
           </p>
-          
+
           {/* Filter Tabs */}
           <div className="flex flex-wrap justify-center gap-2">
             {filters.map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                  activeFilter === filter
+                className={`px-6 py-2 rounded-full transition-all duration-300 ${activeFilter === filter
                     ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
                     : 'bg-white/60 backdrop-blur-sm text-slate-600 hover:bg-white/80 border border-white/20'
-                }`}
+                  }`}
               >
                 {filter}
               </button>
@@ -108,17 +107,17 @@ const OurLawyers = () => {
                   />
                   <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-slate-800 mb-2">{lawyer.name}</h3>
                 <p className="text-blue-500 font-semibold mb-2">{lawyer.specialization}</p>
                 <p className="text-sm text-slate-600 mb-4">{lawyer.experience} experience</p>
-                
+
                 <div className="flex items-center justify-center space-x-1 mb-6">
                   <Star className="h-4 w-4 text-yellow-400 fill-current" />
                   <span className="font-bold text-slate-800">{lawyer.rating}</span>
                   <span className="text-slate-600">({lawyer.reviews} reviews)</span>
                 </div>
-                
+
                 <button className="group/btn w-full flex items-center justify-center space-x-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25">
                   <Eye className="h-4 w-4" />
                   <span>View Profile</span>

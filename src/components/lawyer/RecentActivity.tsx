@@ -58,16 +58,15 @@ const RecentActivity: React.FC = () => {
           View All
         </button>
       </div>
-      
+
       <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 divide-y divide-gray-200/50">
         {activities.map((activity, index) => {
           const IconComponent = activity.icon;
           return (
             <div
               key={activity.id}
-              className={`p-4 hover:bg-white/90 transition-colors duration-200 ${
-                index === 0 ? 'rounded-t-xl' : ''
-              } ${index === activities.length - 1 ? 'rounded-b-xl' : ''}`}
+              className={`p-4 hover:bg-white/90 transition-colors duration-200 ${index === 0 ? 'rounded-t-xl' : ''
+                } ${index === activities.length - 1 ? 'rounded-b-xl' : ''}`}
             >
               <div className="flex items-start space-x-4">
                 <div className={`flex-shrink-0 w-10 h-10 rounded-full ${activity.bgColor} flex items-center justify-center`}>

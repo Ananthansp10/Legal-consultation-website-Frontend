@@ -71,13 +71,13 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
     <div className="group relative">
       {/* Animated background glow */}
       <div className="absolute -inset-1 bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 rounded-3xl blur-lg opacity-20 group-hover:opacity-30 transition-all duration-500 animate-pulse"></div>
-      
+
       <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/30 to-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 hover:shadow-purple-200/20 transition-all duration-500">
         {/* Floating particles effect */}
         <div className="absolute top-4 right-4 opacity-30">
           <Zap className="w-4 h-4 text-purple-400 animate-bounce" />
         </div>
-        
+
         <div className="flex items-center space-x-4 mb-8">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-600 rounded-2xl blur-md opacity-50"></div>
@@ -111,7 +111,7 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
                 >
                   {/* Slot glow effect */}
                   <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full blur opacity-0 group-hover/slot:opacity-30 transition-all duration-300"></div>
-                  
+
                   <div className="relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-white/40 to-white/20 border border-white/30 rounded-full text-sm font-semibold text-slate-700 backdrop-blur-sm hover:from-white/50 hover:to-white/30 transition-all duration-300 group-hover/slot:scale-105 shadow-lg hover:shadow-xl">
                     <span className="mr-3">{formatTimeSlot(slot.startTime, slot.endTime)}</span>
                     <button
@@ -207,7 +207,7 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
           >
             {/* Shimmer effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/add:translate-x-full transition-transform duration-700"></div>
-            
+
             <Plus className="w-5 h-5 mr-3 group-hover/add:rotate-90 transition-transform duration-300" />
             <span className="relative">Add Time Slot</span>
           </button>

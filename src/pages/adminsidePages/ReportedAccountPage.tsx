@@ -59,24 +59,24 @@ const ReportedAccountsPage = () => {
   const [reasonFilter, setReasonFilter] = useState<'All' | 'Harassment' | 'Fake Profile' | 'Scam' | 'Other'>('All');
   const [selectedAccount, setSelectedAccount] = useState<ReportedAccount | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [refresh,setRefresh]=useState(false)
+  const [refresh, setRefresh] = useState(false)
 
-  const [reports,setReports]=useState<ReportedAccount[]>([])
+  const [reports, setReports] = useState<ReportedAccount[]>([])
 
-  useEffect(()=>{
-    getReportedAccounts(activeTab).then((response)=>{
+  useEffect(() => {
+    getReportedAccounts(activeTab).then((response) => {
       setReports(response.data.data)
     })
-  },[activeTab,refresh])
+  }, [activeTab, refresh])
 
-  function takeAction(reportedId:string,userType:string,reportedAccountId:string){
-    userType == 'user' ? updateUserStatus(reportedId,'block').then(()=>{
-      updateReportedAccountStatus(reportedId).then(()=>{
+  function takeAction(reportedId: string, userType: string, reportedAccountId: string) {
+    userType == 'user' ? updateUserStatus(reportedId, 'block').then(() => {
+      updateReportedAccountStatus(reportedId).then(() => {
         toast.success('Account Blocked')
         setRefresh(!refresh)
       })
-    }) : updateLawyerStatus(reportedId,'block').then(()=>{
-      updateReportedAccountStatus(reportedAccountId).then(()=>{
+    }) : updateLawyerStatus(reportedId, 'block').then(() => {
+      updateReportedAccountStatus(reportedAccountId).then(() => {
         toast.success('Account Blocked')
         setRefresh(!refresh)
       })
@@ -93,12 +93,12 @@ const ReportedAccountsPage = () => {
     setSelectedAccount(null);
   };
 
-  const [currentPage,setCurrentPage]=useState(1)
-  const itemsPerPage=3
-  const totalPages=Math.ceil(reports.length/itemsPerPage)
-  const startIndex=(currentPage-1) * itemsPerPage
-  const endIndex=startIndex + itemsPerPage
-  const data=reports.slice(startIndex,endIndex)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 3
+  const totalPages = Math.ceil(reports.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const data = reports.slice(startIndex, endIndex)
 
   const tabs = [
     { key: 'All' as const, label: 'All', count: reports.length },
@@ -127,18 +127,16 @@ const ReportedAccountsPage = () => {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key.toLowerCase())}
-                  className={`px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
-                    activeTab === tab.key
+                  className={`px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${activeTab === tab.key
                       ? 'bg-blue-500 text-white shadow-lg scale-105'
                       : 'bg-white/70 text-gray-700 hover:bg-white hover:shadow-md hover:scale-105'
-                  }`}
+                    }`}
                 >
                   {tab.label}
-                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                    activeTab === tab.key
+                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activeTab === tab.key
                       ? 'bg-white/20 text-white'
                       : 'bg-gray-200 text-gray-600'
-                  }`}>
+                    }`}>
                     {tab.count}
                   </span>
                 </button>
@@ -193,7 +191,7 @@ const ReportedAccountsPage = () => {
           <div className="space-y-4">
             {data.map((account) => {
               const statusConfig = getStatusConfig(account.status);
-              
+
               return (
                 <div key={account._id} className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl hover:bg-white/70 transition-all duration-300">
                   <div className="flex items-center justify-between">
@@ -205,15 +203,14 @@ const ReportedAccountsPage = () => {
                           alt={account.reportedName}
                           className="w-16 h-16 rounded-full border-3 border-white shadow-md"
                         />
-                        <div className={`absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          account.userType === 'user' 
-                            ? 'bg-blue-100 text-blue-700' 
+                        <div className={`absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-xs font-semibold ${account.userType === 'user'
+                            ? 'bg-blue-100 text-blue-700'
                             : 'bg-purple-100 text-purple-700'
-                        }`}>
+                          }`}>
                           {account.userType === 'user' ? <User className="w-3 h-3" /> : <Scale className="w-3 h-3" />}
                         </div>
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg font-bold text-gray-900 truncate">
                           {account.reportedName}
@@ -250,7 +247,7 @@ const ReportedAccountsPage = () => {
                           <Eye className="w-4 h-4" />
                           View Details
                         </button>
-                        <button onClick={()=>takeAction(account.reportedId,account.userType,account._id)} className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-all duration-200 flex items-center gap-2 text-sm font-medium">
+                        <button onClick={() => takeAction(account.reportedId, account.userType, account._id)} className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-all duration-200 flex items-center gap-2 text-sm font-medium">
                           <Shield className="w-4 h-4" />
                           Take Action
                         </button>
@@ -260,7 +257,7 @@ const ReportedAccountsPage = () => {
                 </div>
               );
             })}
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
           </div>
 
           {/* Empty State */}
@@ -282,11 +279,11 @@ const ReportedAccountsPage = () => {
       {isModalOpen && selectedAccount && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={closeModal}
           />
-          
+
           {/* Modal Content */}
           <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200/50 w-full max-w-3xl max-h-[90vh] overflow-hidden">
             {/* Modal Header */}
@@ -335,12 +332,11 @@ const ReportedAccountsPage = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                          report.reason === 'Harassment' ? 'bg-red-100 text-red-700' :
-                          report.reason === 'Fake Info' ? 'bg-orange-100 text-orange-700' :
-                          report.reason === 'Scam' ? 'bg-purple-100 text-purple-700' :
-                          'bg-gray-100 text-gray-700'
-                        }`}>
+                        <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${report.reason === 'Harassment' ? 'bg-red-100 text-red-700' :
+                            report.reason === 'Fake Info' ? 'bg-orange-100 text-orange-700' :
+                              report.reason === 'Scam' ? 'bg-purple-100 text-purple-700' :
+                                'bg-gray-100 text-gray-700'
+                          }`}>
                           <AlertCircle className="w-3 h-3" />
                           {report.reason}
                         </div>

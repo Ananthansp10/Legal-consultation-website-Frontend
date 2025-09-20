@@ -65,79 +65,79 @@ function App() {
         <Routes>
           {/* Main Website Routes */}
 
-          <Route path='/' element={<StartPage/>}/>
+          <Route path='/' element={<StartPage />} />
           <Route path="/user" element={<HomePage />} />
-          
+
           {/* Authentication Routes */}
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/otp-verification" element={<OTPVerification />} />
-          <Route path='/auth/new-password' element={<NewPasswordPage/>}/>
-          <Route path='/unAuthorized' element={<UnAuthorizedPage/>}/>
-          <Route path='/googleFail' element={<GoogleFail/>}/>
-          <Route path='/emailExist' element={<EmailExistError/>}/>
-          <Route path='/block-page' element={<AccountBlockPage/>}/>
+          <Route path='/auth/new-password' element={<NewPasswordPage />} />
+          <Route path='/unAuthorized' element={<UnAuthorizedPage />} />
+          <Route path='/googleFail' element={<GoogleFail />} />
+          <Route path='/emailExist' element={<EmailExistError />} />
+          <Route path='/block-page' element={<AccountBlockPage />} />
 
 
-          <Route path="/auth/lawyer/signup" element={<SignupForm/>} />
-          <Route path="/auth/lawyer/signin" element={<LawyerSignin/>} />
-          <Route path='/auth/lawyer/forgotpassword' element={<LawyerForgotPasswordPage/>}/>
-          <Route path='/auth/lawyer/forgot-password-email-page' element={<LawyerForgotPasswordEmailPage/>}/>
+          <Route path="/auth/lawyer/signup" element={<SignupForm />} />
+          <Route path="/auth/lawyer/signin" element={<LawyerSignin />} />
+          <Route path='/auth/lawyer/forgotpassword' element={<LawyerForgotPasswordPage />} />
+          <Route path='/auth/lawyer/forgot-password-email-page' element={<LawyerForgotPasswordEmailPage />} />
 
-          <Route path='/lawyer' element={<LawyerWelcomePage/>}/>
-          <Route path='/lawyer-verification-status' element={<LawyerVerificationStatusPage/>}/>
-          
-          <Route element={<ProtectedRoute allowedRoles={['user']}/>}>
-              <Route path="/user-dashboard" element={<Dashboard/>} />
-              <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-              <Route path='/user/profile' element={<UserProfilePage/>}/>
-              <Route path='/user/add-profile' element={<UserProfileForm/>}/>
-              <Route path='/user/lawyers' element={<LawyerListingPage/>}/>
-              <Route path='/user/lawyer-view-page/:lawyerId' element={<LawyerViewPage/>}/>
-              <Route path='/user/slot-booking/:lawyerId' element={<SlotBookingPage/>}/>
-              <Route path='/user/appointments' element={<UserAppointmentPage/>}/>
-              <Route path='/user/chat-view-page/:lawyerId' element={<ChatViewPage/>}/>
-              <Route path='/user/chat' element={<ChatPage/>}/>
-              <Route path='/feedback/:lawyerId' element={<AddFeedbackPage/>}/>
-              <Route path='/reviews/:lawyerId' element={<ReviewListing/>}/>
-              <Route path='/user/video-call/:appointmentId' element={<UserVideoCallPage/>}/>
+          <Route path='/lawyer' element={<LawyerWelcomePage />} />
+          <Route path='/lawyer-verification-status' element={<LawyerVerificationStatusPage />} />
+
+          <Route element={<ProtectedRoute allowedRoles={['user']} />}>
+            <Route path="/user-dashboard" element={<Dashboard />} />
+            <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+            <Route path='/user/profile' element={<UserProfilePage />} />
+            <Route path='/user/add-profile' element={<UserProfileForm />} />
+            <Route path='/user/lawyers' element={<LawyerListingPage />} />
+            <Route path='/user/lawyer-view-page/:lawyerId' element={<LawyerViewPage />} />
+            <Route path='/user/slot-booking/:lawyerId' element={<SlotBookingPage />} />
+            <Route path='/user/appointments' element={<UserAppointmentPage />} />
+            <Route path='/user/chat-view-page/:lawyerId' element={<ChatViewPage />} />
+            <Route path='/user/chat' element={<ChatPage />} />
+            <Route path='/feedback/:lawyerId' element={<AddFeedbackPage />} />
+            <Route path='/reviews/:lawyerId' element={<ReviewListing />} />
+            <Route path='/user/video-call/:appointmentId' element={<UserVideoCallPage />} />
           </Route>
 
-           <Route element={<ProtectedRoute allowedRoles={['lawyer']}/>}>
-              <Route path="/lawyer-dashboard" element={<LawyerDashboard/>} />
-              <Route path='/lawyer/reset-password' element={<LawyerResetPasswordPage/>}/>
-              <Route path='/lawyer-profile-page' element={<LawyerProfilePage/>}/>
-              <Route path='/lawyer/add-profile' element={<LawyerProfileAddPage/>}/>
-              <Route path='/lawyer/add-availablity' element={<AvailablityAddPage/>}/>
-              <Route path='/lawyer/appointments' element={<AppointmentPage/>}/>
-              <Route path='/lawyer/slot-list-page' element={<SlotListPage/>}/>
-              <Route path='/lawyer/subscription-plans' element={<SubscriptionPlanPage/>}/>
-              <Route path='/lawyer/chat-list' element={<LawyerChatListPage/>}/>
-              <Route path='/lawyer/chat-view/:userId' element={<LawyerChatViewPage/>}/>
-              <Route path='/lawyer/add-bank-details' element={<AddBankDetailsPage/>}/>
-              <Route path='/lawyer/reviews/:lawyerId/:userType' element={<ReviewListing/>}/>
-              <Route path='/lawyer/video-call/:appointmentId' element={<VideoCallPage/>}/>
+          <Route element={<ProtectedRoute allowedRoles={['lawyer']} />}>
+            <Route path="/lawyer-dashboard" element={<LawyerDashboard />} />
+            <Route path='/lawyer/reset-password' element={<LawyerResetPasswordPage />} />
+            <Route path='/lawyer-profile-page' element={<LawyerProfilePage />} />
+            <Route path='/lawyer/add-profile' element={<LawyerProfileAddPage />} />
+            <Route path='/lawyer/add-availablity' element={<AvailablityAddPage />} />
+            <Route path='/lawyer/appointments' element={<AppointmentPage />} />
+            <Route path='/lawyer/slot-list-page' element={<SlotListPage />} />
+            <Route path='/lawyer/subscription-plans' element={<SubscriptionPlanPage />} />
+            <Route path='/lawyer/chat-list' element={<LawyerChatListPage />} />
+            <Route path='/lawyer/chat-view/:userId' element={<LawyerChatViewPage />} />
+            <Route path='/lawyer/add-bank-details' element={<AddBankDetailsPage />} />
+            <Route path='/lawyer/reviews/:lawyerId/:userType' element={<ReviewListing />} />
+            <Route path='/lawyer/video-call/:appointmentId' element={<VideoCallPage />} />
           </Route>
 
-          <Route path='/admin' element={<AdminWelcomePage/>}/>
-          <Route path="/auth/admin/signin" element={<Login/>} />
+          <Route path='/admin' element={<AdminWelcomePage />} />
+          <Route path="/auth/admin/signin" element={<Login />} />
 
-          <Route element={<ProtectedRoute allowedRoles={['admin']}/>}>
-           <Route path="/admin-dashboard" element={<Layout />}>
+          <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+            <Route path="/admin-dashboard" element={<Layout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="lawyer-verification" element={<LawyerVerification />} />
               <Route path="lawyers" element={<LawyerListing />} />
               <Route path="users" element={<UserListing />} />
-              <Route path='specialization' element={<SpecializationPage/>}/>
-              <Route path='admin/appointments' element={<AppointmentListingPage/>}/>
-              <Route path='reported-accounts' element={<ReportedAccountsPage/>}/>
-              <Route path='admin/subscription-plans' element={<SubscriptionPlanManagement/>}/>
-              <Route path='profile-view' element={<ProfilePage/>}/>
-              <Route path='company-report' element={<CompanyReportPage/>}/>
+              <Route path='specialization' element={<SpecializationPage />} />
+              <Route path='admin/appointments' element={<AppointmentListingPage />} />
+              <Route path='reported-accounts' element={<ReportedAccountsPage />} />
+              <Route path='admin/subscription-plans' element={<SubscriptionPlanManagement />} />
+              <Route path='profile-view' element={<ProfilePage />} />
+              <Route path='company-report' element={<CompanyReportPage />} />
             </Route>
           </Route>
-          
+
         </Routes>
 
         <ToastContainer
@@ -149,7 +149,7 @@ function App() {
           draggable
           theme="colored"
         />
-        
+
       </div>
     </Router>
   );

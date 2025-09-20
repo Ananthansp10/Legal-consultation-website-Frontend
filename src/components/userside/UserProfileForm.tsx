@@ -52,8 +52,8 @@ interface FormErrors {
 }
 
 const UserProfileForm: React.FC = () => {
-  const user:userDetails | null=useSelector((state:RootState)=>state.auth.user)!
-  
+  const user: userDetails | null = useSelector((state: RootState) => state.auth.user)!
+
   const [formData, setFormData] = useState<FormData>({
     fullName: user.name,
     email: user.email,
@@ -89,7 +89,7 @@ const UserProfileForm: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const validateField = (name: string, value: string | File | null): string => {
     switch (name) {
@@ -307,7 +307,7 @@ const UserProfileForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       // toast.error('Please fix all validation errors before submitting');
       return;
@@ -317,7 +317,7 @@ const UserProfileForm: React.FC = () => {
 
     const data = new FormData()
 
-    data.append('userId',user.id)
+    data.append('userId', user.id)
     data.append('name', formData.fullName)
     data.append('email', formData.email)
     data.append('phoneNumber', formData.phone)
@@ -336,7 +336,7 @@ const UserProfileForm: React.FC = () => {
     data.append('country', formData.country)
     data.append('zipCode', formData.zipCode)
 
-    addProfile(data).then((response)=>{
+    addProfile(data).then((response) => {
       toast.success(response.data.message)
       navigate('/user/profile')
     }).catch((error) => {
@@ -388,7 +388,7 @@ const UserProfileForm: React.FC = () => {
     <div className="min-h-screen bg-[#f8fafc] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto mt-12">
         <div className="bg-white rounded-xl shadow-xl p-6 md:p-10 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4">
-          <UserNavbar navLink=''/>
+          <UserNavbar navLink='' />
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#1e293b] mb-2">Add Profile</h1>
             <p className="text-[#64748b] text-lg">
@@ -416,11 +416,10 @@ const UserProfileForm: React.FC = () => {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      errors.fullName 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                    }`}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.fullName
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                     placeholder="Enter your full name"
                   />
                   {errors.fullName && (
@@ -441,11 +440,10 @@ const UserProfileForm: React.FC = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                        errors.email 
-                          ? 'border-red-500 focus:ring-red-500' 
-                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.email
+                        ? 'border-red-500 focus:ring-red-500'
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                        }`}
                       placeholder="your.email@example.com"
                       readOnly
                     />
@@ -468,11 +466,10 @@ const UserProfileForm: React.FC = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                        errors.phone 
-                          ? 'border-red-500 focus:ring-red-500' 
-                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.phone
+                        ? 'border-red-500 focus:ring-red-500'
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                        }`}
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
@@ -494,11 +491,10 @@ const UserProfileForm: React.FC = () => {
                       name="dateOfBirth"
                       value={formData.dateOfBirth}
                       onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                        errors.dateOfBirth 
-                          ? 'border-red-500 focus:ring-red-500' 
-                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.dateOfBirth
+                        ? 'border-red-500 focus:ring-red-500'
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                        }`}
                     />
                   </div>
                   {errors.dateOfBirth && (
@@ -516,11 +512,10 @@ const UserProfileForm: React.FC = () => {
                     name="gender"
                     value={formData.gender}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg bg-white text-[#334155] focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      errors.gender 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                    }`}
+                    className={`w-full px-4 py-2 border rounded-lg bg-white text-[#334155] focus:outline-none focus:ring-2 transition-all duration-200 ${errors.gender
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                   >
                     <option value="" disabled>Select gender</option>
                     <option value="Male">Male</option>
@@ -545,11 +540,10 @@ const UserProfileForm: React.FC = () => {
                       name="proffession"
                       value={formData.proffession}
                       onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                        errors.proffession 
-                          ? 'border-red-500 focus:ring-red-500' 
-                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.proffession
+                        ? 'border-red-500 focus:ring-red-500'
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                        }`}
                       placeholder="Software Engineer"
                     />
                   </div>
@@ -571,11 +565,10 @@ const UserProfileForm: React.FC = () => {
                       name="company"
                       value={formData.company}
                       onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                        errors.company 
-                          ? 'border-red-500 focus:ring-red-500' 
-                          : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.company
+                        ? 'border-red-500 focus:ring-red-500'
+                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                        }`}
                       placeholder="Company Name"
                     />
                   </div>
@@ -601,11 +594,10 @@ const UserProfileForm: React.FC = () => {
                     />
                     <label
                       htmlFor="profileImage"
-                      className={`flex items-center justify-center w-24 h-24 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200 ${
-                        errors.profileImage 
-                          ? 'border-red-500' 
-                          : 'border-[#e2e8f0] hover:border-[#3b82f6]'
-                      }`}
+                      className={`flex items-center justify-center w-24 h-24 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200 ${errors.profileImage
+                        ? 'border-red-500'
+                        : 'border-[#e2e8f0] hover:border-[#3b82f6]'
+                        }`}
                     >
                       {imagePreview ? (
                         <img
@@ -654,11 +646,10 @@ const UserProfileForm: React.FC = () => {
                     name="streetAddress"
                     value={formData.streetAddress}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      errors.streetAddress 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                    }`}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.streetAddress
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                     placeholder="123 Main Street, Apt 4B"
                   />
                   {errors.streetAddress && (
@@ -676,11 +667,10 @@ const UserProfileForm: React.FC = () => {
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      errors.city 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                    }`}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.city
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                     placeholder="New York"
                   />
                   {errors.city && (
@@ -698,11 +688,10 @@ const UserProfileForm: React.FC = () => {
                     name="state"
                     value={formData.state}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      errors.state 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                    }`}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.state
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                     placeholder="NY"
                   />
                   {errors.state && (
@@ -720,11 +709,10 @@ const UserProfileForm: React.FC = () => {
                     name="country"
                     value={formData.country}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      errors.country 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                    }`}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.country
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                     placeholder="United States"
                   />
                   {errors.country && (
@@ -742,11 +730,10 @@ const UserProfileForm: React.FC = () => {
                     name="zipCode"
                     value={formData.zipCode}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                      errors.zipCode 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
-                    }`}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.zipCode
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                      }`}
                     placeholder="10001"
                   />
                   {errors.zipCode && (

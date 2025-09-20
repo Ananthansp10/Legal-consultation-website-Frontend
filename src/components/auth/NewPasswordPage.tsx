@@ -12,18 +12,18 @@ function NewPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const {data,error,loading,execute}=useApi(changePaasword)
+  const { data, error, loading, execute } = useApi(changePaasword)
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    let userDetails=localStorage.getItem('userDetails')
+
+    let userDetails = localStorage.getItem('userDetails')
     let user
-    if(userDetails){
-      user=JSON.parse(userDetails) as {email:string}
+    if (userDetails) {
+      user = JSON.parse(userDetails) as { email: string }
       // changePaasword({email:user.email,password:newPassword}).then((response)=>{
       //   if(response.data.success){
       //     setIsLoading(false);
@@ -37,36 +37,36 @@ function NewPasswordPage() {
       //   navigate('/auth/forgot-password')
       // })
 
-        await execute({email:user.email,password:newPassword})
+      await execute({ email: user.email, password: newPassword })
     }
   };
 
-  useEffect(()=>{
-    if(error){
+  useEffect(() => {
+    if (error) {
       setIsLoading(false)
       toast.error(error.message)
       navigate('/auth/forgot-password')
     }
-  },[error])
+  }, [error])
 
-  useEffect(()=>{
-    if(data){
+  useEffect(() => {
+    if (data) {
       setIsLoading(false)
       toast.success(data.message)
       localStorage.removeItem('userDetails')
       navigate('/auth/signin')
     }
-  },[data])
+  }, [data])
 
   const passwordsMatch = newPassword === confirmPassword && newPassword.length > 0;
-  
+
   // Updated password validation requirements
   const hasMinLength = newPassword.length >= 6;
   const hasUppercase = /[A-Z]/.test(newPassword);
   const hasLowercase = /[a-z]/.test(newPassword);
   const hasNumber = /[0-9]/.test(newPassword);
   const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword);
-  
+
   const isFormValid = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar && passwordsMatch;
 
   return (
@@ -207,11 +207,10 @@ function NewPasswordPage() {
               <button
                 type="submit"
                 disabled={!isFormValid || isLoading}
-                className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 transform ${
-                  isFormValid && !isLoading
+                className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 transform ${isFormValid && !isLoading
                     ? 'bg-blue-500 hover:bg-blue-600 hover:scale-[1.02] shadow-lg hover:shadow-xl'
                     : 'bg-slate-300 cursor-not-allowed'
-                }`}
+                  }`}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">

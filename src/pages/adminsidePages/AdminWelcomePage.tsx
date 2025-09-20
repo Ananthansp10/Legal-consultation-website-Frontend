@@ -23,7 +23,7 @@ const AdminIllustration = () => {
           fill="url(#dashboardGradient)"
           className="drop-shadow-2xl"
         />
-        
+
         {/* Dashboard Header */}
         <rect
           x="50"
@@ -33,19 +33,19 @@ const AdminIllustration = () => {
           rx="20"
           fill="#1F2937"
         />
-        
+
         {/* Navigation Dots */}
         <circle cx="80" cy="80" r="6" fill="#EF4444" />
         <circle cx="100" cy="80" r="6" fill="#F59E0B" />
         <circle cx="120" cy="80" r="6" fill="#10B981" />
-        
+
         {/* Dashboard Title */}
         <rect x="200" y="70" width="120" height="20" rx="4" fill="#6B7280" />
-        
+
         {/* Chart Cards */}
         <rect x="80" y="140" width="150" height="80" rx="12" fill="#F8FAFC" className="animate-pulse" />
         <rect x="250" y="140" width="150" height="80" rx="12" fill="#F8FAFC" className="animate-pulse" />
-        
+
         {/* Chart Elements */}
         <path
           d="M100 200 L120 180 L140 190 L160 170 L180 175 L200 160"
@@ -54,29 +54,29 @@ const AdminIllustration = () => {
           fill="none"
           className="animate-draw"
         />
-        
+
         <rect x="270" y="160" width="8" height="30" fill="#3B82F6" />
         <rect x="285" y="170" width="8" height="20" fill="#8B5CF6" />
         <rect x="300" y="155" width="8" height="35" fill="#EF4444" />
         <rect x="315" y="165" width="8" height="25" fill="#F59E0B" />
-        
+
         {/* Bottom Stats */}
         <rect x="80" y="250" width="320" height="60" rx="12" fill="#F8FAFC" />
         <rect x="100" y="270" width="60" height="8" rx="4" fill="#E5E7EB" />
         <rect x="180" y="270" width="80" height="8" rx="4" fill="#E5E7EB" />
         <rect x="280" y="270" width="50" height="8" rx="4" fill="#E5E7EB" />
-        
+
         <rect x="100" y="285" width="40" height="6" rx="3" fill="#10B981" />
         <rect x="180" y="285" width="60" height="6" rx="3" fill="#3B82F6" />
         <rect x="280" y="285" width="35" height="6" rx="3" fill="#EF4444" />
-        
+
         {/* Floating Elements */}
         <circle cx="420" cy="120" r="20" fill="#10B981" className="animate-bounce" opacity="0.8" />
         <rect x="410" y="110" width="20" height="20" rx="4" fill="#FFFFFF" />
-        
+
         <circle cx="60" cy="180" r="15" fill="#3B82F6" className="animate-pulse" opacity="0.6" />
         <rect x="53" y="173" width="14" height="14" rx="3" fill="#FFFFFF" />
-        
+
         {/* Gradient Definitions */}
         <defs>
           <linearGradient id="dashboardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -85,7 +85,7 @@ const AdminIllustration = () => {
           </linearGradient>
         </defs>
       </svg>
-      
+
       {/* Floating Icons */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-12 right-12 animate-float-delayed">
@@ -128,7 +128,7 @@ const TypewriterText = ({ text, delay = 100 }: { text: string; delay?: number })
 
 function AdminWelcomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
-   const navigate=useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setIsLoaded(true);
@@ -152,7 +152,7 @@ function AdminWelcomePage() {
       <div className="min-h-screen flex items-center justify-center px-6 lg:px-12">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            
+
             {/* Left Side - Content */}
             <div className={`space-y-8 text-center lg:text-left ${isLoaded ? 'animate-slide-in-left' : 'opacity-0'}`}>
               <div className="space-y-6">
@@ -164,7 +164,7 @@ function AdminWelcomePage() {
                     <TypewriterText text="Admin!" delay={150} />
                   </div>
                 </h1>
-                
+
                 <p className="text-xl lg:text-2xl text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                   Let's dive into your control center and keep everything running smoothly.
                 </p>
@@ -231,4 +231,4 @@ function AdminWelcomePage() {
   );
 }
 
-export default AdminWelcomePage ;
+export default AdminWelcomePage;

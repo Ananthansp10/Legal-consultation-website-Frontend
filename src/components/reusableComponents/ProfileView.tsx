@@ -181,11 +181,10 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
               {getProfileName()}
             </h1>
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
-                isLawyer 
-                  ? 'bg-teal-100 text-teal-700' 
+              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${isLawyer
+                  ? 'bg-teal-100 text-teal-700'
                   : 'bg-blue-100 text-blue-700'
-              }`}>
+                }`}>
                 {isLawyer ? <Briefcase size={16} /> : <User size={16} />}
                 {isLawyer ? 'Legal Professional' : 'Client'}
               </div>
@@ -196,9 +195,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
           {/* Personal Details Section */}
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className={`text-2xl font-semibold mb-8 ${
-                isLawyer ? 'text-teal-600' : 'text-blue-600'
-              }`}>
+              <h2 className={`text-2xl font-semibold mb-8 ${isLawyer ? 'text-teal-600' : 'text-blue-600'
+                }`}>
                 Personal Details
               </h2>
             </div>
@@ -211,11 +209,10 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
                   className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/30 shadow-md hover:shadow-lg transform transition-all duration-300 hover:-translate-y-1 min-w-0"
                 >
                   <div className="flex flex-col space-y-3">
-                    <div className={`p-3 rounded-xl ${
-                      isLawyer 
-                        ? 'bg-teal-100 text-teal-600' 
+                    <div className={`p-3 rounded-xl ${isLawyer
+                        ? 'bg-teal-100 text-teal-600'
                         : 'bg-blue-100 text-blue-600'
-                    } w-fit`}>
+                      } w-fit`}>
                       <item.icon size={24} />
                     </div>
                     <div className="w-full">

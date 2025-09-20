@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ImageSlider: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   const slides = [
     {
       id: 1,
@@ -44,16 +44,15 @@ const ImageSlider: React.FC = () => {
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold text-slate-800 mb-6">Featured Content</h2>
-      
+
       <div className="relative bg-white/70 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-200/50 shadow-lg">
         <div className="relative h-64 md:h-80 overflow-hidden">
           {slides.map((slide, index) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
-                index === currentSlide ? 'translate-x-0' : 
-                index < currentSlide ? '-translate-x-full' : 'translate-x-full'
-              }`}
+              className={`absolute inset-0 transition-transform duration-500 ease-in-out ${index === currentSlide ? 'translate-x-0' :
+                  index < currentSlide ? '-translate-x-full' : 'translate-x-full'
+                }`}
             >
               <img
                 src={slide.image}
@@ -92,9 +91,8 @@ const ImageSlider: React.FC = () => {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                index === currentSlide ? 'bg-white' : 'bg-white/50'
-              }`}
+              className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentSlide ? 'bg-white' : 'bg-white/50'
+                }`}
             />
           ))}
         </div>

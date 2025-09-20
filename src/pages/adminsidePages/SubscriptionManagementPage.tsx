@@ -8,13 +8,13 @@ import ConfirmModal from '../../components/reusableComponents/ConfirmModal';
 type PlanType = 'weekly' | 'monthly' | 'yearly';
 
 interface Plan {
-  _id ? : string;
+  _id?: string;
   name: string;
   price: number;
   duration: number;
   planType: PlanType;
   features: string[];
-  status ?: boolean;
+  status?: boolean;
 }
 
 interface Stat {
@@ -39,10 +39,10 @@ const SubscriptionPlanManagement: React.FC = () => {
   const [newFeature, setNewFeature] = useState<string>('');
 
   const [plans, setPlans] = useState<Plan[]>([]);
-  const [refresh,setRefresh]=useState(false)
-  const [planId,setPlanId]=useState('')
-  const [isEdit,setIsEdit]=useState(false)
-  const [confirmationModal,setConfirmationModal]=useState(false)
+  const [refresh, setRefresh] = useState(false)
+  const [planId, setPlanId] = useState('')
+  const [isEdit, setIsEdit] = useState(false)
+  const [confirmationModal, setConfirmationModal] = useState(false)
 
   const stats: Stat[] = [
     {
@@ -124,37 +124,37 @@ const SubscriptionPlanManagement: React.FC = () => {
       return;
     }
 
-    if(isEdit){
-      planEdit(planId,{...formData,price:parseInt(formData.price),duration:parseInt(formData.duration)}).then((response)=>{
+    if (isEdit) {
+      planEdit(planId, { ...formData, price: parseInt(formData.price), duration: parseInt(formData.duration) }).then((response) => {
         closeModal()
         setIsEdit(false)
         setPlanId('')
         setRefresh(!refresh)
         toast.success(response.data.message)
       })
-    }else{
+    } else {
 
-    const newPlan: Plan = {
-      name: formData.name,
-      price: parseInt(formData.price),
-      duration: parseInt(formData.duration),
-      planType: formData.planType,
-      features: formData.features,
-    };
+      const newPlan: Plan = {
+        name: formData.name,
+        price: parseInt(formData.price),
+        duration: parseInt(formData.duration),
+        planType: formData.planType,
+        features: formData.features,
+      };
 
-    addSubscriptionPlans(newPlan).then((response)=>{
-      closeModal();
-      setRefresh(!refresh)
-      toast.success(response.data.message)
-    });
-  }
+      addSubscriptionPlans(newPlan).then((response) => {
+        closeModal();
+        setRefresh(!refresh)
+        toast.success(response.data.message)
+      });
+    }
   };
 
-  useEffect(()=>{
-    getSubscriptionPlans().then((response)=>{
+  useEffect(() => {
+    getSubscriptionPlans().then((response) => {
       setPlans(response.data.data)
     })
-  },[refresh])
+  }, [refresh])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
@@ -162,21 +162,21 @@ const SubscriptionPlanManagement: React.FC = () => {
     }
   };
 
-  function togglePlanStatus(planId:string,status:string){
-    changePlanStatus(planId,status).then((response)=>{
+  function togglePlanStatus(planId: string, status: string) {
+    changePlanStatus(planId, status).then((response) => {
       setRefresh(!refresh)
       toast.success(response.data.message)
     })
   }
 
-  function deletePlan(planId:string){
+  function deletePlan(planId: string) {
     setPlanId(planId)
     setConfirmationModal(true)
   }
 
-  function editPlan(planId:string){
-    const findPlan=plans.filter((plan)=>plan._id==planId)
-    setFormData({...findPlan[0],price:findPlan[0].price.toString(),duration:findPlan[0].duration.toString()})
+  function editPlan(planId: string) {
+    const findPlan = plans.filter((plan) => plan._id == planId)
+    setFormData({ ...findPlan[0], price: findPlan[0].price.toString(), duration: findPlan[0].duration.toString() })
     setIsEdit(true)
     setPlanId(planId)
     setIsModalOpen(true)
@@ -209,7 +209,7 @@ const SubscriptionPlanManagement: React.FC = () => {
                 <p className="text-gray-600">Manage subscription plans for lawyers</p>
               </div>
             </div>
-            <button 
+            <button
               onClick={openModal}
               className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200"
             >
@@ -301,34 +301,32 @@ const SubscriptionPlanManagement: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                            plan.status
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${plan.status
                               ? 'bg-emerald-100 text-emerald-800'
                               : 'bg-red-100 text-red-800'
-                          }`}
+                            }`}
                         >
                           {plan.status ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-2">
-                          <button onClick={()=>editPlan(plan._id!)}
+                          <button onClick={() => editPlan(plan._id!)}
                             className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-all duration-200 group"
                             aria-label={`Edit ${plan.name} plan`}
                           >
                             <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
                           </button>
-                          <button onClick={()=>togglePlanStatus(plan._id!, plan.status ? 'Deactivate' : 'Activate')}
-                            className={`p-2 rounded-lg transition-all duration-200 group ${
-                              plan.status
+                          <button onClick={() => togglePlanStatus(plan._id!, plan.status ? 'Deactivate' : 'Activate')}
+                            className={`p-2 rounded-lg transition-all duration-200 group ${plan.status
                                 ? 'text-orange-600 hover:bg-orange-100'
                                 : 'text-emerald-600 hover:bg-emerald-100'
-                            }`}
+                              }`}
                             aria-label={`${plan.status ? 'Deactivate' : 'Activate'} ${plan.name} plan`}
                           >
                             <Power className="w-4 h-4 group-hover:scale-110 transition-transform" />
                           </button>
-                          <button onClick={()=>deletePlan(plan._id!)}
+                          <button onClick={() => deletePlan(plan._id!)}
                             className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-all duration-200 group"
                             aria-label={`Delete ${plan.name} plan`}
                           >
@@ -352,7 +350,7 @@ const SubscriptionPlanManagement: React.FC = () => {
                 <h2 className="text-2xl font-bold text-gray-800">
                   Add New Plan
                 </h2>
-                <button 
+                <button
                   onClick={closeModal}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   aria-label="Close modal"
@@ -437,7 +435,7 @@ const SubscriptionPlanManagement: React.FC = () => {
                       className="flex-1 px-4 py-3 rounded-xl bg-white border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                       placeholder="Add a feature"
                     />
-                    <button 
+                    <button
                       onClick={addFeature}
                       type="button"
                       className="px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all"
@@ -470,14 +468,14 @@ const SubscriptionPlanManagement: React.FC = () => {
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4">
-                  <button 
+                  <button
                     onClick={closeModal}
                     type="button"
                     className="px-6 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-xl transition-all"
                   >
                     Cancel
                   </button>
-                  <button 
+                  <button
                     onClick={handleSubmit}
                     type="button"
                     className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg hover:scale-105 transition-all"
@@ -490,12 +488,12 @@ const SubscriptionPlanManagement: React.FC = () => {
           </div>
         )}
       </div>
-      {confirmationModal && <ConfirmModal message='Are you sure want to delete this plan' onConfirm={()=>planDelete(planId).then((response)=>{
+      {confirmationModal && <ConfirmModal message='Are you sure want to delete this plan' onConfirm={() => planDelete(planId).then((response) => {
         setPlanId('')
         setRefresh(!refresh)
         setConfirmationModal(false)
         toast.success(response.data.message)
-      })} onCancel={()=>setConfirmationModal(false)}/>}
+      })} onCancel={() => setConfirmationModal(false)} />}
     </div>
   );
 };

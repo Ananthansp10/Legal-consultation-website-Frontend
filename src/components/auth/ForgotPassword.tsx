@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import { forgotPassword } from '../../services/user/authService';
 import { useApi } from '../../hooks/UseApi';
 
@@ -9,12 +9,12 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
 
-  const {data,error,loading,execute}=useApi(forgotPassword)
+  const { data, error, loading, execute } = useApi(forgotPassword)
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const emailRegex = /^\S+@\S+\.\S+$/;
-    if(!email){
+    if (!email) {
       return toast.error("Email is required")
     }
     if (!emailRegex.test(email.trim())) {
@@ -31,28 +31,28 @@ const ForgotPassword = () => {
     //   toast.error(error.response.data.message)
     // })
 
-      await execute(email)
+    await execute(email)
   };
 
-  useEffect(()=>{
-    if(error){
+  useEffect(() => {
+    if (error) {
       toast.error(error.message)
     }
-  },[error])
+  }, [error])
 
-  useEffect(()=>{
-    if(data){
-      const responseData={...data.data,forgotPassword:true}
-       localStorage.setItem('userDetails',JSON.stringify(responseData))
-       toast.success(data.message)
-       navigate('/auth/otp-verification')
+  useEffect(() => {
+    if (data) {
+      const responseData = { ...data.data, forgotPassword: true }
+      localStorage.setItem('userDetails', JSON.stringify(responseData))
+      toast.success(data.message)
+      navigate('/auth/otp-verification')
     }
-  },[data])
+  }, [data])
 
   return (
     <div className="min-h-screen flex">
       {/* Back to Home Button */}
-      <Link 
+      <Link
         to="/"
         className="fixed top-4 left-4 z-50 flex items-center space-x-2 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-white/20 text-slate-600 hover:text-blue-500 transition-all duration-200"
       >
@@ -115,7 +115,7 @@ const ForgotPassword = () => {
             </form>
 
             <div className="text-center mt-6">
-              <Link 
+              <Link
                 to="/auth/signin"
                 className="inline-flex items-center space-x-2 text-blue-500 hover:text-blue-600 font-medium transition-colors duration-200"
               >

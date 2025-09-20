@@ -61,7 +61,7 @@ const FAQ = () => {
                   <ChevronDown className="h-5 w-5 text-slate-400 flex-shrink-0" />
                 )}
               </button>
-              
+
               {openFAQ === index && (
                 <div className="px-6 pb-6">
                   <div className="border-t border-slate-200 pt-4">

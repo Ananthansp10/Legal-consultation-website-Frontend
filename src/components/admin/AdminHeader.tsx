@@ -19,7 +19,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ onAddClick }) => {
         </div>
         <p className="text-slate-600 text-lg font-medium ml-14">Create and manage legal practice areas with precision</p>
       </div>
-      
+
       <button
         onClick={onAddClick}
         className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:via-blue-600 hover:to-indigo-700 hover:shadow-2xl hover:shadow-blue-500/25 hover:scale-105 transition-all duration-300 font-semibold backdrop-blur-sm border border-white/10 overflow-hidden"

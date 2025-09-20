@@ -66,8 +66,8 @@ const LawyerResetPasswordPage: React.FC = () => {
       toast.success(response.data.message);
       navigate('/auth/lawyer/signin');
     } catch (error) {
-      const errorData=error as AxiosError
-      const errorResponse=errorData.response?.data as ErrorResponse
+      const errorData = error as AxiosError
+      const errorResponse = errorData.response?.data as ErrorResponse
       toast.error(errorResponse.message || 'Something went wrong');
     }
   };

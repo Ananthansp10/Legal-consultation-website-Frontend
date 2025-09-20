@@ -56,7 +56,7 @@ const LawyerForgotPasswordPage: React.FC = () => {
 
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email');
-  const token=searchParams.get('token')
+  const token = searchParams.get('token')
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,14 +83,14 @@ const LawyerForgotPasswordPage: React.FC = () => {
 
     setFormErrors({});
 
-    saveNewPassword({ email: email!, password: formData.newPassword,token:token! })
+    saveNewPassword({ email: email!, password: formData.newPassword, token: token! })
       .then((response) => {
         toast.success(response.data.message);
         navigate('/auth/lawyer/signin');
       })
       .catch((error) => {
         toast.error(error.response?.data?.message || 'Something went wrong');
-        if(error.response.data.message=="Link has Expired try again"){
+        if (error.response.data.message == "Link has Expired try again") {
           navigate('/auth/lawyer/forgot-password-email-page')
         }
       });
@@ -101,7 +101,7 @@ const LawyerForgotPasswordPage: React.FC = () => {
       {/* Left Side - Legal Theme Background */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-800 to-slate-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url('https://images.pexels.com/photos/5668882/pexels-photo-5668882.jpeg?auto=compress&cs=tinysrgb&w=1200')`

@@ -104,12 +104,12 @@ const AppointmentCard: React.FC<{ appointment: Appointment }> = ({ appointment }
           <Calendar className="w-4 h-4" />
           <span className="text-sm">{appointment.date}</span>
         </div>
-        
+
         <div className="flex items-center gap-3 text-gray-600">
           <Clock className="w-4 h-4" />
           <span className="text-sm">{appointment.time}</span>
         </div>
-        
+
         <div className="flex items-start gap-3 text-gray-600">
           <User className="w-4 h-4 mt-0.5" />
           <span className="text-sm leading-relaxed">{appointment.problem}</span>
@@ -121,28 +121,28 @@ const AppointmentCard: React.FC<{ appointment: Appointment }> = ({ appointment }
 
 function AppointmentListingPage() {
   const [activeFilter, setActiveFilter] = useState<'All' | Appointment['appointmentStatus']>('All');
-  const [appointments,setAppointments]=useState<Appointment[]>([])
+  const [appointments, setAppointments] = useState<Appointment[]>([])
 
-  useEffect(()=>{
-    getAppointments(activeFilter).then((response)=>{
+  useEffect(() => {
+    getAppointments(activeFilter).then((response) => {
       setAppointments(response.data.data)
     })
-  },[activeFilter])
+  }, [activeFilter])
 
-  const [currentPage,setCurrentPage]=useState(1)
-  const itemsPerPage=3
-  const totalPages=Math.ceil(appointments.length/itemsPerPage)
-  const startIndex=(currentPage-1) * itemsPerPage
-  const endIndex=startIndex + itemsPerPage
-  const data=appointments.slice(startIndex,endIndex)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 3
+  const totalPages = Math.ceil(appointments.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const data = appointments.slice(startIndex, endIndex)
 
   const filterTabs = [
-    { key: 'All' as const, label: 'All'},
-    { key: 'Pending' as const, label: 'Pending'},
-    { key: 'Accepted' as const, label: 'Accepted'},
-    { key: 'Booked' as const, label: 'Booked'},
-    { key: 'Cancelled' as const, label: 'Cancelled'},
-    { key: 'Rejected' as const, label: 'Rejected'}
+    { key: 'All' as const, label: 'All' },
+    { key: 'Pending' as const, label: 'Pending' },
+    { key: 'Accepted' as const, label: 'Accepted' },
+    { key: 'Booked' as const, label: 'Booked' },
+    { key: 'Cancelled' as const, label: 'Cancelled' },
+    { key: 'Rejected' as const, label: 'Rejected' }
   ];
 
   return (
@@ -167,11 +167,10 @@ function AppointmentListingPage() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveFilter(tab.key)}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    activeFilter === tab.key
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${activeFilter === tab.key
                       ? 'bg-blue-600 text-white shadow-lg scale-105'
                       : 'bg-white/70 text-gray-700 hover:bg-white hover:shadow-md hover:scale-105'
-                  }`}
+                    }`}
                 >
                   {tab.label}
                   {/* {tab.count > 0 && (
@@ -205,7 +204,7 @@ function AppointmentListingPage() {
                 {activeFilter === 'All' ? 'No appointments found' : `No ${activeFilter} appointments`}
               </h3>
               <p className="text-gray-600">
-                {activeFilter === 'All' 
+                {activeFilter === 'All'
                   ? "You don't have any appointments scheduled at the moment."
                   : `There are no ${activeFilter} appointments to display.`
                 }
@@ -213,7 +212,7 @@ function AppointmentListingPage() {
             </div>
           )}
         </div>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </div>
     </div>
   );

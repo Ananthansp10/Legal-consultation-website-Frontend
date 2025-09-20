@@ -7,89 +7,89 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { getLawyerChatProfile, getUserChat } from '../../services/user/userService';
 
-interface Messages{
-  senderId:string;
-  receiverId:string;
-  message:string;
-  isRead:boolean;
-  createdAt:Date
+interface Messages {
+  senderId: string;
+  receiverId: string;
+  message: string;
+  isRead: boolean;
+  createdAt: Date
 }
 
-interface LawyerProfile{
-  name:string;
-  profileImage:string;
-  specialization:string;
-  courtName:string;
+interface LawyerProfile {
+  name: string;
+  profileImage: string;
+  specialization: string;
+  courtName: string;
 }
 
 function ChatViewPage() {
 
-  const [message,setMessage]=useState('')
-  const [socket,setSocket]=useState<Socket | null>(null)
-  const [chats,setChats]=useState<Messages[]>([])
-  const [lawyerProfile,setLawyerProfile]=useState<LawyerProfile>()
+  const [message, setMessage] = useState('')
+  const [socket, setSocket] = useState<Socket | null>(null)
+  const [chats, setChats] = useState<Messages[]>([])
+  const [lawyerProfile, setLawyerProfile] = useState<LawyerProfile>()
 
-  const {lawyerId}=useParams()
-  const userId=useSelector((state:RootState)=>state.auth.user?.id)
-  console.log(lawyerId,userId)
+  const { lawyerId } = useParams()
+  const userId = useSelector((state: RootState) => state.auth.user?.id)
+  console.log(lawyerId, userId)
 
-  useEffect(()=>{
-    let sock=connectSocket()
+  useEffect(() => {
+    let sock = connectSocket()
     setSocket(sock)
 
-    sock.on("connect",()=>{
-      console.log("connected",sock.id)
+    sock.on("connect", () => {
+      console.log("connected", sock.id)
     })
 
-    sock.emit("register",userId)
+    sock.emit("register", userId)
 
-    sock.on("receive_message",async(chat)=>{
-      setChats((prevChat)=>[...prevChat,{...chat.message,isRead:chat.receiverId==userId ? true : chat.isRead}])
-      sock.emit("update_read_status",{userId,lawyerId})
+    sock.on("receive_message", async (chat) => {
+      setChats((prevChat) => [...prevChat, { ...chat.message, isRead: chat.receiverId == userId ? true : chat.isRead }])
+      sock.emit("update_read_status", { userId, lawyerId })
     })
 
-     return (()=>{
-       sock.off("connect")
-       sock.off("receive_message")
-     })
-  },[])
+    return (() => {
+      sock.off("connect")
+      sock.off("receive_message")
+    })
+  }, [])
 
-  useEffect(()=>{
-    getUserChat(userId!,lawyerId!).then((response)=>{
+  useEffect(() => {
+    getUserChat(userId!, lawyerId!).then((response) => {
       setChats(response.data.data || [])
     })
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    socket?.emit("update_read_status",{userId,lawyerId})
-  },[chats])
+  useEffect(() => {
+    socket?.emit("update_read_status", { userId, lawyerId })
+  }, [chats])
 
-  function sendMessage(){
-    if(message.trim() === '') return;
-    
+  function sendMessage() {
+    if (message.trim() === '') return;
+
     const newMessage = {
-      senderId:userId!,
-      receiverId:lawyerId!,
-      message:message,
-      isRead:false,
-      createdAt:new Date()
+      senderId: userId!,
+      receiverId: lawyerId!,
+      message: message,
+      isRead: false,
+      createdAt: new Date()
     }
 
-    setChats((prevChat)=>[...prevChat,newMessage])
+    setChats((prevChat) => [...prevChat, newMessage])
 
-    socket?.emit("send_message",{
-      senderId:userId,
-      receiverId:lawyerId,
-      message:newMessage
+    socket?.emit("send_message", {
+      senderId: userId,
+      receiverId: lawyerId,
+      message: newMessage
     })
     setMessage('')
   }
 
-  useEffect(()=>{
-    getLawyerChatProfile(lawyerId!).then((response)=>{
+  useEffect(() => {
+    getLawyerChatProfile(lawyerId!).then((response) => {
       setLawyerProfile(response.data.data)
     })
-  },[])
+  }, [])
 
   const isMyMessage = (senderId: string) => senderId === userId;
 
@@ -125,17 +125,16 @@ function ChatViewPage() {
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto bg-gray-50 px-4 py-6 md:px-6">
         <div className="max-w-4xl mx-auto">
-          {chats.length>0 && chats.map((chat, index) => {
+          {chats.length > 0 && chats.map((chat, index) => {
             const isMine = isMyMessage(chat.senderId);
-            
+
             return (
               <div key={index} className={`flex mb-4 animate-in slide-in-from-bottom-1 duration-300 ${isMine ? 'justify-end' : 'justify-start'}`}>
                 <div className="max-w-xs md:max-w-md lg:max-w-lg">
-                  <div className={`px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md ${
-                    isMine 
-                      ? 'bg-blue-500 text-white rounded-br-md' 
+                  <div className={`px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md ${isMine
+                      ? 'bg-blue-500 text-white rounded-br-md'
                       : 'bg-gray-100 text-gray-900 rounded-bl-md'
-                  }`}>
+                    }`}>
                     <p className="text-sm md:text-base leading-relaxed">
                       {chat.message}
                     </p>
@@ -192,10 +191,10 @@ function ChatViewPage() {
               <Smile className="w-5 h-5" />
             </button>
           </div>
-          
+
           <div className="flex-1 relative">
             <textarea
-              onChange={(e)=>setMessage(e.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
               value={message}
               placeholder="Type your legal question..."
               className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
@@ -209,7 +208,7 @@ function ChatViewPage() {
               }}
             />
           </div>
-          
+
           <button onClick={sendMessage} className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-200 transform hover:scale-105 active:scale-95">
             <Send className="w-5 h-5" />
           </button>

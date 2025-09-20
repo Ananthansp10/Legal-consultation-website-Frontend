@@ -12,56 +12,56 @@ import { getProfileImage } from '../../services/lawyer/lawyerProfileService';
 const LawyerNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [profileImage,setProfileImage]=useState('')
+  const [profileImage, setProfileImage] = useState('')
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
 
-  const lawyer=useSelector((state:RootState)=>state.lawyerAuth.lawyer)
+  const lawyer = useSelector((state: RootState) => state.lawyerAuth.lawyer)
 
-  const dispatch=useDispatch()
-  const navigate=useNavigate()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  function logoutLawyer(){
-    logout().then((response)=>{
+  function logoutLawyer() {
+    logout().then((response) => {
       dispatch(lawyerLogout())
       toast.success(response.data.message)
       navigate('/auth/lawyer/signin')
-    }).catch((error)=>{
+    }).catch((error) => {
       toast.error(error.response.data.message)
     })
   }
 
-  function pageNavigate(link:string){
-    if(link=='Schedule'){
+  function pageNavigate(link: string) {
+    if (link == 'Schedule') {
       navigate('/lawyer/add-availablity')
     }
-    if(link=='Appointments'){
+    if (link == 'Appointments') {
       navigate('/lawyer/appointments')
     }
 
-    if(link=='Home'){
+    if (link == 'Home') {
       navigate('/lawyer-dashboard')
     }
 
-    if(link=='Subscription Plans'){
+    if (link == 'Subscription Plans') {
       navigate('/lawyer/subscription-plans')
     }
 
-    if(link=='Chat'){
+    if (link == 'Chat') {
       navigate('/lawyer/chat-list')
     }
 
-    if(link=='Reviews'){
+    if (link == 'Reviews') {
       navigate(`/lawyer/reviews/${lawyer?._id}/lawyer`)
     }
   }
 
-  useEffect(()=>{
-    getProfileImage(lawyer?._id!).then((response)=>{
+  useEffect(() => {
+    getProfileImage(lawyer?._id!).then((response) => {
       setProfileImage(response.data.data)
     })
-  },[])
+  }, [])
 
   return (
     <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -69,7 +69,7 @@ const LawyerNavbar: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 onClick={()=>navigate('/lawyer-dashboard')} className="text-2xl font-bold text-slate-800">LegalConnect</h1>
+            <h1 onClick={() => navigate('/lawyer-dashboard')} className="text-2xl font-bold text-slate-800">LegalConnect</h1>
           </div>
 
           {/* Desktop Navigation */}
@@ -78,7 +78,7 @@ const LawyerNavbar: React.FC = () => {
               {['Home', 'Appointments', 'Schedule', 'Reviews', 'Subscription Plans', 'Chat'].map((item) => (
                 <button
                   key={item}
-                  onClick={()=>pageNavigate(item)}
+                  onClick={() => pageNavigate(item)}
                   className="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   {item}
@@ -107,14 +107,14 @@ const LawyerNavbar: React.FC = () => {
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-md shadow-lg border border-gray-200">
                     <div className="py-1">
-                      <button onClick={()=>navigate('/lawyer-profile-page')}
+                      <button onClick={() => navigate('/lawyer-profile-page')}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         <User className="mr-3 h-4 w-4" />
                         My Profile
                       </button>
                       <button
-                        onClick={()=>navigate('/lawyer/reset-password')}
+                        onClick={() => navigate('/lawyer/reset-password')}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         <Key className="mr-3 h-4 w-4" />
@@ -172,7 +172,7 @@ const LawyerNavbar: React.FC = () => {
               </div>
             </div>
             <div className="mt-3 space-y-1 px-2">
-              <button onClick={()=>navigate('/lawyer-profile-page')}
+              <button onClick={() => navigate('/lawyer-profile-page')}
                 className="flex items-center px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
               >
                 <User className="mr-3 h-5 w-5" />

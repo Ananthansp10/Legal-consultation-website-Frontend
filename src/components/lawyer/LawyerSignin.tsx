@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Scale, ArrowRight } from 'lucide-react';
-import {z} from 'zod'
+import { z } from 'zod'
 import { signin } from '../../services/lawyer/authService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -15,8 +15,8 @@ function LawyerSignin() {
   const [isLoading, setIsLoading] = useState(false);
   const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
 
-  const navigate=useNavigate()
-  const dispatch=useDispatch()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
 
   const loginSchema = z.object({
@@ -25,7 +25,7 @@ function LawyerSignin() {
       .trim()
       .nonempty({ message: 'Email is required' })
       .email({ message: 'Enter a valid email address' }),
-    
+
     password: z
       .string({ required_error: 'Password is required' })
       .trim()
@@ -37,16 +37,16 @@ function LawyerSignin() {
     e.preventDefault();
     setIsLoading(true);
 
-     const result = loginSchema.safeParse({ email, password });
+    const result = loginSchema.safeParse({ email, password });
 
     if (!result.success) {
       const errors: { email?: string; password?: string } = {};
       for (const err of result.error.errors) {
         const field = err.path[0] as 'email' | 'password';
-      if (!errors[field]) {
-        errors[field] = err.message;
+        if (!errors[field]) {
+          errors[field] = err.message;
+        }
       }
-    }
       setFormErrors(errors);
       setIsLoading(false);
       return;
@@ -54,21 +54,21 @@ function LawyerSignin() {
 
     setFormErrors({});
 
-    signin({email,password}).then((response)=>{
-      if(response){
+    signin({ email, password }).then((response) => {
+      if (response) {
         toast.success(response.data.message)
         dispatch(lawyerLogin(response.data.data))
         navigate('/lawyer-dashboard')
       }
-    }).catch((error)=>{
-      if(error.status==503){
+    }).catch((error) => {
+      if (error.status == 503) {
         navigate('/lawyer-verification-status')
-      }else{
-      toast.error(error.response.data.message)
+      } else {
+        toast.error(error.response.data.message)
       }
     })
-    
-    
+
+
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsLoading(false);
   };
@@ -77,7 +77,7 @@ function LawyerSignin() {
     <div className="min-h-screen bg-slate-50 relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-slate-50 to-blue-100"></div>
-      
+
       {/* Decorative elements */}
       <div className="absolute top-10 left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
       <div className="absolute bottom-10 right-10 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl"></div>
@@ -87,16 +87,16 @@ function LawyerSignin() {
         {/* Left Panel - Legal Background */}
         <div className="hidden lg:flex lg:w-1/2 relative">
           {/* Background image */}
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage: `url('https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')`
             }}
           ></div>
-          
+
           {/* Dark overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-800/85 to-blue-900/90"></div>
-          
+
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-start p-16 text-white">
             <div className="mb-8">
@@ -111,7 +111,7 @@ function LawyerSignin() {
               </p>
               <p className="text-blue-300 font-medium">— Ralph Waldo Emerson</p>
             </div>
-            
+
             {/* Features */}
             <div className="space-y-4">
               <div className="flex items-center text-slate-300">
@@ -204,7 +204,7 @@ function LawyerSignin() {
 
                 {/* Forgot password link */}
                 <div className="text-right">
-                  <button onClick={()=>navigate('/auth/lawyer/forgot-password-email-page')}
+                  <button onClick={() => navigate('/auth/lawyer/forgot-password-email-page')}
                     className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
                   >
                     Forgot your password?
@@ -230,15 +230,15 @@ function LawyerSignin() {
 
               {/* Sign up link */}
               <Link to="/auth/lawyer/signup">
-              <div className="text-center mt-6 pt-6 border-t border-white/20">
-              <p className="text-slate-600">
-                      Don't have an account?{' '}
-              <span className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-              Sign up here
-              </span>
-              </p>
-            </div>
-            </Link>
+                <div className="text-center mt-6 pt-6 border-t border-white/20">
+                  <p className="text-slate-600">
+                    Don't have an account?{' '}
+                    <span className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                      Sign up here
+                    </span>
+                  </p>
+                </div>
+              </Link>
             </div>
 
             {/* Security notice */}

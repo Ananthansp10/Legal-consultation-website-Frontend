@@ -21,17 +21,17 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
     const startingDayOfWeek = firstDay.getDay();
 
     const days = [];
-    
+
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
-    
+
     // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
-    
+
     return days;
   };
 
@@ -82,13 +82,13 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
     <div className="group relative">
       {/* Animated background glow */}
       <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 via-purple-400 to-blue-600 rounded-3xl blur-lg opacity-20 group-hover:opacity-30 transition-all duration-500 animate-pulse"></div>
-      
+
       <div className="relative backdrop-blur-xl bg-gradient-to-br from-white/30 to-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 hover:shadow-blue-200/20 transition-all duration-500">
         {/* Floating particles effect */}
         <div className="absolute top-4 right-4 opacity-30">
           <Sparkles className="w-4 h-4 text-blue-400 animate-pulse" />
         </div>
-        
+
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -145,10 +145,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
                     ${isDateDisabled(date)
                       ? 'text-slate-300 cursor-not-allowed bg-slate-100/30'
                       : isDateSelected(date)
-                      ? 'bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-110 z-10'
-                      : isToday(date)
-                      ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-200 hover:scale-105'
-                      : 'text-slate-700 hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 hover:shadow-xl hover:scale-105 hover:text-blue-700'
+                        ? 'bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-110 z-10'
+                        : isToday(date)
+                          ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-200 hover:scale-105'
+                          : 'text-slate-700 hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 hover:shadow-xl hover:scale-105 hover:text-blue-700'
                     }
                   `}
                 >
@@ -156,14 +156,14 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
                   {!isDateDisabled(date) && !isDateSelected(date) && (
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/date:translate-x-full transition-transform duration-700"></div>
                   )}
-                  
+
                   {/* Glow effect for selected date */}
                   {isDateSelected(date) && (
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-2xl blur-xl opacity-50 animate-pulse"></div>
                   )}
-                  
+
                   <span className="relative z-10">{date.getDate()}</span>
-                  
+
                   {/* Today indicator */}
                   {isToday(date) && !isDateSelected(date) && (
                     <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full"></div>

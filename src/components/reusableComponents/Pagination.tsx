@@ -8,9 +8,9 @@ interface Props {
   maxVisiblePages?: number;
 }
 
-const Pagination = ({ 
-  currentPage, 
-  totalPages, 
+const Pagination = ({
+  currentPage,
+  totalPages,
   onPageChange,
   showPageInfo = true,
   maxVisiblePages = 7
@@ -43,10 +43,10 @@ const Pagination = ({
   const showStartEllipsis = visiblePages[0] > 2;
   const showEndEllipsis = visiblePages[visiblePages.length - 1] < totalPages - 1;
 
-  const PaginationButton = ({ 
-    children, 
-    onClick, 
-    disabled = false, 
+  const PaginationButton = ({
+    children,
+    onClick,
+    disabled = false,
     active = false,
     className = ""
   }: {
@@ -67,10 +67,10 @@ const Pagination = ({
         transition-all duration-200
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
         disabled:cursor-not-allowed
-        ${active 
-          ? 'bg-blue-600 text-white shadow-lg transform scale-105 hover:bg-blue-700' 
-          : disabled 
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+        ${active
+          ? 'bg-blue-600 text-white shadow-lg transform scale-105 hover:bg-blue-700'
+          : disabled
+            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
             : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md'
         }
         ${className}
@@ -104,10 +104,10 @@ const Pagination = ({
           disabled={currentPage === 1}
           className="mr-2"
         >
-          <svg 
-            className="w-4 h-4 mr-1" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            className="w-4 h-4 mr-1"
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -159,10 +159,10 @@ const Pagination = ({
           className="ml-2"
         >
           Next
-          <svg 
-            className="w-4 h-4 ml-1" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            className="w-4 h-4 ml-1"
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

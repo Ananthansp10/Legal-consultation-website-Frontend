@@ -8,93 +8,93 @@ import { StringValidation } from 'zod';
 
 const AdminDashboard: React.FC = () => {
 
-  function getColour(avg:number){
-    if(avg>=90 && avg<100){
+  function getColour(avg: number) {
+    if (avg >= 90 && avg < 100) {
       return '#ef4444'
     }
-    if(avg>=1 && avg<=10){
+    if (avg >= 1 && avg <= 10) {
       return '#f59e0b'
     }
-    if(avg<=0){
+    if (avg <= 0) {
       return '#10b981'
     }
     return '#3b82f6'
   }
 
-  interface RevenueData{
-    month:number;
-    revenue:number;
+  interface RevenueData {
+    month: number;
+    revenue: number;
   }
 
-  interface RevenueChart{
-    _id:RevenueData,
-    revenue:number;
+  interface RevenueChart {
+    _id: RevenueData,
+    revenue: number;
   }
 
-  interface WeeklyAppointmentsData{
-    dayName:string;
-    appointmentsCount:number;
+  interface WeeklyAppointmentsData {
+    dayName: string;
+    appointmentsCount: number;
   }
 
-  interface SpecializationData{
-    specializationName:string;
-    average:number;
+  interface SpecializationData {
+    specializationName: string;
+    average: number;
   }
 
-  interface TopLawyersData{
-    name:string;
-    profileImage:string;
-    specialization:string;
-    totalConsultation:number;
-    rating:number;
+  interface TopLawyersData {
+    name: string;
+    profileImage: string;
+    specialization: string;
+    totalConsultation: number;
+    rating: number;
   }
 
-  interface TopUserData{
-    name:string;
-    profileImage:string;
-    state:string;
-    country:string;
-    totalConsultation:number
+  interface TopUserData {
+    name: string;
+    profileImage: string;
+    state: string;
+    country: string;
+    totalConsultation: number
   }
 
-  interface StateChartData{
-    _id:string;
-    consultations:number;
+  interface StateChartData {
+    _id: string;
+    consultations: number;
   }
 
-  interface CountryChartData{
-    _id:string;
-    consultations:number;
+  interface CountryChartData {
+    _id: string;
+    consultations: number;
   }
 
-  interface SummaryReport{
-    totalUsers:number;
-    totalLawyers:number;
-    todaysAppointments:number;
-    pendingVerification:number;
-    revenueChart:RevenueChart[];
-    weeklyAppointments:WeeklyAppointmentsData[];
-    specializationChart:SpecializationData[];
-    topLawyers:TopLawyersData[];
-    topUsers:TopUserData[];
-    stateChart:StateChartData[];
-    countryChart:CountryChartData[];
+  interface SummaryReport {
+    totalUsers: number;
+    totalLawyers: number;
+    todaysAppointments: number;
+    pendingVerification: number;
+    revenueChart: RevenueChart[];
+    weeklyAppointments: WeeklyAppointmentsData[];
+    specializationChart: SpecializationData[];
+    topLawyers: TopLawyersData[];
+    topUsers: TopUserData[];
+    stateChart: StateChartData[];
+    countryChart: CountryChartData[];
   }
 
-  const months=["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-  const [summaryReport,setSummaryReport]=useState<SummaryReport | null>(null)
+  const [summaryReport, setSummaryReport] = useState<SummaryReport | null>(null)
 
-  useEffect(()=>{
-    getSummaryReport().then((response)=>{
+  useEffect(() => {
+    getSummaryReport().then((response) => {
       setSummaryReport(response.data.data)
     })
-  },[])
+  }, [])
 
-  const revenueChartObj=summaryReport?.revenueChart.map((data)=>{
-    return{
-      month:months[data._id.month-1],
-      revenue:data.revenue
+  const revenueChartObj = summaryReport?.revenueChart.map((data) => {
+    return {
+      month: months[data._id.month - 1],
+      revenue: data.revenue
     }
   })
 
@@ -149,10 +149,10 @@ const AdminDashboard: React.FC = () => {
             <XAxis dataKey="month" stroke="#64748b" />
             <YAxis stroke="#64748b" />
             <Tooltip />
-            <Line 
-              type="monotone" 
-              dataKey="revenue" 
-              stroke="#3b82f6" 
+            <Line
+              type="monotone"
+              dataKey="revenue"
+              stroke="#3b82f6"
               strokeWidth={3}
               dot={{ fill: '#3b82f6', strokeWidth: 2, r: 6 }}
             />
@@ -269,7 +269,7 @@ const AdminDashboard: React.FC = () => {
               <p className="text-slate-600 text-sm">Consultations by Indian states</p>
             </div>
           </div>
-          
+
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
               data={summaryReport?.stateChart}
@@ -277,24 +277,24 @@ const AdminDashboard: React.FC = () => {
             >
               <defs>
                 <linearGradient id="stateGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.8}/>
-                  <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6}/>
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.5} />
-              <XAxis 
+              <XAxis
                 dataKey="_id"
                 tick={{ fontSize: 12, fill: '#64748b' }}
                 angle={-45}
                 textAnchor="end"
                 height={80}
               />
-              <YAxis 
+              <YAxis
                 tick={{ fontSize: 12, fill: '#64748b' }}
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{
                   backgroundColor: 'rgba(255, 255, 255, 0.9)',
                   backdropFilter: 'blur(10px)',
@@ -303,8 +303,8 @@ const AdminDashboard: React.FC = () => {
                   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
                 }}
               />
-              <Bar 
-                dataKey="consultations" 
+              <Bar
+                dataKey="consultations"
                 fill="url(#stateGradient)"
                 radius={[4, 4, 0, 0]}
               />
@@ -323,29 +323,29 @@ const AdminDashboard: React.FC = () => {
               <p className="text-slate-600 text-sm">Global consultation distribution</p>
             </div>
           </div>
-          
+
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <defs>
                 <linearGradient id="countryGradient0" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#10B981" stopOpacity={0.8}/>
-                  <stop offset="100%" stopColor="#059669" stopOpacity={0.6}/>
+                  <stop offset="0%" stopColor="#10B981" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#059669" stopOpacity={0.6} />
                 </linearGradient>
                 <linearGradient id="countryGradient1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.8}/>
-                  <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6}/>
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6} />
                 </linearGradient>
                 <linearGradient id="countryGradient2" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8}/>
-                  <stop offset="100%" stopColor="#7C3AED" stopOpacity={0.6}/>
+                  <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#7C3AED" stopOpacity={0.6} />
                 </linearGradient>
                 <linearGradient id="countryGradient3" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.8}/>
-                  <stop offset="100%" stopColor="#D97706" stopOpacity={0.6}/>
+                  <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#D97706" stopOpacity={0.6} />
                 </linearGradient>
                 <linearGradient id="countryGradient4" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#EF4444" stopOpacity={0.8}/>
-                  <stop offset="100%" stopColor="#DC2626" stopOpacity={0.6}/>
+                  <stop offset="0%" stopColor="#EF4444" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#DC2626" stopOpacity={0.6} />
                 </linearGradient>
               </defs>
               <Pie
@@ -358,15 +358,15 @@ const AdminDashboard: React.FC = () => {
                 dataKey="consultations"
               >
                 {[0, 1, 2, 3, 4].map((index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
+                  <Cell
+                    key={`cell-${index}`}
                     fill={`url(#countryGradient${index})`}
                     stroke="#ffffff"
                     strokeWidth={2}
                   />
                 ))}
               </Pie>
-              <Tooltip 
+              <Tooltip
                 formatter={(value: any, name: any, props: any) => [
                   `${value} consultations (${value * 10 > 100 ? 100 : value * 10}%)`,
                   props.payload.country
@@ -381,15 +381,15 @@ const AdminDashboard: React.FC = () => {
               />
             </PieChart>
           </ResponsiveContainer>
-          
+
           {/* Legend */}
           <div className="mt-4 space-y-2">
             {summaryReport?.countryChart.map((item, index) => (
               <div key={item._id} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div 
+                  <div
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor:'red' }}
+                    style={{ backgroundColor: 'red' }}
                   />
                   <span className="text-sm font-medium text-slate-700">{item._id}</span>
                 </div>

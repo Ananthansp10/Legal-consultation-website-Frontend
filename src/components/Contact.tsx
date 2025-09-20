@@ -37,7 +37,7 @@ const Contact = () => {
           {/* Contact Form */}
           <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
             <h3 className="text-2xl font-bold text-slate-800 mb-6">Send us a Message</h3>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
@@ -54,7 +54,7 @@ const Contact = () => {
                   required
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
                   Email Address
@@ -70,7 +70,7 @@ const Contact = () => {
                   required
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
                   Message
@@ -86,7 +86,7 @@ const Contact = () => {
                   required
                 />
               </div>
-              
+
               <button
                 type="submit"
                 className="w-full flex items-center justify-center space-x-2 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
@@ -101,7 +101,7 @@ const Contact = () => {
           <div className="space-y-8">
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
               <h3 className="text-2xl font-bold text-slate-800 mb-6">Contact Information</h3>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -113,7 +113,7 @@ const Contact = () => {
                     <p className="text-sm text-slate-500">Available 24/7</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <Mail className="h-6 w-6 text-blue-500" />
@@ -124,7 +124,7 @@ const Contact = () => {
                     <p className="text-sm text-slate-500">We'll respond within 24 hours</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <MapPin className="h-6 w-6 text-blue-500" />
@@ -134,7 +134,7 @@ const Contact = () => {
                     <p className="text-slate-600">123 Legal Street<br />New York, NY 10001</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <MessageCircle className="h-6 w-6 text-blue-500" />
@@ -147,7 +147,7 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Chat Widget */}
             <div className="bg-blue-500 rounded-2xl p-6 text-white text-center">
               <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-80" />

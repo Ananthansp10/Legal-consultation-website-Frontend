@@ -45,17 +45,17 @@ const HowItWorks = () => {
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
                     {step.number}
                   </div>
-                  
+
                   {/* Icon */}
                   <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-500/20 transition-colors duration-300">
                     <Icon className="h-8 w-8 text-blue-500" />
                   </div>
-                  
+
                   {/* Content */}
                   <h3 className="text-xl font-bold text-slate-800 mb-4">{step.title}</h3>
                   <p className="text-slate-600 leading-relaxed">{step.description}</p>
                 </div>
-                
+
                 {/* Connecting Line */}
                 {index < steps.length - 1 && (
                   <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-blue-500 to-blue-300 transform -translate-y-1/2"></div>

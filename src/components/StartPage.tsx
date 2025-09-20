@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 function StartPage() {
 
-    const navigate=useNavigate()
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Background with blur and overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: 'url("https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop")'
@@ -15,7 +15,7 @@ function StartPage() {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/70 to-slate-800/90 backdrop-blur-sm"></div>
       </div>
-      
+
       {/* Animated background particles */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -33,7 +33,7 @@ function StartPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl mb-6 shadow-lg">
                 <Scale className="w-8 h-8 text-white" />
               </div>
-              
+
               {/* Welcome headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
                 Welcome to
@@ -41,7 +41,7 @@ function StartPage() {
                   LegalConnect
                 </span>
               </h1>
-              
+
               {/* Subheading */}
               <p className="text-lg sm:text-xl text-white/80 font-light">
                 Who are you?
@@ -51,7 +51,7 @@ function StartPage() {
             {/* Action buttons */}
             <div className="space-y-4">
               {/* I am a User button */}
-              <button onClick={()=>navigate('/user')} className="group w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-blue-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10">
+              <button onClick={() => navigate('/user')} className="group w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-blue-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10">
                 <div className="flex items-center justify-center space-x-3">
                   <User className="w-6 h-6 transition-transform group-hover:scale-110" />
                   <span className="text-lg">I am a User</span>
@@ -59,7 +59,7 @@ function StartPage() {
               </button>
 
               {/* I am a Lawyer button */}
-              <button onClick={()=>navigate('/lawyer')} className="group w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-amber-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10">
+              <button onClick={() => navigate('/lawyer')} className="group w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-amber-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10">
                 <div className="flex items-center justify-center space-x-3">
                   <Scale className="w-6 h-6 transition-transform group-hover:scale-110" />
                   <span className="text-lg">I am a Lawyer</span>

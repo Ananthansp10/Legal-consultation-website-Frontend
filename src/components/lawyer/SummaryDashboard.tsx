@@ -6,19 +6,19 @@ import { RootState } from '../../redux/store';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
-interface Consultations{
+interface Consultations {
   id: string | null;
   count?: number;
   revenue?: number;
   month?: string;
 }
 
-interface GraphDate{
-  month:number;
-  year:number;
+interface GraphDate {
+  month: number;
+  year: number;
 }
 
-interface Summary{
+interface Summary {
   totalConsultations: Consultations[];
   pendingConsultations: Consultations[];
   upcomingConsultations: Consultations[];
@@ -27,7 +27,7 @@ interface Summary{
   completedConsultations: Consultations[];
   totalRevenue: Consultations[];
   graphData?: {
-    _id:GraphDate;
+    _id: GraphDate;
     count: number;
     revenue: number;
   }[];
@@ -43,13 +43,13 @@ const SummaryDashboard = () => {
     });
   }, []);
 
-  const monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  const chartData=summary?.graphData?.map((date)=>{
-    return{
-      month:monthNames[date._id.month],
-      year:date._id.year,
-      revenue:date.revenue
+  const chartData = summary?.graphData?.map((date) => {
+    return {
+      month: monthNames[date._id.month],
+      year: date._id.year,
+      revenue: date.revenue
     }
   })
 

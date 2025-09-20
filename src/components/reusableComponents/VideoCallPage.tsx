@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Mic, 
-  MicOff, 
-  Video, 
-  VideoOff, 
-  MessageCircle, 
-  Settings, 
-  Phone, 
+import {
+  Mic,
+  MicOff,
+  Video,
+  VideoOff,
+  MessageCircle,
+  Settings,
+  Phone,
   Send,
   X
 } from 'lucide-react';
@@ -145,7 +145,7 @@ function VideoCallPage() {
   const handleFinalEndCall = () => {
     // Here you can save the final notes if needed
     console.log('Final consultation notes:', finalNotes);
-    
+
     // Close modal and end call
     setIsEndCallModalOpen(false);
     endCall();
@@ -155,11 +155,11 @@ function VideoCallPage() {
   useEffect(() => {
     async function setupStream() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: true, 
-          audio: true 
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
         });
-        
+
         localStream.current = stream;
 
         if (localVideoContainerRef.current) {
@@ -206,7 +206,7 @@ function VideoCallPage() {
         videoElement.autoplay = true;
         videoElement.playsInline = true;
         videoElement.className = "w-full h-full object-cover";
-        
+
         remoteVideoContainerRef.current.innerHTML = "";
         remoteVideoContainerRef.current.appendChild(videoElement);
       }
@@ -229,7 +229,7 @@ function VideoCallPage() {
   // Setup socket connection
   useEffect(() => {
     socket.current = connectSocket();
-    
+
     socket.current.emit("join-room", appointmentId, 'lawyer');
 
     return () => {
@@ -251,7 +251,7 @@ function VideoCallPage() {
             Personal Injury Consultation
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
@@ -279,7 +279,7 @@ function VideoCallPage() {
                 <p className="text-blue-200">Client</p>
               </div>
             </div>
-            
+
             {/* Lawyer's Self-View */}
             <div className="absolute bottom-4 right-4 w-48 h-36 bg-gray-800 rounded-xl shadow-lg border-2 border-white overflow-hidden">
               <div ref={localVideoContainerRef} className="w-full h-full">
@@ -305,11 +305,10 @@ function VideoCallPage() {
           {/* Mic Toggle */}
           <button
             onClick={toggleMic}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isMuted 
-                ? 'bg-red-100 text-red-600 hover:bg-red-200' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isMuted
+              ? 'bg-red-100 text-red-600 hover:bg-red-200'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
           </button>
@@ -317,11 +316,10 @@ function VideoCallPage() {
           {/* Camera Toggle */}
           <button
             onClick={toggleCamera}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
-              !isVideoOn 
-                ? 'bg-red-100 text-red-600 hover:bg-red-200' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${!isVideoOn
+              ? 'bg-red-100 text-red-600 hover:bg-red-200'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             {isVideoOn ? <Video size={20} /> : <VideoOff size={20} />}
           </button>
@@ -329,11 +327,10 @@ function VideoCallPage() {
           {/* Chat Toggle */}
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isChatOpen 
-                ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${isChatOpen
+              ? 'bg-blue-100 text-blue-600 hover:bg-blue-200'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
           >
             <MessageCircle size={20} />
           </button>
@@ -347,7 +344,7 @@ function VideoCallPage() {
           <div className="w-px h-8 bg-gray-300"></div>
 
           {/* End Call */}
-          <button 
+          <button
             onClick={showEndCallModal}
             className="w-14 h-12 rounded-full bg-red-500 text-white hover:bg-red-600 flex items-center justify-center transition-all duration-200 shadow-md"
           >
@@ -357,9 +354,8 @@ function VideoCallPage() {
       </div>
 
       {/* Chat Panel */}
-      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-        isChatOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
+      <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${isChatOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}>
         <div className="h-full flex flex-col">
           {/* Chat Header */}
           <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
@@ -376,15 +372,13 @@ function VideoCallPage() {
           <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.sender === 'lawyer' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-xs px-4 py-2 rounded-2xl ${
-                  message.sender === 'lawyer'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-900'
-                }`}>
-                  <p className="text-sm">{message.text}</p>
-                  <p className={`text-xs mt-1 ${
-                    message.sender === 'lawyer' ? 'text-blue-200' : 'text-gray-500'
+                <div className={`max-w-xs px-4 py-2 rounded-2xl ${message.sender === 'lawyer'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-900'
                   }`}>
+                  <p className="text-sm">{message.text}</p>
+                  <p className={`text-xs mt-1 ${message.sender === 'lawyer' ? 'text-blue-200' : 'text-gray-500'
+                    }`}>
                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>

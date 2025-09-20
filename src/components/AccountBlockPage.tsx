@@ -3,17 +3,17 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function AccountBlockPage() {
 
-    const [searchParams]=useSearchParams()
-    const navigate=useNavigate()
-    const role=searchParams.get('role')
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const role = searchParams.get('role')
 
-    function gotoSignin(){
-        if(role=='user'){
-            navigate('/auth/signin')
-        }else{
-            navigate('/auth/lawyer/signin')
-        }
+  function gotoSignin() {
+    if (role == 'user') {
+      navigate('/auth/signin')
+    } else {
+      navigate('/auth/lawyer/signin')
     }
+  }
 
   return (
     <>
@@ -38,13 +38,13 @@ function AccountBlockPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50/30"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05),transparent_50%)]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(147,51,234,0.03),transparent_50%)]"></div>
-        
+
         {/* Main Card */}
         <div className="relative w-full max-w-md mx-auto animate-fade-in">
           <div className="backdrop-blur-xl bg-white/80 border border-gray-200/60 rounded-3xl shadow-2xl shadow-gray-900/10 p-8 relative overflow-hidden">
             {/* Card Glow Effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 rounded-3xl"></div>
-            
+
             {/* Content */}
             <div className="relative z-10 text-center space-y-6">
               {/* Icon */}
@@ -56,7 +56,7 @@ function AccountBlockPage() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Heading */}
               <div className="space-y-2">
                 <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent leading-tight">
@@ -64,19 +64,19 @@ function AccountBlockPage() {
                 </h1>
                 <div className="w-16 h-1 bg-gradient-to-r from-red-500 to-red-600 rounded-full mx-auto"></div>
               </div>
-              
+
               {/* Message */}
               <div className="space-y-4">
                 <p className="text-gray-600 text-base leading-relaxed">
                   Unfortunately, your account has been temporarily blocked due to a violation of our terms. Please contact support for further assistance.
                 </p>
-                
+
                 <div className="flex items-center justify-center space-x-2 text-gray-500 text-sm">
                   <AlertCircle className="w-4 h-4" />
                   <span>Account access restricted</span>
                 </div>
               </div>
-              
+
               {/* Sign In Button */}
               <div className="pt-4">
                 <button onClick={gotoSignin} className="group relative w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/25 active:scale-[0.98]">
@@ -85,7 +85,7 @@ function AccountBlockPage() {
                   <span className="relative text-lg">Sign In</span>
                 </button>
               </div>
-              
+
               {/* Contact Support Link */}
               <div className="pt-2">
                 <button className="group flex items-center justify-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors duration-200 mx-auto">
@@ -97,11 +97,11 @@ function AccountBlockPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Bottom Glow */}
           <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-8 bg-blue-500/10 rounded-full blur-2xl"></div>
         </div>
-        
+
         {/* Floating Elements */}
         <div className="absolute top-20 left-10 w-2 h-2 bg-blue-400/20 rounded-full animate-float"></div>
         <div className="absolute top-32 right-16 w-1 h-1 bg-purple-400/30 rounded-full animate-float-delayed"></div>

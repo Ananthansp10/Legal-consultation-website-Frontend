@@ -15,55 +15,54 @@ const specializations = [
   { id: 'immigration', name: 'Immigration', icon: Scale },
 ];
 
-interface LawyerData{
-  lawyerId:string;
-    name:string;
-    specialization:string[];
-    experience:string;
-    country:string;
-    state:string;
-    profileImage:string;
+interface LawyerData {
+  lawyerId: string;
+  name: string;
+  specialization: string[];
+  experience: string;
+  country: string;
+  state: string;
+  profileImage: string;
 }
 
 function LawyerListingPage() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [lawyers,setLawyers]=useState<LawyerData[]>([])
+  const [lawyers, setLawyers] = useState<LawyerData[]>([])
 
-  function fetchLawyers(){
-    getLawyers().then((response)=>{
-        setLawyers(response.data.data)
-    })
-  }
-
-  function searchLawyerByName(){
-    searchLawyer(searchQuery).then((response)=>{
+  function fetchLawyers() {
+    getLawyers().then((response) => {
       setLawyers(response.data.data)
     })
   }
 
-  function filterLawyer(specializationId:string,specialization:string){
+  function searchLawyerByName() {
+    searchLawyer(searchQuery).then((response) => {
+      setLawyers(response.data.data)
+    })
+  }
+
+  function filterLawyer(specializationId: string, specialization: string) {
     setActiveFilter(specializationId)
-    filterLawyerBySpecialization(specialization).then((response)=>{
+    filterLawyerBySpecialization(specialization).then((response) => {
       console.log(response.data.data)
       setLawyers(response.data.data)
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchLawyers()
-  },[])
+  }, [])
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
         size={16}
-        className={`${
-          i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-        }`}
+        className={`${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+          }`}
       />
     ));
   };
@@ -71,7 +70,7 @@ function LawyerListingPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sticky Navigation */}
-        <UserNavbar navLink='Lawyers'/>
+      <UserNavbar navLink='Lawyers' />
       {/* Search and Filter Section */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -102,18 +101,17 @@ function LawyerListingPage() {
               return (
                 <button
                   key={spec.id}
-                  onClick={() => filterLawyer(spec.id,spec.name)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${
-                    activeFilter === spec.id
+                  onClick={() => filterLawyer(spec.id, spec.name)}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 ${activeFilter === spec.id
                       ? 'bg-blue-600 text-white shadow-lg'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                   style={
                     activeFilter === spec.id
                       ? {}
                       : {
-                          boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.1), -2px -2px 5px rgba(255, 255, 255, 0.7)'
-                        }
+                        boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.1), -2px -2px 5px rgba(255, 255, 255, 0.7)'
+                      }
                   }
                 >
                   <IconComponent size={16} />
@@ -167,12 +165,12 @@ function LawyerListingPage() {
                 <h3 className="text-lg font-bold text-gray-900 mb-1">{lawyer.name}</h3>
                 <div className="flex flex-wrap justify-center gap-1 mb-2">
                   <span
-                      className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium"
-                    >
-                      {lawyer?.specialization[0]}
-                    </span>
+                    className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium"
+                  >
+                    {lawyer?.specialization[0]}
+                  </span>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{}</p>
+                <p className="text-sm text-gray-600 mb-2">{ }</p>
               </div>
 
               {/* Experience and Location */}
@@ -192,12 +190,12 @@ function LawyerListingPage() {
                 <div className="flex items-center space-x-1">
                   {renderStars(123)}
                 </div>
-                <span className="text-sm font-medium text-gray-900">{}</span>
-                <span className="text-sm text-gray-500">({} reviews)</span>
+                <span className="text-sm font-medium text-gray-900">{ }</span>
+                <span className="text-sm text-gray-500">({ } reviews)</span>
               </div>
 
               {/* CTA Button */}
-              <button onClick={()=>navigate(`/user/lawyer-view-page/${lawyer?.lawyerId}`)}
+              <button onClick={() => navigate(`/user/lawyer-view-page/${lawyer?.lawyerId}`)}
                 className="w-full py-3 px-4 bg-gray-50 text-blue-600 rounded-xl font-medium transition-all duration-200 hover:bg-blue-600 hover:text-white hover:shadow-lg"
                 style={{
                   boxShadow: '3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.7)'

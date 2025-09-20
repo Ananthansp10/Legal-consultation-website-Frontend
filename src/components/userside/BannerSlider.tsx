@@ -58,9 +58,8 @@ const BannerSlider: React.FC = () => {
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
           >
             <img
               src={slide.image}
@@ -101,11 +100,10 @@ const BannerSlider: React.FC = () => {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-200 ${
-              index === currentSlide
-                ? 'bg-white'
-                : 'bg-white/40 hover:bg-white/60'
-            }`}
+            className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentSlide
+              ? 'bg-white'
+              : 'bg-white/40 hover:bg-white/60'
+              }`}
           />
         ))}
       </div>

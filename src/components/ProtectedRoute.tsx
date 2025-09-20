@@ -17,65 +17,65 @@ interface ProtectRouteProps {
 
 function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   const [isAuth, setIsAuth] = useState<boolean | null | string>(null);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
 
 
-  const user:User | null=useSelector((state:RootState)=>state.auth.user)
+  const user: User | null = useSelector((state: RootState) => state.auth.user)
 
-  useEffect(()=>{
-    if(!user){
-      getGoogleAuthDetails().then((response)=>{
-        if(response.data.result){
-          let obj={
-            id:response.data.result.id,
-            googleId:response.data.result.googleId,
-            email:response.data.result.email,
-            name:response.data.result.name
+  useEffect(() => {
+    if (!user) {
+      getGoogleAuthDetails().then((response) => {
+        if (response.data.result) {
+          let obj = {
+            id: response.data.result.id,
+            googleId: response.data.result.googleId,
+            email: response.data.result.email,
+            name: response.data.result.name
           }
           dispatch(login(obj))
         }
       })
     }
-  },[])
+  }, [])
 
-  interface CheckAuthResponse{
-    success:boolean;
-    message:string;
+  interface CheckAuthResponse {
+    success: boolean;
+    message: string;
   }
 
-  interface CheckAuthErrorResponse{
-    success:boolean;
-    message:string;
-    isUnAuth:boolean;
-    isBlock:string;
+  interface CheckAuthErrorResponse {
+    success: boolean;
+    message: string;
+    isUnAuth: boolean;
+    isBlock: string;
   }
 
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response:AxiosResponse<CheckAuthResponse> = await isValidUser(allowedRoles);
+        const response: AxiosResponse<CheckAuthResponse> = await isValidUser(allowedRoles);
         if (response.data.success) {
           setIsAuth(true);
-        }else{
+        } else {
           setIsAuth(false)
         }
       } catch (error) {
-        const axiosError=error as AxiosError<CheckAuthErrorResponse>
-        const errorData=axiosError.response?.data
-        if(errorData?.isUnAuth){
+        const axiosError = error as AxiosError<CheckAuthErrorResponse>
+        const errorData = axiosError.response?.data
+        if (errorData?.isUnAuth) {
           localStorage.removeItem('user')
           setIsAuth("unAuth");
-        }else if(errorData?.isBlock){
-          if(allowedRoles[0]=='user'){
+        } else if (errorData?.isBlock) {
+          if (allowedRoles[0] == 'user') {
             dispatch(logout())
             setIsAuth('blocked')
-          }else{
+          } else {
             dispatch(lawyerLogout())
             setIsAuth('blocked')
           }
         }
-        else{
+        else {
           setIsAuth(false);
         }
       }
@@ -83,21 +83,21 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
 
     checkAuth();
   }, [allowedRoles[0]]);
-   
+
   if (isAuth === null) {
-    return <Loader/>
+    return <Loader />
   }
 
-  if(isAuth=='blocked'){
-    return <Navigate to={`/block-page?role=${allowedRoles[0]}`}/>
+  if (isAuth == 'blocked') {
+    return <Navigate to={`/block-page?role=${allowedRoles[0]}`} />
   }
 
-  if(isAuth=="unAuth"){
+  if (isAuth == "unAuth") {
     return <Navigate to={`/unauthorized?role=${allowedRoles[0]}`} />
   }
 
-  if(isAuth){
-    return <Outlet/>;
+  if (isAuth) {
+    return <Outlet />;
   }
 }
 

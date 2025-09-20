@@ -11,25 +11,25 @@ function LawyerDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <LawyerNavbar />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <WelcomeSection />
         <ImageSlider />
         <QuickActions />
-        
+
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           <div className="xl:col-span-2">
-           <SummaryDashboard/>
+            <SummaryDashboard />
           </div>
           <div className="xl:col-span-1">
             {/* <RecentActivity /> */}
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );
 }
 
-export default  LawyerDashboard;
+export default LawyerDashboard;

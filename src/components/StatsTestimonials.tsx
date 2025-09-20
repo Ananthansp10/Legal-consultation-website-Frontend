@@ -3,7 +3,7 @@ import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const StatsTestimonials = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  
+
   const stats = [
     { number: 5000, label: "Happy Clients", suffix: "+" },
     { number: 100, label: "Expert Lawyers", suffix: "+" },
@@ -107,31 +107,30 @@ const StatsTestimonials = () => {
                     <div className="text-slate-600 text-sm">{testimonials[currentTestimonial].role}</div>
                   </div>
                 </div>
-                
+
                 <div className="flex space-x-1">
                   {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
                     <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
                   ))}
                 </div>
               </div>
-              
+
               <p className="text-slate-600 leading-relaxed mb-6">
                 "{testimonials[currentTestimonial].content}"
               </p>
-              
+
               <div className="flex justify-between items-center">
                 <div className="flex space-x-2">
                   {testimonials.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentTestimonial(index)}
-                      className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                        index === currentTestimonial ? 'bg-blue-500' : 'bg-slate-300'
-                      }`}
+                      className={`w-2 h-2 rounded-full transition-colors duration-300 ${index === currentTestimonial ? 'bg-blue-500' : 'bg-slate-300'
+                        }`}
                     />
                   ))}
                 </div>
-                
+
                 <div className="flex space-x-2">
                   <button
                     onClick={prevTestimonial}

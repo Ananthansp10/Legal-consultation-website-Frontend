@@ -1,6 +1,6 @@
 
 
-export const LAWYER_AUTH_API={
+export const LAWYER_AUTH_API = {
   SIGNUP: "/lawyer/signup",
   SIGNIN: "/lawyer/signin",
   LOGOUT: "/lawyer/logout",

@@ -12,7 +12,7 @@ import { User } from '../../interface/userInterface/userInterface';
 import { RootState } from '../../redux/store';
 
 
-interface GetProfileData{
+interface GetProfileData {
   userId: string;
   name: string;
   email: string;
@@ -33,27 +33,27 @@ interface GetProfileData{
 
 
 function Dashboard() {
-  let userDetails:User | null=useSelector((state:RootState)=>state.auth.user)
+  let userDetails: User | null = useSelector((state: RootState) => state.auth.user)
 
   const userData = {
-    name:userDetails?.name
+    name: userDetails?.name
   }
 
-   const [userProfileData,setUserProfileData]=useState<GetProfileData | undefined>()
+  const [userProfileData, setUserProfileData] = useState<GetProfileData | undefined>()
 
-   useEffect(()=>{
-      getProfile(userDetails?.id!).then((response)=>{
-        if(response.data.data){
-          setUserProfileData(response.data.data)
-        }
-      })
-  },[])
+  useEffect(() => {
+    getProfile(userDetails?.id!).then((response) => {
+      if (response.data.data) {
+        setUserProfileData(response.data.data)
+      }
+    })
+  }, [])
 
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
-      <UserNavbar navLink='Home'/>
-      
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
+      <UserNavbar navLink='Home' />
+
       <main className="pt-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
@@ -79,7 +79,7 @@ function Dashboard() {
           </div>
         </div>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

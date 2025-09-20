@@ -9,24 +9,24 @@ import Pagination from '../../components/reusableComponents/Pagination';
 function SpecializationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [specializations,setSpecializations]=useState<Array<{_id:string,name:string,description:string}>>([])
+  const [specializations, setSpecializations] = useState<Array<{ _id: string, name: string, description: string }>>([])
 
-    function fetchSpecialization(){
-       getSpecialization().then((response)=>{
-            setSpecializations(response.data.data)
-        })
-    }
-    
-    useEffect(()=>{
-       fetchSpecialization()
-    },[isModalOpen])
+  function fetchSpecialization() {
+    getSpecialization().then((response) => {
+      setSpecializations(response.data.data)
+    })
+  }
 
-    const [currentPage,setCurrentPage]=useState(1)
-    const itemsPerPage=4
-    const totalPages=Math.ceil(specializations.length/itemsPerPage)
-    const startIndex=(currentPage-1) * itemsPerPage
-    const lastIndex=startIndex+itemsPerPage
-    const currentData=specializations.slice(startIndex,lastIndex)
+  useEffect(() => {
+    fetchSpecialization()
+  }, [isModalOpen])
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 4
+  const totalPages = Math.ceil(specializations.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const lastIndex = startIndex + itemsPerPage
+  const currentData = specializations.slice(startIndex, lastIndex)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 relative overflow-hidden">
@@ -36,10 +36,10 @@ function SpecializationPage() {
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-indigo-400/20 to-blue-600/20 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-full blur-3xl" />
       </div>
-      
+
       <main className="relative z-10 p-8 lg:p-12">
         <AdminHeader onAddClick={() => setIsModalOpen(true)} />
-        
+
         {specializations.length === 0 ? (
           <EmptyState onAddClick={() => setIsModalOpen(true)} />
         ) : (

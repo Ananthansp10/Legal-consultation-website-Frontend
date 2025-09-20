@@ -7,15 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 const Navbar: React.FC = () => {
-  const navigate=useNavigate()
-  const dispatch=useDispatch()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  function logoutAdmin(){
-    logout().then((response)=>{
+  function logoutAdmin() {
+    logout().then((response) => {
       dispatch(adminLogout())
       toast.success(response.data.message)
       navigate('/auth/admin/signin')
-    }).catch((error)=>{
+    }).catch((error) => {
       toast.error(error.response.data.message)
     })
   }
@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
             <span className="text-blue-500">Connect</span>
           </span>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2 bg-white/60 rounded-full px-4 py-2 backdrop-blur-sm border border-slate-200">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">

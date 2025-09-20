@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Mic, 
-  MicOff, 
-  Video, 
-  VideoOff, 
-  MessageCircle, 
-  FileText, 
+import {
+  Mic,
+  MicOff,
+  Video,
+  VideoOff,
+  MessageCircle,
+  FileText,
   Phone,
   Send,
   X,
@@ -56,7 +56,7 @@ export default function UserVideoCallPage() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const sendMessage = () => {
@@ -132,7 +132,7 @@ export default function UserVideoCallPage() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localStream.current = stream;
-        
+
         if (localVideoRef.current) {
           const videoEl = document.createElement('video');
           videoEl.srcObject = stream;
@@ -296,7 +296,7 @@ export default function UserVideoCallPage() {
 
             <div className="w-px h-8 bg-gray-300 mx-2" />
 
-            <button 
+            <button
               onClick={endCall}
               className="p-3 rounded-full bg-red-500 hover:bg-red-600 text-white transition-all duration-200 hover:scale-105"
             >

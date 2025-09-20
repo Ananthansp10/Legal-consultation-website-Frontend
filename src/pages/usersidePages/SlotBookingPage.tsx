@@ -12,76 +12,76 @@ function SlotBookingPage() {
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
-  
+
   const [consultationMode, setConsultationMode] = useState('');
   const [problem, setProblem] = useState('');
 
-  interface Address{
-    street:string;
-    country:string;
-    state:string;
-    city:string;
-}
+  interface Address {
+    street: string;
+    country: string;
+    state: string;
+    city: string;
+  }
 
-interface Education{
-    degree:string;
-    university:string;
-    year:string;
-}
+  interface Education {
+    degree: string;
+    university: string;
+    year: string;
+  }
 
-interface PersonalInfo{
-    name:string;
-    email:string;
-    phoneNumber:string;
-    DOB:string;
-    gender:string;
-    address:Address;
-    language:string[];
-    profileImage:string;
-}
+  interface PersonalInfo {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    DOB: string;
+    gender: string;
+    address: Address;
+    language: string[];
+    profileImage: string;
+  }
 
-interface ProffessionalInfo{
-    practiceAreas:string[];
-    barRegisterNumber:string;
-    experience:string;
-    courtName:string;
-    workLocation:string;
-    fee:string;
-    availableDays:string[];
-    startTime:string;
-    endTime:string;
-    education:Education;
-    documents:string[];
-}
+  interface ProffessionalInfo {
+    practiceAreas: string[];
+    barRegisterNumber: string;
+    experience: string;
+    courtName: string;
+    workLocation: string;
+    fee: string;
+    availableDays: string[];
+    startTime: string;
+    endTime: string;
+    education: Education;
+    documents: string[];
+  }
 
-interface LawyerProfileData{
-    _id ? :string;
-    lawyerId:string;
-    personalInfo:PersonalInfo;
-    proffessionalInfo:ProffessionalInfo;
-    isReported ? :boolean;
-    reportCount ? :number;
-}
+  interface LawyerProfileData {
+    _id?: string;
+    lawyerId: string;
+    personalInfo: PersonalInfo;
+    proffessionalInfo: ProffessionalInfo;
+    isReported?: boolean;
+    reportCount?: number;
+  }
 
-  const [lawyer,setLawyer]=useState<LawyerProfileData>()
+  const [lawyer, setLawyer] = useState<LawyerProfileData>()
 
-  const {lawyerId}=useParams()
+  const { lawyerId } = useParams()
 
-  const userId:string | undefined=useSelector((state:RootState)=>state.auth.user?.id)
+  const userId: string | undefined = useSelector((state: RootState) => state.auth.user?.id)
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
-  useEffect(()=>{
-    getLawyerDetails(lawyerId!).then((response)=>{
+  useEffect(() => {
+    getLawyerDetails(lawyerId!).then((response) => {
       setLawyer(response.data.data)
     })
-  },[])
+  }, [])
 
-  function handleConfirmBookingClick(){
+  function handleConfirmBookingClick() {
     setShowModal(true);
   }
 
-  function confirmBooking(){
+  function confirmBooking() {
     if (!consultationMode || !problem.trim()) {
       toast.error('Please fill in all fields');
       return;
@@ -89,20 +89,20 @@ interface LawyerProfileData{
 
     bookAppointment(
       {
-        lawyerId:lawyerId!,
-        userId:userId!,
-        date:selectedDate?.toLocaleDateString('en-CA')!,
-        time:selectedTime,
+        lawyerId: lawyerId!,
+        userId: userId!,
+        date: selectedDate?.toLocaleDateString('en-CA')!,
+        time: selectedTime,
         consultationMode: consultationMode,
         problem: problem,
-        fee:parseInt(lawyer?.proffessionalInfo.fee!)
+        fee: parseInt(lawyer?.proffessionalInfo.fee!)
       }
-    ).then((response)=>{
+    ).then((response) => {
       toast.success(response.data.message)
       setShowModal(false);
       navigate('/user/appointments')
     }).catch((error) => {
-      toast.error('Failed to book appointment');
+      toast.error(error.response.data.message);
     })
   }
 
@@ -126,20 +126,20 @@ interface LawyerProfileData{
     return date.toDateString() === today.toDateString();
   };
 
-  interface TimeSlotsData{
-    startTime:string;
-    endTime:string;
-    isBooked:boolean
+  interface TimeSlotsData {
+    startTime: string;
+    endTime: string;
+    isBooked: boolean
   }
 
-  
 
-  const[timeSlots,setTimeSlots]=useState<TimeSlotsData[]>([])
 
-  function getTimeSlots(){
-    const isoDate=selectedDate?.toLocaleDateString('en-CA')
-        getLawyerSlots(lawyerId!,isoDate!).then((response)=>{
-          if (response?.data?.timeSlots) {
+  const [timeSlots, setTimeSlots] = useState<TimeSlotsData[]>([])
+
+  function getTimeSlots() {
+    const isoDate = selectedDate?.toLocaleDateString('en-CA')
+    getLawyerSlots(lawyerId!, isoDate!).then((response) => {
+      if (response?.data?.timeSlots) {
         setTimeSlots(response.data.timeSlots);
       } else {
         setTimeSlots([]);
@@ -198,20 +198,20 @@ interface LawyerProfileData{
     // Set initial date to tomorrow
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     // If tomorrow is in the next month, navigate to that month
     if (tomorrow.getMonth() !== currentMonth.getMonth() || tomorrow.getFullYear() !== currentMonth.getFullYear()) {
       setCurrentMonth(new Date(tomorrow.getFullYear(), tomorrow.getMonth(), 1));
     }
-    
+
     setSelectedDate(tomorrow);
   }, []);
 
-  useEffect(()=>{
-    if(selectedDate){
-        getTimeSlots()
+  useEffect(() => {
+    if (selectedDate) {
+      getTimeSlots()
     }
-  },[selectedDate])
+  }, [selectedDate])
 
   return (
     <div className="min-h-screen bg-[#f8fafc] font-sans">
@@ -232,7 +232,7 @@ interface LawyerProfileData{
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-8">
-        <UserNavbar navLink='Lawyers'/>
+        <UserNavbar navLink='Lawyers' />
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <button className="flex items-center gap-2 text-[#64748b] hover:text-[#3b82f6] transition-colors duration-200">
@@ -246,19 +246,19 @@ interface LawyerProfileData{
             <div className="absolute top-4 right-4 opacity-5">
               <Scale size={120} className="text-[#3b82f6]" />
             </div>
-            
+
             <div className="flex items-start gap-6 relative z-10">
               <div className="relative">
-                <img 
+                <img
                   src={lawyer?.personalInfo?.profileImage}
-                  alt="Lawyer" 
+                  alt="Lawyer"
                   className="w-24 h-24 rounded-full object-cover shadow-md"
                 />
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-[#3b82f6] to-[#6366f1] rounded-full flex items-center justify-center">
                   <Scale size={16} className="text-white" />
                 </div>
               </div>
-              
+
               <div className="flex-1">
                 <h1 className="text-3xl font-serif font-bold text-[#334155] mb-2">
                   {lawyer?.personalInfo?.name}
@@ -286,7 +286,7 @@ interface LawyerProfileData{
           <h2 className="text-2xl font-serif font-bold text-[#334155] mb-6">
             Select Date
           </h2>
-          
+
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-[#e2e8f0]">
             {/* Calendar Header */}
             <div className="flex items-center justify-between mb-6">
@@ -296,11 +296,11 @@ interface LawyerProfileData{
               >
                 <ChevronLeft size={20} />
               </button>
-              
+
               <h3 className="text-xl font-serif font-bold text-[#334155]">
                 {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
               </h3>
-              
+
               <button
                 onClick={() => navigateMonth('next')}
                 className="p-2 rounded-lg hover:bg-[#f1f5f9] transition-colors duration-200 text-[#64748b] hover:text-[#3b82f6]"
@@ -331,22 +331,21 @@ interface LawyerProfileData{
                     onClick={() => !dayItem.isPast && setSelectedDate(dayItem.fullDate)}
                     className={`
                       h-12 rounded-lg flex items-center justify-center text-center cursor-pointer transition-all duration-300 relative
-                      ${dayItem.isPast 
-                        ? 'text-[#cbd5e1] cursor-not-allowed' 
+                      ${dayItem.isPast
+                        ? 'text-[#cbd5e1] cursor-not-allowed'
                         : 'hover:scale-110 hover:shadow-md'
                       }
                       ${selectedDate?.toDateString() === dayItem.fullDate.toDateString()
-                        ? 'bg-gradient-to-br from-[#3b82f6] to-[#6366f1] text-white shadow-lg ring-2 ring-[#3b82f6] ring-opacity-30' 
-                        : dayItem.isPast 
-                          ? 'bg-[#f8fafc]' 
+                        ? 'bg-gradient-to-br from-[#3b82f6] to-[#6366f1] text-white shadow-lg ring-2 ring-[#3b82f6] ring-opacity-30'
+                        : dayItem.isPast
+                          ? 'bg-[#f8fafc]'
                           : 'bg-[#f8fafc] hover:bg-[#3b82f6] hover:text-white'
                       }
                     `}
                   >
-                    <span className={`font-semibold ${
-                      selectedDate?.toDateString() === dayItem.fullDate.toDateString() ? 'text-white' : 
+                    <span className={`font-semibold ${selectedDate?.toDateString() === dayItem.fullDate.toDateString() ? 'text-white' :
                       dayItem.isPast ? 'text-[#cbd5e1]' : 'text-[#334155]'
-                    }`}>
+                      }`}>
                       {dayItem?.date}
                     </span>
                   </div>
@@ -361,43 +360,41 @@ interface LawyerProfileData{
           <h2 className="text-2xl font-serif font-bold text-[#334155] mb-6">
             Available Time Slots
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {timeSlots.length === 0 ? (
-          <div className="text-center text-red-500 font-medium col-span-full">
-            No slots available for the selected date.
-          </div>
-          ):
-            timeSlots?.map((slot, index) => (
-              <div
-                key={index}
-                onClick={() => !slot.isBooked && setSelectedTime(`${slot.startTime}-${slot.endTime}`)}
-                className={`
+              <div className="text-center text-red-500 font-medium col-span-full">
+                No slots available for the selected date.
+              </div>
+            ) :
+              timeSlots?.map((slot, index) => (
+                <div
+                  key={index}
+                  onClick={() => !slot.isBooked && setSelectedTime(`${slot.startTime}-${slot.endTime}`)}
+                  className={`
                   rounded-xl p-4 text-center transition-all duration-300 cursor-pointer border-2
-                  ${!slot.isBooked 
-                    ? `bg-white border-[#e2e8f0] hover:border-[#3b82f6] hover:shadow-lg hover:shadow-[#3b82f6]/10
+                  ${!slot.isBooked
+                      ? `bg-white border-[#e2e8f0] hover:border-[#3b82f6] hover:shadow-lg hover:shadow-[#3b82f6]/10
                        ${selectedTime === `${slot.startTime}-${slot.endTime}` ? 'border-[#3b82f6] bg-gradient-to-br from-[#3b82f6]/5 to-white shadow-lg' : ''}
-                      ` 
-                    : 'bg-gray-50 border-gray-200 opacity-60 cursor-not-allowed'
-                  }
+                      `
+                      : 'bg-gray-50 border-gray-200 opacity-60 cursor-not-allowed'
+                    }
                 `}
-              >
-                <div className={`font-bold text-lg mb-2 ${
-                  !slot.isBooked 
+                >
+                  <div className={`font-bold text-lg mb-2 ${!slot.isBooked
                     ? (selectedTime === `${slot.startTime}-${slot.endTime}` ? 'text-[#3b82f6]' : 'text-[#334155]')
                     : 'text-gray-400 line-through'
-                }`}>
-                  {slot.startTime} – {slot.endTime}
-                </div>
-                <div className={`text-sm font-medium ${
-                  !slot.isBooked 
-                    ? 'text-green-600' 
+                    }`}>
+                    {slot.startTime} – {slot.endTime}
+                  </div>
+                  <div className={`text-sm font-medium ${!slot.isBooked
+                    ? 'text-green-600'
                     : 'text-gray-400'
-                }`}>
-                  {!slot.isBooked ? 'Available' : 'Booked'}
+                    }`}>
+                    {!slot.isBooked ? 'Available' : 'Booked'}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 
@@ -408,7 +405,7 @@ interface LawyerProfileData{
               <h3 className="text-lg font-serif font-bold text-[#334155] mb-2">
                 Booking Summary
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <Calendar size={16} className="text-[#3b82f6]" />
@@ -417,32 +414,31 @@ interface LawyerProfileData{
                     {selectedDate?.toDateString() || 'Select date'}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <Clock size={16} className="text-[#3b82f6]" />
                   <span className="text-[#64748b]">Time:</span>
                   <span className="font-semibold text-[#334155]">
-                    {selectedTime 
-                    ? `${selectedTime.split('-')[0]} – ${selectedTime.split('-')[1]}` 
-                    : 'Select time'}
+                    {selectedTime
+                      ? `${selectedTime.split('-')[0]} – ${selectedTime.split('-')[1]}`
+                      : 'Select time'}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <span className="text-[#64748b]">Fee:</span>
                   <span className="font-bold text-[#3b82f6] text-lg">₹{lawyer?.proffessionalInfo?.fee}</span>
                 </div>
               </div>
             </div>
-            
-            <button 
-              onClick={handleConfirmBookingClick} 
+
+            <button
+              onClick={handleConfirmBookingClick}
               disabled={!selectedDate || !selectedTime}
-              className={`font-semibold py-4 px-8 rounded-xl transition-all duration-300 min-w-[200px] group relative overflow-hidden ${
-                selectedDate && selectedTime 
-                  ? 'bg-gradient-to-r from-[#3b82f6] to-[#6366f1] text-white hover:shadow-lg hover:shadow-[#3b82f6]/25 hover:-translate-y-0.5 cursor-pointer'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
+              className={`font-semibold py-4 px-8 rounded-xl transition-all duration-300 min-w-[200px] group relative overflow-hidden ${selectedDate && selectedTime
+                ? 'bg-gradient-to-r from-[#3b82f6] to-[#6366f1] text-white hover:shadow-lg hover:shadow-[#3b82f6]/25 hover:-translate-y-0.5 cursor-pointer'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
             >
               <span className="relative z-10">Confirm Booking</span>
               {selectedDate && selectedTime && (
@@ -462,7 +458,7 @@ interface LawyerProfileData{
               <h2 className="text-2xl font-serif font-bold text-[#334155]">
                 Booking Details
               </h2>
-              <button 
+              <button
                 onClick={() => setShowModal(false)}
                 className="p-2 rounded-lg hover:bg-[#f1f5f9] transition-colors duration-200"
               >
@@ -479,11 +475,10 @@ interface LawyerProfileData{
                 <button
                   type="button"
                   onClick={() => setConsultationMode('online')}
-                  className={`p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 ${
-                    consultationMode === 'online'
-                      ? 'border-[#3b82f6] bg-[#3b82f6]/5 text-[#3b82f6]'
-                      : 'border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b]'
-                  }`}
+                  className={`p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 ${consultationMode === 'online'
+                    ? 'border-[#3b82f6] bg-[#3b82f6]/5 text-[#3b82f6]'
+                    : 'border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b]'
+                    }`}
                 >
                   <Video size={20} />
                   <span className="font-medium">Online</span>
@@ -491,11 +486,10 @@ interface LawyerProfileData{
                 <button
                   type="button"
                   onClick={() => setConsultationMode('in-person')}
-                  className={`p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 ${
-                    consultationMode === 'in-person'
-                      ? 'border-[#3b82f6] bg-[#3b82f6]/5 text-[#3b82f6]'
-                      : 'border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b]'
-                  }`}
+                  className={`p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 ${consultationMode === 'in-person'
+                    ? 'border-[#3b82f6] bg-[#3b82f6]/5 text-[#3b82f6]'
+                    : 'border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b]'
+                    }`}
                 >
                   <Users size={20} />
                   <span className="font-medium">In Person</span>

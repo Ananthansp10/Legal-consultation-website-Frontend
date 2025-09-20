@@ -23,9 +23,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, trend, cl
           {trend && (
             <div className="flex items-center mt-2">
               <span
-                className={`text-xs font-medium ${
-                  trend.isPositive ? 'text-green-500' : 'text-red-500'
-                }`}
+                className={`text-xs font-medium ${trend.isPositive ? 'text-green-500' : 'text-red-500'
+                  }`}
               >
                 {trend.isPositive ? '+' : ''}{trend.value}%
               </span>
