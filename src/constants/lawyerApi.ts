@@ -20,5 +20,6 @@ export const LAWYER_API = {
   UPDATE_CHAT_READ_STATUS: (lawyerId: string, userId: string) => `/lawyer/update-chat-read-status/${lawyerId}/${userId}`,
   ADD_BANK_ACCOUNT: '/lawyer/add-bank-account',
   GET_SUMMARY: (lawyerId: string) => `/lawyer/get-summary/${lawyerId}`,
-  CHECK_BANK_DETAILS: (lawyerId: string) => `/lawyer/check-bank-details/${lawyerId}`
+  CHECK_BANK_DETAILS: (lawyerId: string) => `/lawyer/check-bank-details/${lawyerId}`,
+  GET_CONSULTATION_HISTORY: (caseId: string) => `/lawyer/get-consultation-history/${caseId}`
 }

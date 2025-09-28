@@ -21,6 +21,18 @@ interface LawyerDetailsData {
   joinDate: Date;
 }
 
+interface RevenueChartData {
+  _id: { day: number, month: number | string, year: number, week: number };
+  totalRevenue: number;
+  year: number;
+  month: string;
+}
+
+interface SpecializationChartData {
+  _id: string;
+  specializationCount: number;
+}
+
 interface KPIData {
   totalRevenue: number;
   totalAppointments: number;
@@ -29,6 +41,8 @@ interface KPIData {
   subscriptionPlanReport: SubscriptionReportData[];
   stateReport: StateReportData[];
   lawyerDetails: LawyerDetailsData[];
+  revenueDateChart: RevenueChartData[];
+  specializationChart: SpecializationChartData[];
 }
 
 interface ChartData {
@@ -53,132 +67,26 @@ function convertToDate(date: Date) {
 }
 
 
-const mockChartData: ChartData = {
-  monthlyRevenue: [
-    { month: 'Jan', revenue: 180000 },
-    { month: 'Feb', revenue: 220000 },
-    { month: 'Mar', revenue: 350000 },
-    { month: 'Apr', revenue: 280000 },
-    { month: 'May', revenue: 420000 },
-    { month: 'Jun', revenue: 380000 },
-    { month: 'Jul', revenue: 490000 },
-    { month: 'Aug', revenue: 320000 },
-    { month: 'Sep', revenue: 440000 },
-    { month: 'Oct', revenue: 510000 },
-    { month: 'Nov', revenue: 380000 },
-    { month: 'Dec', revenue: 467650 },
-  ],
-  appointmentsBySpecialization: [
-    { specialization: 'Criminal Law', count: 425, color: '#3B82F6' },
-    { specialization: 'Corporate Law', count: 318, color: '#14B8A6' },
-    { specialization: 'Family Law', count: 289, color: '#F97316' },
-    { specialization: 'Civil Law', count: 424, color: '#8B5CF6' },
-  ],
-  lawyersByPlan: [
-    { plan: 'Basic', count: 34 },
-    { plan: 'Premium', count: 42 },
-    { plan: 'Enterprise', count: 13 },
-  ],
-  usersByState: [
-    { state: 'Maharashtra', count: 842 },
-    { state: 'Delhi', count: 567 },
-    { state: 'Karnataka', count: 423 },
-    { state: 'Tamil Nadu', count: 389 },
-    { state: 'Gujarat', count: 298 },
-    { state: 'West Bengal', count: 267 },
-    { state: 'Rajasthan', count: 234 },
-    { state: 'Others', count: 401 },
-  ],
-};
+function getColour(count: number) {
+  if (count < 2) {
+    return '#3B82F6'
+  } else if (count == 3) {
+    return '#F97316'
+  } else {
+    return '#14B8A6'
+  }
+}
 
-const mockLawyerData: LawyerData[] = [
-  {
-    id: 1,
-    name: 'Advocate Rajesh Kumar',
-    specialization: 'Criminal Law',
-    plan: 'Premium',
-    revenue: 125000,
-    appointments: 45,
-    joinDate: '2023-01-15',
-  },
-  {
-    id: 2,
-    name: 'Advocate Priya Sharma',
-    specialization: 'Corporate Law',
-    plan: 'Enterprise',
-    revenue: 89000,
-    appointments: 32,
-    joinDate: '2023-02-20',
-  },
-  {
-    id: 3,
-    name: 'Advocate Amit Patel',
-    specialization: 'Family Law',
-    plan: 'Basic',
-    revenue: 67000,
-    appointments: 28,
-    joinDate: '2023-03-10',
-  },
-  {
-    id: 4,
-    name: 'Advocate Sunita Singh',
-    specialization: 'Civil Law',
-    plan: 'Premium',
-    revenue: 98000,
-    appointments: 38,
-    joinDate: '2023-01-28',
-  },
-  {
-    id: 5,
-    name: 'Advocate Vikram Malhotra',
-    specialization: 'Criminal Law',
-    plan: 'Enterprise',
-    revenue: 145000,
-    appointments: 52,
-    joinDate: '2022-11-12',
-  },
-  {
-    id: 6,
-    name: 'Advocate Meera Gupta',
-    specialization: 'Corporate Law',
-    plan: 'Premium',
-    revenue: 112000,
-    appointments: 41,
-    joinDate: '2023-04-05',
-  },
-  {
-    id: 7,
-    name: 'Advocate Ravi Chandra',
-    specialization: 'Family Law',
-    plan: 'Basic',
-    revenue: 54000,
-    appointments: 22,
-    joinDate: '2023-05-18',
-  },
-  {
-    id: 8,
-    name: 'Advocate Kavita Reddy',
-    specialization: 'Civil Law',
-    plan: 'Premium',
-    revenue: 87000,
-    appointments: 35,
-    joinDate: '2023-02-14',
-  },
-];
 
 
 const generatePDFReport = (
   kpiData: KPIData | null,
-  chartData: ChartData,
-  lawyerData: LawyerData[]
+  revenueData: RevenueChartData[] | null,
+  specializationData: SpecializationChartData[] | null,
+  sunscriptionPlanData: SubscriptionReportData[] | null,
+  lawyerData: LawyerDetailsData[] | undefined,
+  dateRange: string
 ) => {
-  const printWindow = window.open('', '_blank');
-
-  if (!printWindow) {
-    alert('Please allow popups to download the PDF report.');
-    return;
-  }
-
   const html = `
     <!DOCTYPE html>
     <html>
@@ -344,30 +252,36 @@ const generatePDFReport = (
 
       <h2 class="section-title">Monthly Revenue Breakdown</h2>
       <div class="chart-data">
-        ${chartData.monthlyRevenue.map(item =>
+        ${revenueData?.map(item =>
     `<div class="chart-item">
-            <span>${item.month}</span>
-            <span>₹${item.revenue.toLocaleString()}</span>
+            <span>${dateRange == 'Daily' ? item._id.day + '-' + item._id.month + '-' + item._id.year
+      : dateRange === 'Weekly'
+        ? 'Week ' + item._id.week + ', ' + item._id.year
+        : dateRange === 'Monthly'
+          ? item.month + ' ' + item.year
+          : dateRange === 'Yearly'
+            ? item.year : item.totalRevenue}</span>
+            <span>₹${item.totalRevenue.toLocaleString()}</span>
           </div>`
   ).join('')}
       </div>
 
       <h2 class="section-title">Appointments by Specialization</h2>
       <div class="chart-data">
-        ${chartData.appointmentsBySpecialization.map(item =>
+        ${specializationData?.map(item =>
     `<div class="chart-item">
-            <span>${item.specialization}</span>
-            <span>${item.count} appointments</span>
+            <span>${item._id}</span>
+            <span>${item.specializationCount} appointments</span>
           </div>`
   ).join('')}
       </div>
 
       <h2 class="section-title">Lawyer Subscriptions by Plan</h2>
       <div class="chart-data">
-        ${chartData.lawyersByPlan.map(item =>
+        ${sunscriptionPlanData?.map(item =>
     `<div class="chart-item">
-            <span>${item.plan}</span>
-            <span>${item.count} lawyers</span>
+            <span>${item._id}</span>
+            <span>${item.specializationCount} lawyers</span>
           </div>`
   ).join('')}
       </div>
@@ -385,14 +299,14 @@ const generatePDFReport = (
           </tr>
         </thead>
         <tbody>
-          ${lawyerData.map(lawyer =>
+          ${lawyerData?.map(lawyer =>
     `<tr>
-              <td>${lawyer.name}</td>
-              <td>${lawyer.specialization}</td>
-              <td><span class="plan-badge plan-${lawyer.plan.toLowerCase()}">${lawyer.plan}</span></td>
-              <td>₹${lawyer.revenue.toLocaleString()}</td>
-              <td>${lawyer.appointments}</td>
-              <td>${lawyer.joinDate}</td>
+              <td>${lawyer?.name}</td>
+              <td>${lawyer?.specialization}</td>
+              <td><span class="plan-badge plan-${lawyer?.planName[0]}">${lawyer?.planName[0]}</span></td>
+              <td>₹${lawyer?.totalRevenue?.toLocaleString()}</td>
+              <td>${lawyer?.totalAppointments}</td>
+              <td>${lawyer?.joinDate}</td>
             </tr>`
   ).join('')}
         </tbody>
@@ -406,37 +320,41 @@ const generatePDFReport = (
     </html>
   `;
 
-  printWindow.document.write(html);
-  printWindow.document.close();
+  // Create a Blob with the HTML content
+  const blob = new Blob([html], { type: 'text/html' });
 
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 1000);
+  // Create a temporary URL for the blob
+  const url = URL.createObjectURL(blob);
+
+  // Create a temporary anchor element and trigger download
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `overall-report-${new Date().toISOString().split('T')[0]}.html`;
+  document.body.appendChild(a);
+  a.click();
+
+  // Clean up
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 };
-
 function CompanyReportPage() {
-  const [dateRange, setDateRange] = useState('30days');
-  const [specialization, setSpecialization] = useState('all');
-  const [planType, setPlanType] = useState('all');
-
-  const handlePDFDownload = () => {
-    generatePDFReport(reports ? reports : null, mockChartData, mockLawyerData);
-  };
-
-  // Calculate chart dimensions
-  const maxRevenue = Math.max(...mockChartData.monthlyRevenue.map(d => d.revenue));
-  const maxLawyers = Math.max(...mockChartData.lawyersByPlan.map(d => d.count));
-  const maxUsers = Math.max(...mockChartData.usersByState.map(d => d.count));
+  const [dateRange, setDateRange] = useState('Daily');
+  const [specialization, setSpecialization] = useState('All');
 
   const [reports, setReports] = useState<KPIData | null>()
 
 
   useEffect(() => {
-    getReports().then((response) => {
+    getReports(dateRange, specialization).then((response) => {
+      console.log(response.data.data)
       setReports(response.data.data)
     })
-  }, [])
+  }, [dateRange, specialization])
+
+  const handlePDFDownload = () => {
+    generatePDFReport(reports ? reports : null, reports?.revenueDateChart || [], reports?.specializationChart || [], reports?.subscriptionPlanReport || [], reports?.lawyerDetails, dateRange);
+  };
+
 
   const summaryCards = [
     {
@@ -524,11 +442,11 @@ function CompanyReportPage() {
                   onChange={(e) => setDateRange(e.target.value)}
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 >
-                  <option value="daily">Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthy">Monthy</option>
-                  <option value="yearly"></option>
-                  <option value="all">All Time</option>
+                  <option value="Daily">Daily</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthy">Monthy</option>
+                  <option value="Yearly">Yearly</option>
+                  <option value="All">All Time</option>
                 </select>
               </div>
             </div>
@@ -542,27 +460,11 @@ function CompanyReportPage() {
                 onChange={(e) => setSpecialization(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
               >
-                <option value="all">All Specializations</option>
-                <option value="criminal">Criminal Law</option>
-                <option value="corporate">Corporate Law</option>
-                <option value="family">Family Law</option>
-                <option value="civil">Civil Law</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Plan Type
-              </label>
-              <select
-                value={planType}
-                onChange={(e) => setPlanType(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-              >
-                <option value="all">All Plans</option>
-                <option value="basic">Basic</option>
-                <option value="premium">Premium</option>
-                <option value="enterprise">Enterprise</option>
+                <option value="All">All Specializations</option>
+                <option value="Criminal Law">Criminal Law</option>
+                <option value="Corporate Law">Corporate Law</option>
+                <option value="Family Law">Family Law</option>
+                <option value="Civil Law">Civil Law</option>
               </select>
             </div>
           </div>
@@ -574,22 +476,27 @@ function CompanyReportPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Revenue</h3>
             <div className="h-64 flex items-end justify-between space-x-2">
-              {mockChartData.monthlyRevenue.map((item, index) => (
-                <div key={index} className="flex-1 flex flex-col items-center">
-                  <div className="w-full flex flex-col items-center">
-                    <div
-                      className="w-full bg-teal-500 rounded-t transition-all duration-500 hover:bg-teal-600"
-                      style={{
-                        height: `${(item.revenue / maxRevenue) * 200}px`,
-                        minHeight: '4px'
-                      }}
-                    ></div>
-                    <span className="text-xs text-gray-600 mt-2 transform -rotate-45 origin-left">
-                      {item.month}
-                    </span>
-                  </div>
-                </div>
-              ))}
+              {reports?.revenueDateChart && reports.revenueDateChart.length > 0 ? (
+                (() => {
+                  const maxRevenue = Math.max(...reports.revenueDateChart.map(r => r.totalRevenue));
+                  return reports.revenueDateChart.map((item, index) => (
+                    <div key={index} className="flex-1 flex flex-col items-center">
+                      <div
+                        className="w-full bg-teal-500 rounded-t transition-all duration-500 hover:bg-teal-600"
+                        style={{
+                          height: `${(item.totalRevenue / maxRevenue) * 200}px`,
+                          minHeight: '4px'
+                        }}
+                      ></div>
+                      <span className="text-xs text-gray-600 mt-2 whitespace-nowrap">
+                        {dateRange == 'Daily' ? `${item._id.day}/${item._id.month}/${item._id.year}` : dateRange == 'Weekly' ? `${item._id.week}/${item._id.year}` : dateRange == 'Monthly' ? `${item._id.week}/${item._id.year}` : dateRange == 'Yearly' ? `${item.year}` : `${item.totalRevenue}`}
+                      </span>
+                    </div>
+                  ));
+                })()
+              ) : (
+                <div className="text-gray-400 text-sm">No revenue data for the selected range</div>
+              )}
             </div>
           </div>
 
@@ -607,9 +514,9 @@ function CompanyReportPage() {
                     stroke="#f3f4f6"
                     strokeWidth="20"
                   />
-                  {mockChartData.appointmentsBySpecialization.map((item, index) => {
-                    const total = mockChartData.appointmentsBySpecialization.reduce((sum, d) => sum + d.count, 0);
-                    const percentage = (item.count / total) * 100;
+                  {(reports?.specializationChart || []).map((item, index) => {
+                    const total = reports?.specializationChart.reduce((sum, d) => sum + d.specializationCount, 0) || 1;
+                    const percentage = (item.specializationCount / total) * 100;
                     const circumference = 2 * Math.PI * 70;
                     const strokeDasharray = circumference;
                     const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -621,7 +528,7 @@ function CompanyReportPage() {
                         cy="90"
                         r="70"
                         fill="none"
-                        stroke={item.color}
+                        stroke={getColour(item.specializationCount)}
                         strokeWidth="20"
                         strokeDasharray={strokeDasharray}
                         strokeDashoffset={strokeDashoffset}
@@ -634,7 +541,7 @@ function CompanyReportPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <p className="text-2xl font-bold text-gray-900">
-                      {mockChartData.appointmentsBySpecialization.reduce((sum, d) => sum + d.count, 0)}
+                      {reports?.specializationChart.reduce((sum, d) => sum + d.specializationCount, 0)}
                     </p>
                     <p className="text-sm text-gray-600">Total</p>
                   </div>
@@ -642,13 +549,13 @@ function CompanyReportPage() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mt-4">
-              {mockChartData.appointmentsBySpecialization.map((item, index) => (
+              {reports?.specializationChart.map((item, index) => (
                 <div key={index} className="flex items-center">
                   <div
                     className="w-3 h-3 rounded-full mr-2"
-                    style={{ backgroundColor: item.color }}
+                    style={{ backgroundColor: getColour(item.specializationCount) }}
                   ></div>
-                  <span className="text-sm text-gray-700">{item.specialization}</span>
+                  <span className="text-sm text-gray-700">{item._id}</span>
                 </div>
               ))}
             </div>
@@ -739,10 +646,10 @@ function CompanyReportPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${lawyer.planName[0] === 'Standard Plan'
-                          ? 'bg-purple-100 text-purple-800'
-                          : lawyer.planName[0] === 'Premium Plan'
-                            ? 'bg-teal-100 text-teal-800'
-                            : 'bg-gray-100 text-gray-800'
+                        ? 'bg-purple-100 text-purple-800'
+                        : lawyer.planName[0] === 'Premium Plan'
+                          ? 'bg-teal-100 text-teal-800'
+                          : 'bg-gray-100 text-gray-800'
                         }`}>
                         {lawyer.planName[0]}
                       </span>

@@ -27,7 +27,7 @@ const UserListing: React.FC = () => {
   function fetchUsers() {
     getUsers(startIndex, itemsPerPage).then((response) => {
       setUsers(response.data.data)
-      setTotalPages(Math.ceil(response.data.totalData) / itemsPerPage)
+      setTotalPages(Math.ceil(response.data.totalData / itemsPerPage))
     })
   }
 

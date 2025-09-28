@@ -119,7 +119,7 @@ const LawyerVerification: React.FC = () => {
                 <tr key={lawyer._id} className="border-b border-slate-200/30 hover:bg-white/50">
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-3">
-                      <img src='https://tse3.mm.bing.net/th/id/OIP.3uQpGX34V3TU_BP195p9nQHaI1?pid=Api&P=0&h=180' alt={lawyer.name[0]} className="w-10 h-10 rounded-full object-cover" />
+                      <img src='https://up.yimg.com/ib/th/id/OIP.ncOCV5LVCL8j70Edjgyn6QHaGy?pid=Api&rs=1&c=1&qlt=95&w=133&h=122' alt={lawyer.name[0]} className="w-10 h-10 rounded-full object-cover" />
                       <div>
                         <p className="font-medium text-slate-800">{lawyer.name}</p>
                         <p className="text-sm text-slate-600">{lawyer.email}</p>

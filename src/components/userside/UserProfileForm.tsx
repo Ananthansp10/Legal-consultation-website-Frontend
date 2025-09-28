@@ -134,7 +134,7 @@ const UserProfileForm: React.FC = () => {
           return 'Date of birth cannot be in the future';
         }
         if (age < 18) {
-          return 'You must be at least 13 years old';
+          return 'You must be at least 18 years old';
         }
         if (age > 120) {
           return 'Please enter a valid date of birth';
@@ -414,6 +414,7 @@ const UserProfileForm: React.FC = () => {
                     type="text"
                     id="fullName"
                     name="fullName"
+                    pattern="[A-Za-z]+"
                     value={formData.fullName}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${errors.fullName

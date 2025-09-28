@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Eye, EyeOff, Lock, Shield } from 'lucide-react';
+import { Eye, EyeOff, Lock, Shield, Check, X } from 'lucide-react';
 import { changePaasword } from '../../services/user/authService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -11,32 +11,115 @@ function NewPasswordPage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Validation errors
+  const [errors, setErrors] = useState({
+    newPassword: '',
+    confirmPassword: ''
+  });
 
   const { data, error, loading, execute } = useApi(changePaasword)
 
   const navigate = useNavigate()
 
+  // Password validation criteria
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    hasMinLength: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+    hasSpecialChar: false
+  });
+
+  const validatePasswordCriteria = (password: string) => {
+    const criteria = {
+      hasMinLength: password.length >= 6,
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+    };
+    setPasswordCriteria(criteria);
+    return Object.values(criteria).every(Boolean);
+  };
+
+  const validateField = (field: 'newPassword' | 'confirmPassword', value: string) => {
+    let error = '';
+
+    switch (field) {
+      case 'newPassword':
+        if (!value.trim()) {
+          error = 'New password is required';
+        } else if (!validatePasswordCriteria(value)) {
+          error = 'Password must meet all requirements';
+        }
+        break;
+
+      case 'confirmPassword':
+        if (!value.trim()) {
+          error = 'Please confirm your password';
+        } else if (newPassword !== value) {
+          error = 'Passwords do not match';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(prev => ({ ...prev, [field]: error }));
+    return error === '';
+  };
+
+  const handleNewPasswordChange = (value: string) => {
+    setNewPassword(value);
+    validatePasswordCriteria(value);
+    
+    // Clear error when user starts typing
+    if (errors.newPassword) {
+      setErrors(prev => ({ ...prev, newPassword: '' }));
+    }
+    
+    // Revalidate confirm password if it exists
+    if (confirmPassword) {
+      setTimeout(() => validateField('confirmPassword', confirmPassword), 0);
+    }
+  };
+
+  const handleConfirmPasswordChange = (value: string) => {
+    setConfirmPassword(value);
+    
+    // Clear error when user starts typing
+    if (errors.confirmPassword) {
+      setErrors(prev => ({ ...prev, confirmPassword: '' }));
+    }
+  };
+
+  const handleBlur = (field: 'newPassword' | 'confirmPassword') => {
+    const value = field === 'newPassword' ? newPassword : confirmPassword;
+    validateField(field, value);
+  };
+
+  const validateForm = () => {
+    const newPasswordValid = validateField('newPassword', newPassword);
+    const confirmPasswordValid = validateField('confirmPassword', confirmPassword);
+    
+    return newPasswordValid && confirmPasswordValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
 
     let userDetails = localStorage.getItem('userDetails')
     let user
     if (userDetails) {
       user = JSON.parse(userDetails) as { email: string }
-      // changePaasword({email:user.email,password:newPassword}).then((response)=>{
-      //   if(response.data.success){
-      //     setIsLoading(false);
-      //     toast.success(response.data.message)
-      //     localStorage.removeItem('userDetails')
-      //     navigate('/auth/signin')
-      //   }
-      // }).catch((error)=>{
-      //   setIsLoading(false);
-      //   toast.error(error.response.data.message)
-      //   navigate('/auth/forgot-password')
-      // })
-
       await execute({ email: user.email, password: newPassword })
     }
   };
@@ -59,15 +142,7 @@ function NewPasswordPage() {
   }, [data])
 
   const passwordsMatch = newPassword === confirmPassword && newPassword.length > 0;
-
-  // Updated password validation requirements
-  const hasMinLength = newPassword.length >= 6;
-  const hasUppercase = /[A-Z]/.test(newPassword);
-  const hasLowercase = /[a-z]/.test(newPassword);
-  const hasNumber = /[0-9]/.test(newPassword);
-  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword);
-
-  const isFormValid = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar && passwordsMatch;
+  const isFormValid = Object.values(passwordCriteria).every(Boolean) && passwordsMatch && !Object.values(errors).some(error => error !== '');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex">
@@ -127,10 +202,14 @@ function NewPasswordPage() {
                     type={showNewPassword ? 'text' : 'password'}
                     id="newPassword"
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-4 py-3 pr-12 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-slate-400"
+                    onChange={(e) => handleNewPasswordChange(e.target.value)}
+                    onBlur={() => handleBlur('newPassword')}
+                    className={`w-full px-4 py-3 pr-12 bg-white/50 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 placeholder-slate-400 ${
+                      errors.newPassword 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-slate-200 focus:ring-blue-500'
+                    }`}
                     placeholder="Enter your new password"
-                    required
                   />
                   <button
                     type="button"
@@ -140,8 +219,8 @@ function NewPasswordPage() {
                     {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                {newPassword.length > 0 && newPassword.length < 6 && (
-                  <p className="text-sm text-red-500">Password must be at least 6 characters long</p>
+                {errors.newPassword && (
+                  <p className="text-sm text-red-500">{errors.newPassword}</p>
                 )}
               </div>
 
@@ -155,10 +234,14 @@ function NewPasswordPage() {
                     type={showConfirmPassword ? 'text' : 'password'}
                     id="confirmPassword"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-3 pr-12 bg-white/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-slate-400"
+                    onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+                    onBlur={() => handleBlur('confirmPassword')}
+                    className={`w-full px-4 py-3 pr-12 bg-white/50 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200 placeholder-slate-400 ${
+                      errors.confirmPassword 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-slate-200 focus:ring-blue-500'
+                    }`}
                     placeholder="Confirm your new password"
-                    required
                   />
                   <button
                     type="button"
@@ -168,47 +251,72 @@ function NewPasswordPage() {
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                {confirmPassword.length > 0 && !passwordsMatch && (
-                  <p className="text-sm text-red-500">Passwords do not match</p>
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-500">{errors.confirmPassword}</p>
                 )}
-                {passwordsMatch && confirmPassword.length > 0 && (
-                  <p className="text-sm text-green-600">Passwords match!</p>
+                {!errors.confirmPassword && confirmPassword.length > 0 && passwordsMatch && (
+                  <div className="flex items-center space-x-2">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <p className="text-sm text-green-600">Passwords match!</p>
+                  </div>
                 )}
               </div>
 
               {/* Password Requirements */}
-              <div className="bg-slate-50/50 rounded-xl p-4 space-y-2">
-                <p className="text-sm font-medium text-slate-700 mb-2">Password Requirements:</p>
-                <div className="space-y-1">
-                  <div className={`flex items-center text-sm ${hasMinLength ? 'text-green-600' : 'text-slate-500'}`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${hasMinLength ? 'bg-green-500' : 'bg-slate-300'}`}></div>
-                    At least 6 characters long
-                  </div>
-                  <div className={`flex items-center text-sm ${hasUppercase ? 'text-green-600' : 'text-slate-500'}`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${hasUppercase ? 'bg-green-500' : 'bg-slate-300'}`}></div>
-                    Contains uppercase letter
-                  </div>
-                  <div className={`flex items-center text-sm ${hasLowercase ? 'text-green-600' : 'text-slate-500'}`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${hasLowercase ? 'bg-green-500' : 'bg-slate-300'}`}></div>
-                    Contains lowercase letter
-                  </div>
-                  <div className={`flex items-center text-sm ${hasNumber ? 'text-green-600' : 'text-slate-500'}`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${hasNumber ? 'bg-green-500' : 'bg-slate-300'}`}></div>
-                    Contains number
-                  </div>
-                  <div className={`flex items-center text-sm ${hasSpecialChar ? 'text-green-600' : 'text-slate-500'}`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${hasSpecialChar ? 'bg-green-500' : 'bg-slate-300'}`}></div>
-                    Contains special character
+              {newPassword && (
+                <div className="bg-slate-50/50 rounded-xl p-4 space-y-2">
+                  <p className="text-sm font-medium text-slate-700 mb-2">Password Requirements:</p>
+                  <div className="space-y-1">
+                    <div className={`flex items-center text-sm ${passwordCriteria.hasMinLength ? 'text-green-600' : 'text-slate-500'}`}>
+                      {passwordCriteria.hasMinLength ? (
+                        <Check className="w-3 h-3 mr-2" />
+                      ) : (
+                        <X className="w-3 h-3 mr-2" />
+                      )}
+                      At least 6 characters long
+                    </div>
+                    <div className={`flex items-center text-sm ${passwordCriteria.hasUppercase ? 'text-green-600' : 'text-slate-500'}`}>
+                      {passwordCriteria.hasUppercase ? (
+                        <Check className="w-3 h-3 mr-2" />
+                      ) : (
+                        <X className="w-3 h-3 mr-2" />
+                      )}
+                      Contains uppercase letter
+                    </div>
+                    <div className={`flex items-center text-sm ${passwordCriteria.hasLowercase ? 'text-green-600' : 'text-slate-500'}`}>
+                      {passwordCriteria.hasLowercase ? (
+                        <Check className="w-3 h-3 mr-2" />
+                      ) : (
+                        <X className="w-3 h-3 mr-2" />
+                      )}
+                      Contains lowercase letter
+                    </div>
+                    <div className={`flex items-center text-sm ${passwordCriteria.hasNumber ? 'text-green-600' : 'text-slate-500'}`}>
+                      {passwordCriteria.hasNumber ? (
+                        <Check className="w-3 h-3 mr-2" />
+                      ) : (
+                        <X className="w-3 h-3 mr-2" />
+                      )}
+                      Contains number
+                    </div>
+                    <div className={`flex items-center text-sm ${passwordCriteria.hasSpecialChar ? 'text-green-600' : 'text-slate-500'}`}>
+                      {passwordCriteria.hasSpecialChar ? (
+                        <Check className="w-3 h-3 mr-2" />
+                      ) : (
+                        <X className="w-3 h-3 mr-2" />
+                      )}
+                      Contains special character
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Submit Button */}
               <button
                 type="submit"
                 disabled={!isFormValid || isLoading}
                 className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 transform ${isFormValid && !isLoading
-                    ? 'bg-blue-500 hover:bg-blue-600 hover:scale-[1.02] shadow-lg hover:shadow-xl'
+                    ? 'bg-blue-500 hover:bg-blue-600 hover:scale-[1.02] shadow-lg hover:shadow-xl cursor-pointer'
                     : 'bg-slate-300 cursor-not-allowed'
                   }`}
               >

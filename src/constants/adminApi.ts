@@ -9,11 +9,11 @@ export const ADMIN_API = {
     GET_LAWYERS: (startIndex: number, limit: number) => `/admin/getlawyers?page=${startIndex}&limit=${limit}`,
     UPDATE_LAWYER_STATUS: (lawyerId: string, status: string) => `/admin/lawyer/${lawyerId}/${status}`,
     ADD_SPECIALIZATION: "/admin/add-specialization",
-    GET_SPECIALIZATION: "/admin/get-specialization",
+    GET_SPECIALIZATION: (startIndex: number, limit: number) => `/admin/get-specialization/${startIndex}/${limit}`,
     EDIT_SPECIALIZATION: "/admin/edit-specialization",
     DELETE_SPECIALIZATION: (specId: string) => `/admin/delete-specialization/${specId}`,
-    GET_APPOINTMENTS: (appointmentStatus: string) => `/admin/get-appointments/${appointmentStatus}`,
-    GET_REPORTED_ACCOUNTS: (userType: string) => `/admin/reported-accounts/${userType}`,
+    GET_APPOINTMENTS: (appointmentStatus: string, startIndex: number, limit: number) => `/admin/get-appointments/${appointmentStatus}/${startIndex}/${limit}`,
+    GET_REPORTED_ACCOUNTS: (userType: string, startIndex: number, limit: number) => `/admin/reported-accounts/${userType}/${startIndex}/${limit}`,
     UPDATE_REPORTED_ACCOUNT_STATUS: (reportedAccountId: string) => `/admin/update-reportedAccount-status/${reportedAccountId}`,
     ADD_SUBSCRIPTION_PLAN: `/admin/add-plan`,
     GET_SUBSCRIPTION_PLANS: '/admin/plans',
@@ -27,5 +27,5 @@ export const ADMIN_API = {
     GET_USER_PROFILE: (userId: string) => `/admin/get-user-profile/${userId}`,
     GET_LAWYER_PROFILE: (lawyerId: string) => `/admin/get-lawyer-profile/${lawyerId}`,
     GET_SUMMARY_REPORT: `/admin/get-summary-report`,
-    GET_REPORTS: '/admin/get-reports'
+    GET_REPORTS: (revenueDateRange: string, specializationType: string) => `/admin/get-reports/${revenueDateRange}/${specializationType}`
 }

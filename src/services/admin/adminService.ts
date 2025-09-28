@@ -25,9 +25,9 @@ export const addSpecialization = async (data: SpecializationData) => {
     }
 }
 
-export const getSpecialization = async () => {
+export const getSpecialization = async (startIndex: number, limit: number) => {
     try {
-        let result = await axios.get(ADMIN_API.GET_SPECIALIZATION)
+        let result = await axios.get(ADMIN_API.GET_SPECIALIZATION(startIndex, limit))
         return result;
     } catch (error) {
         throw error;
@@ -50,17 +50,17 @@ export const deleteSpecialization = async (specId: string) => {
     }
 }
 
-export const getAppointments = async (appointmentStatus: string) => {
+export const getAppointments = async (appointmentStatus: string, startIndex: number, limit: number) => {
     try {
-        return await axios.get(ADMIN_API.GET_APPOINTMENTS(appointmentStatus))
+        return await axios.get(ADMIN_API.GET_APPOINTMENTS(appointmentStatus, startIndex, limit))
     } catch (error) {
         throw error
     }
 }
 
-export const getReportedAccounts = async (userType: string) => {
+export const getReportedAccounts = async (userType: string, startIndex: number, limit: number) => {
     try {
-        return await axios.get(ADMIN_API.GET_REPORTED_ACCOUNTS(userType))
+        return await axios.get(ADMIN_API.GET_REPORTED_ACCOUNTS(userType, startIndex, limit))
     } catch (error) {
         throw error
     }
@@ -138,9 +138,9 @@ export const getSummaryReport = async () => {
     }
 }
 
-export const getReports = async () => {
+export const getReports = async (revenueDateRange: string, specializationType: string) => {
     try {
-        return await axios.get(ADMIN_API.GET_REPORTS)
+        return await axios.get(ADMIN_API.GET_REPORTS(revenueDateRange, specializationType))
     } catch (error) {
         throw error
     }

@@ -15,7 +15,7 @@ import { connectSocket } from '../../config/socket';
 import Peer from 'simple-peer';
 import { useParams } from 'react-router-dom';
 
-export default function UserVideoCallPage() {
+export default function LawyerVideoCallPage() {
   const { appointmentId } = useParams();
   const socket = connectSocket();
 
@@ -27,7 +27,7 @@ export default function UserVideoCallPage() {
   const [notes, setNotes] = useState('');
   const [callDuration, setCallDuration] = useState(0);
   const [messages, setMessages] = useState([
-    { id: '1', sender: 'lawyer', text: 'Hello! I\'m ready to discuss your questions.', timestamp: '2:15 PM' },
+    { id: '1', sender: 'user', text: 'Hello! Ready for consultation.', timestamp: '2:15 PM' },
   ]);
   const [isEndCallModalOpen, setIsEndCallModalOpen] = useState(false);
 
@@ -38,19 +38,19 @@ export default function UserVideoCallPage() {
   const localStream = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    // Get user media
+    // Get media
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       localStream.current = stream;
       if (myVideo.current) myVideo.current.srcObject = stream;
 
-      // Join the appointment room
-      socket.emit('join-room', appointmentId, 'user');
+      // Join room as lawyer
+      socket.emit('join-room', appointmentId, 'lawyer');
 
-      // Initialize peer
-      const peer = new Peer({ initiator: false, trickle: false, stream });
+      // Initiate peer as initiator
+      const peer = new Peer({ initiator: true, trickle: false, stream });
 
       peer.on('signal', (data) => {
-        socket.emit('answer', { roomId: appointmentId, answer: data });
+        socket.emit('offer', { roomId: appointmentId, offer: data });
       });
 
       peer.on('stream', (remoteStream) => {
@@ -60,18 +60,18 @@ export default function UserVideoCallPage() {
       peerRef.current = peer;
     });
 
-    // Listen for offer from lawyer
-    socket.on('receive-offer', (offer) => {
-      peerRef.current.signal(offer);
+    // Receive answer from user
+    socket.on('receive-answer', (answer) => {
+      peerRef.current.signal(answer);
     });
 
-    // Listen for ICE candidates
+    // Receive ICE candidate
     socket.on('ice-candidate', (candidate) => {
       peerRef.current.signal(candidate);
     });
 
     return () => {
-      socket.off('receive-offer');
+      socket.off('receive-answer');
       socket.off('ice-candidate');
       peerRef.current?.destroy();
       localStream.current?.getTracks().forEach((track) => track.stop());
@@ -98,9 +98,9 @@ export default function UserVideoCallPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-100">
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-lg">SC</div>
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold text-lg">LC</div>
             <div>
-              <h1 className="text-lg font-semibold text-gray-900">Sarah Chen</h1>
+              <h1 className="text-lg font-semibold text-gray-900">Lawyer Name</h1>
               <p className="text-sm text-gray-600">Corporate Law Specialist</p>
             </div>
           </div>
@@ -164,8 +164,8 @@ export default function UserVideoCallPage() {
         </div>
       </div>
 
-      {/* Chat & Notes panels (unchanged) */}
-      {/* ... your existing chat & notes code ... */}
+      {/* Chat & Notes panels */}
+      {/* ... keep your existing chat & notes code ... */}
 
       {/* End Call Modal */}
       {isEndCallModalOpen && (

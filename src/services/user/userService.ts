@@ -72,9 +72,9 @@ export const searchLawyer = async (name: string) => {
     }
 }
 
-export const bookAppointment = async (data: AppointmentData) => {
+export const bookAppointment = async (data: AppointmentData, caseId: string | undefined) => {
     try {
-        return await axios.post(USER_API.BOOK_APPOINTMENT, data)
+        return await axios.post(USER_API.BOOK_APPOINTMENT(caseId), data)
     } catch (error) {
         throw error
     }

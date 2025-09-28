@@ -1,4 +1,4 @@
-import React, { useDebugValue } from 'react';
+import React from 'react';
 import { Scale, LogOut, User } from 'lucide-react';
 import { logout } from '../../services/admin/authService';
 import { toast } from 'react-toastify';
@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-2">
           <Scale className="w-8 h-8 text-blue-500" />
-          <span className="text-xl font-bold">
+          <span onClick={()=>navigate('/admin-dashboard')} className="text-xl font-bold">
             <span className="text-slate-700">Legal</span>
             <span className="text-blue-500">Connect</span>
           </span>

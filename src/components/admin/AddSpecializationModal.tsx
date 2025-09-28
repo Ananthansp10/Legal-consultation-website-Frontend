@@ -21,7 +21,7 @@ const AddSpecializationModal: React.FC<AddSpecializationModalProps> = ({ isOpen,
     addSpecialization({ name: name, description: description, isDeleted: false }).then((response) => {
       toast.success(response.data.message)
       onClose()
-      navigate('/specialization')
+      navigate('/admin-dashboard/specialization')
     }).catch((error) => {
       toast.error(error.response.data.message)
     })

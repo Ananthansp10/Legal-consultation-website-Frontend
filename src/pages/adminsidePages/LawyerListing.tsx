@@ -19,7 +19,7 @@ const LawyerListing: React.FC = () => {
   const startIndex = (currentPage - 1) * itemsPerPage
 
   function fetchLawyer() {
-    getLawyers(currentPage, itemsPerPage).then((response) => {
+    getLawyers(startIndex, itemsPerPage).then((response) => {
       setLawyers(response.data.data)
       setTotalPages(Math.ceil(response.data.totalData / itemsPerPage))
     })

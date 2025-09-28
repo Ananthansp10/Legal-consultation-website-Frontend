@@ -12,6 +12,8 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 function LawyerWelcomePage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -21,6 +23,13 @@ function LawyerWelcomePage() {
   }, []);
 
   const navigate = useNavigate()
+  const lawyerDetails=useSelector((state:RootState)=>state.lawyerAuth.isAuthenticate)
+  
+    useEffect(()=>{
+      if(lawyerDetails){
+        navigate('/lawyer-dashboard')
+      }
+    },[])
 
   const features = [
     {

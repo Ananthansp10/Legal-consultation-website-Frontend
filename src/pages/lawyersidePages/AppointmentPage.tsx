@@ -1,4 +1,4 @@
-import { Calendar, Clock, MessageCircle, User, MapPin, Video, CheckCircle, XCircle, CreditCard, X } from 'lucide-react';
+import { Calendar, Clock, MessageCircle, User, MapPin, Video, CheckCircle, XCircle, CreditCard, X, FileText, History } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getAppointments, updateAppointmentStatus } from '../../services/lawyer/lawyerService';
 import { useSelector } from 'react-redux';
@@ -27,6 +27,8 @@ export interface Appointment {
   paymentDate?: string;
   paymentMode?: string;
   fee?: string;
+  note?: string;
+  caseId: number;
 }
 
 interface AppointmentCardProps {
@@ -207,6 +209,9 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
   const navigate = useNavigate();
 
   const canShowPaymentHistory = ['Booked', 'Completed', 'Cancelled'].includes(appointment.status);
+  
+  // Show previous consultations button for all statuses except Pending, Cancelled, and Rejected
+  const showPreviousConsultations = !['Pending', 'Cancelled', 'Rejected'].includes(appointment.status);
 
   const handleCardClick = () => {
     if (canShowPaymentHistory) {
@@ -214,14 +219,17 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
     }
   };
 
+  const handlePreviousConsultations = (caseId:number) => {
+    navigate(`/lawyer/consultation-history/${caseId}`)
+  };
+
   return (
     <div
       className={`bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 mb-6 overflow-hidden ${canShowPaymentHistory ? 'cursor-pointer' : ''
         }`}
-      onClick={handleCardClick}
     >
       <div className="p-6">
-        {/* Header with user info and status */}
+        {/* Header with user info, status, and previous consultations button */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-4">
             <img
@@ -246,9 +254,25 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
               </div>
             </div>
           </div>
-          <div className={`px-3 py-1 rounded-full border text-xs font-medium flex items-center gap-1 ${getStatusColor(appointment.status)}`}>
-            {getStatusIcon(appointment.status)}
-            {appointment.status}
+          
+          <div className="flex items-center space-x-3">
+            {/* Previous Consultations Button */}
+            {showPreviousConsultations && (
+              <button
+                onClick={()=>handlePreviousConsultations(appointment.caseId)}
+                className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
+                title="View previous consultations"
+              >
+                <History size={16} />
+                <span>Previous</span>
+              </button>
+            )}
+            
+            {/* Status Badge */}
+            <div className={`px-3 py-1 rounded-full border text-xs font-medium flex items-center gap-1 ${getStatusColor(appointment.status)}`}>
+              {getStatusIcon(appointment.status)}
+              {appointment.status}
+            </div>
           </div>
         </div>
 
@@ -256,6 +280,19 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
         <div className="mb-4">
           <p className="text-gray-700 leading-relaxed">{appointment.problem}</p>
         </div>
+
+        {/* Note section for completed appointments */}
+        {appointment.status === 'Completed' && appointment.note && (
+          <div className="bg-blue-50 border-l-4 border-blue-400 p-3 mb-4 rounded-r-lg">
+            <div className="flex items-start space-x-2">
+              <FileText className="w-4 h-4 text-blue-600 mt-0.5" />
+              <div>
+                <p className="text-xs font-medium text-blue-800 mb-1">Consultation Note:</p>
+                <p className="text-sm text-blue-700">{appointment.note}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Date and time info */}
         <div className="flex items-center justify-between mb-4">
@@ -298,7 +335,7 @@ function AppointmentCard({ appointment, setActiveFilter, onCardClick }: Appointm
 
         {/* Click hint for appointments with payment history */}
         {canShowPaymentHistory && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
+          <div onClick={handleCardClick} className="mt-3 pt-3 border-t border-gray-100">
             <p className="text-xs text-blue-600 text-center">
               💡 Click to view payment history
             </p>

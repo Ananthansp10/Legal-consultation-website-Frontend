@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Scale, ArrowRight } from 'lucide-react';
 import { z } from 'zod'
 import { signin } from '../../services/lawyer/authService';
@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { lawyerLogin } from '../../redux/slices/lawyerAuthSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 function LawyerSignin() {
   const [email, setEmail] = useState('');
@@ -17,6 +19,14 @@ function LawyerSignin() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const lawyerDetails=useSelector((state:RootState)=>state.lawyerAuth.isAuthenticate)
+
+  useEffect(()=>{
+    if(lawyerDetails){
+      navigate('/lawyer-dashboard')
+    }
+  },[])
 
 
   const loginSchema = z.object({

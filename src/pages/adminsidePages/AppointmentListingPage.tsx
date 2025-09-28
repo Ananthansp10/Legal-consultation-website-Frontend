@@ -122,19 +122,18 @@ const AppointmentCard: React.FC<{ appointment: Appointment }> = ({ appointment }
 function AppointmentListingPage() {
   const [activeFilter, setActiveFilter] = useState<'All' | Appointment['appointmentStatus']>('All');
   const [appointments, setAppointments] = useState<Appointment[]>([])
-
-  useEffect(() => {
-    getAppointments(activeFilter).then((response) => {
-      setAppointments(response.data.data)
-    })
-  }, [activeFilter])
-
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 3
-  const totalPages = Math.ceil(appointments.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const data = appointments.slice(startIndex, endIndex)
+  const [totalPages, setTotalPages] = useState(0)
+
+  useEffect(() => {
+    getAppointments(activeFilter, startIndex, itemsPerPage).then((response) => {
+      setAppointments(response.data.data.appointments)
+      setTotalPages(Math.ceil(response.data.data.totalAppointments / itemsPerPage))
+    })
+  }, [activeFilter, currentPage])
+
 
   const filterTabs = [
     { key: 'All' as const, label: 'All' },
@@ -168,8 +167,8 @@ function AppointmentListingPage() {
                   key={tab.key}
                   onClick={() => setActiveFilter(tab.key)}
                   className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${activeFilter === tab.key
-                      ? 'bg-blue-600 text-white shadow-lg scale-105'
-                      : 'bg-white/70 text-gray-700 hover:bg-white hover:shadow-md hover:scale-105'
+                    ? 'bg-blue-600 text-white shadow-lg scale-105'
+                    : 'bg-white/70 text-gray-700 hover:bg-white hover:shadow-md hover:scale-105'
                     }`}
                 >
                   {tab.label}
@@ -189,7 +188,7 @@ function AppointmentListingPage() {
 
           {/* Appointments Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {data?.map((appointment) => (
+            {appointments?.map((appointment) => (
               <AppointmentCard
                 appointment={appointment}
               />
@@ -212,7 +211,7 @@ function AppointmentListingPage() {
             </div>
           )}
         </div>
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        <Pagination currentPage={currentPage} totalPages={totalPages || 0} onPageChange={setCurrentPage} />
       </div>
     </div>
   );

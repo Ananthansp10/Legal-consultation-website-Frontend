@@ -4,6 +4,8 @@ import LawyerNavbar from '../../components/lawyer/Navbar';
 import { addBankAccount } from '../../services/user/userService';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
   fullName: string;
@@ -36,6 +38,8 @@ function AddBankDetailsPage() {
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const navigate = useNavigate()
 
   const validateField = (name: string, value: string): string => {
     switch (name) {
@@ -133,8 +137,9 @@ function AddBankDetailsPage() {
         ifscCode: formData.ifscCode,
         bankName: formData.bankName,
         lawyerId: lawyerId
-      }).then(() => {
-        setIsSubmitted(true);
+      }).then((response) => {
+        toast.success(response.data.message)
+        navigate(-1)
       })
     }
 

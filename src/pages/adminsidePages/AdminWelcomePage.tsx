@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Rocket, BarChart3, Users, Settings, TrendingUp, Shield, Database, Activity, Scale } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const AdminIllustration = () => {
   return (
@@ -129,6 +131,13 @@ const TypewriterText = ({ text, delay = 100 }: { text: string; delay?: number })
 function AdminWelcomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate()
+  const adminDetails=useSelector((state:RootState)=>state.adminAuth.isAuthenticate)
+
+  useEffect(()=>{
+    if(adminDetails){
+      navigate('/admin-dashboard')
+    }
+  },[])
 
   useEffect(() => {
     setIsLoaded(true);

@@ -16,6 +16,12 @@ function SlotBookingPage() {
   const [consultationMode, setConsultationMode] = useState('');
   const [problem, setProblem] = useState('');
 
+  // Validation errors for modal fields
+  const [errors, setErrors] = useState({
+    consultationMode: '',
+    problem: ''
+  });
+
   interface Address {
     street: string;
     country: string;
@@ -65,7 +71,7 @@ function SlotBookingPage() {
 
   const [lawyer, setLawyer] = useState<LawyerProfileData>()
 
-  const { lawyerId } = useParams()
+  const { lawyerId, caseId } = useParams()
 
   const userId: string | undefined = useSelector((state: RootState) => state.auth.user?.id)
 
@@ -77,13 +83,69 @@ function SlotBookingPage() {
     })
   }, [])
 
+  const validateField = (field: string, value: string) => {
+    let error = '';
+
+    switch (field) {
+      case 'consultationMode':
+        if (!value.trim()) {
+          error = 'Please select a consultation mode';
+        }
+        break;
+
+      case 'problem':
+        if (!value.trim()) {
+          error = 'Please describe your legal problem';
+        } else if (value.trim().length < 50) {
+          error = 'Problem description must be at least 50 characters long';
+        } else if (value.trim().length > 500) {
+          error = 'Problem description must not exceed 500 characters';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(prev => ({ ...prev, [field]: error }));
+    return error === '';
+  };
+
+  const handleConsultationModeChange = (mode: string) => {
+    setConsultationMode(mode);
+    
+    // Clear error when user makes selection
+    if (errors.consultationMode) {
+      setErrors(prev => ({ ...prev, consultationMode: '' }));
+    }
+  };
+
+  const handleProblemChange = (value: string) => {
+    setProblem(value);
+    
+    // Clear error when user starts typing
+    if (errors.problem) {
+      setErrors(prev => ({ ...prev, problem: '' }));
+    }
+  };
+
+  const handleProblemBlur = () => {
+    validateField('problem', problem);
+  };
+
+  const validateModal = () => {
+    const consultationModeValid = validateField('consultationMode', consultationMode);
+    const problemValid = validateField('problem', problem);
+    
+    return consultationModeValid && problemValid;
+  };
+
   function handleConfirmBookingClick() {
     setShowModal(true);
   }
 
   function confirmBooking() {
-    if (!consultationMode || !problem.trim()) {
-      toast.error('Please fill in all fields');
+    if (!validateModal()) {
       return;
     }
 
@@ -96,15 +158,28 @@ function SlotBookingPage() {
         consultationMode: consultationMode,
         problem: problem,
         fee: parseInt(lawyer?.proffessionalInfo.fee!)
-      }
+      },
+      caseId
     ).then((response) => {
       toast.success(response.data.message)
       setShowModal(false);
+      // Clear form data
+      setConsultationMode('');
+      setProblem('');
+      setErrors({ consultationMode: '', problem: '' });
       navigate('/user/appointments')
     }).catch((error) => {
       toast.error(error.response.data.message);
     })
   }
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    // Clear form data and errors
+    setConsultationMode('');
+    setProblem('');
+    setErrors({ consultationMode: '', problem: '' });
+  };
 
   // Calendar helper functions
   const getDaysInMonth = (date: Date) => {
@@ -131,8 +206,6 @@ function SlotBookingPage() {
     endTime: string;
     isBooked: boolean
   }
-
-
 
   const [timeSlots, setTimeSlots] = useState<TimeSlotsData[]>([])
 
@@ -212,6 +285,8 @@ function SlotBookingPage() {
       getTimeSlots()
     }
   }, [selectedDate])
+
+  const isModalValid = consultationMode && problem.trim().length >= 10 && problem.trim().length <= 500 && !Object.values(errors).some(error => error !== '');
 
   return (
     <div className="min-h-screen bg-[#f8fafc] font-sans">
@@ -459,7 +534,7 @@ function SlotBookingPage() {
                 Booking Details
               </h2>
               <button
-                onClick={() => setShowModal(false)}
+                onClick={handleModalClose}
                 className="p-2 rounded-lg hover:bg-[#f1f5f9] transition-colors duration-200"
               >
                 <X size={20} className="text-[#64748b]" />
@@ -474,10 +549,12 @@ function SlotBookingPage() {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setConsultationMode('online')}
+                  onClick={() => handleConsultationModeChange('online')}
                   className={`p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 ${consultationMode === 'online'
                     ? 'border-[#3b82f6] bg-[#3b82f6]/5 text-[#3b82f6]'
-                    : 'border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b]'
+                    : `border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b] ${
+                        errors.consultationMode ? 'border-red-500' : ''
+                      }`
                     }`}
                 >
                   <Video size={20} />
@@ -485,43 +562,62 @@ function SlotBookingPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setConsultationMode('in-person')}
+                  onClick={() => handleConsultationModeChange('in-person')}
                   className={`p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 ${consultationMode === 'in-person'
                     ? 'border-[#3b82f6] bg-[#3b82f6]/5 text-[#3b82f6]'
-                    : 'border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b]'
+                    : `border-[#e2e8f0] hover:border-[#3b82f6] text-[#64748b] ${
+                        errors.consultationMode ? 'border-red-500' : ''
+                      }`
                     }`}
                 >
                   <Users size={20} />
                   <span className="font-medium">In Person</span>
                 </button>
               </div>
+              {errors.consultationMode && (
+                <p className="text-red-500 text-sm mt-2">{errors.consultationMode}</p>
+              )}
             </div>
 
             {/* Problem Description */}
             <div className="mb-8">
               <label className="block text-sm font-semibold text-[#334155] mb-3">
-                Describe your problem *
+                Describe your problem * <span className="text-xs text-[#64748b]">({problem.length}/500)</span>
               </label>
               <textarea
                 value={problem}
-                onChange={(e) => setProblem(e.target.value)}
+                onChange={(e) => handleProblemChange(e.target.value)}
+                onBlur={handleProblemBlur}
                 rows={4}
                 placeholder="Please provide details about your legal issue..."
-                className="w-full p-3 border border-[#e2e8f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent resize-none"
+                className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent resize-none ${
+                  errors.problem
+                    ? 'border-red-500 focus:ring-red-500'
+                    : 'border-[#e2e8f0] focus:ring-[#3b82f6]'
+                }`}
+                maxLength={500}
               />
+              {errors.problem && (
+                <p className="text-red-500 text-sm mt-2">{errors.problem}</p>
+              )}
             </div>
 
             {/* Modal Actions */}
             <div className="flex gap-3">
               <button
-                onClick={() => setShowModal(false)}
+                onClick={handleModalClose}
                 className="flex-1 py-3 px-4 border border-[#e2e8f0] text-[#64748b] rounded-lg font-semibold hover:bg-[#f8fafc] transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmBooking}
-                className="flex-1 py-3 px-4 bg-gradient-to-r from-[#3b82f6] to-[#6366f1] text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-[#3b82f6]/25 transition-all duration-300"
+                disabled={!isModalValid}
+                className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
+                  isModalValid
+                    ? 'bg-gradient-to-r from-[#3b82f6] to-[#6366f1] text-white hover:shadow-lg hover:shadow-[#3b82f6]/25 cursor-pointer'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
                 Confirm Booking
               </button>

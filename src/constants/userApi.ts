@@ -10,7 +10,7 @@ export const USER_API = {
   GET_LAWYER_SLOTS: (lawyerId: string, date: string) => `/user/get-slot-details/${lawyerId}/${date}`,
   FILTER_BY_SPECIALIZATION: (specialization: string) => `/user/filter-lawyer/${specialization}`,
   SEARCH_LAWYER: (name: string) => `/user/search-lawyer/${name}`,
-  BOOK_APPOINTMENT: "/user/book-appointment",
+  BOOK_APPOINTMENT: (caseId: string | undefined)=> `/user/book-appointment/${caseId}`,
   GET_APPOINTMENTS: (userId: string, appointmentStatus: string, startIndex: number, limit: number) => `/user/get-appointments/${userId}/${appointmentStatus}/${startIndex}/${limit}`,
   CANCEL_APPOINTMENT: (appointmentId: string) => `/user/cancel-appointment/${appointmentId}`,
   GET_TODAYS_APPOINTMENTS: (userId: string) => `/user/get-todays-appointments/${userId}`,

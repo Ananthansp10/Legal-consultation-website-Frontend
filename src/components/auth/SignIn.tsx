@@ -10,6 +10,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useApi } from '../../hooks/UseApi';
 
+interface FormErrors {
+  email: string;
+  password: string;
+}
+
 const SignIn = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -18,43 +23,135 @@ const SignIn = () => {
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({
+    email: '',
+    password: ''
+  });
+  const [touched, setTouched] = useState({
+    email: false,
+    password: false
+  });
 
   const { user, isAuthenticate } = useSelector((state: RootState) => state.auth);
 
-  const { data, error, loading, execute } = useApi(signinService)
+  const { data, error, loading, execute } = useApi(signinService);
+
+  // Validation functions
+  const validateEmail = (email: string): string => {
+    if (!email.trim()) return 'Email is required';
+    
+    // Check if it's a phone number (10 digits)
+    if (/^\d{10}$/.test(email.trim())) {
+      return ''; // Valid phone number
+    }
+    
+    // Check if it's a valid email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    
+    return '';
+  };
+
+  const validatePassword = (password: string): string => {
+    if (!password) return 'Password is required';
+    if (password.length < 6) return 'Password must be at least 6 characters';
+    return '';
+  };
+
+  // Real-time validation
+  const validateField = (name: string, value: string) => {
+    let error = '';
+    switch (name) {
+      case 'email':
+        error = validateEmail(value);
+        break;
+      case 'password':
+        error = validatePassword(value);
+        break;
+      default:
+        break;
+    }
+    
+    setErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Validate field if it has been touched
+    if (touched[name as keyof typeof touched]) {
+      validateField(name, value);
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({
+      ...prev,
+      [name]: true
+    }));
+    validateField(name, value);
+  };
+
+  const validateAllFields = (): boolean => {
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
+
+    setErrors({
+      email: emailError,
+      password: passwordError
+    });
+
+    setTouched({
+      email: true,
+      password: true
+    });
+
+    return !emailError && !passwordError;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let errorMsg = signinValidation(formData)
+    
+    // First run client-side validation
+    if (!validateAllFields()) {
+      return;
+    }
+
+    // Then run existing validation
+    let errorMsg = signinValidation(formData);
     if (errorMsg) {
-      toast.error(errorMsg)
+      toast.error(errorMsg);
     } else {
-      await execute(formData)
+      await execute(formData);
     }
   };
 
   useEffect(() => {
     if (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }, [error])
+  }, [error]);
 
   useEffect(() => {
     if (data) {
-      dispatch(login(data.user))
-      toast.success(data.message)
+      dispatch(login(data.user));
+      toast.success(data.message);
     }
-  }, [data])
+  }, [data]);
 
   const handleGoogleSignIn = () => {
-    googleAuth()
+    googleAuth();
   };
 
   useEffect(() => {
@@ -67,7 +164,7 @@ const SignIn = () => {
     <div className="min-h-screen flex">
       {/* Back to Home Button */}
       <Link
-        to="/"
+        to="/user"
         className="fixed top-4 left-4 z-50 flex items-center space-x-2 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-white/20 text-slate-600 hover:text-blue-500 transition-all duration-200"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -112,10 +209,18 @@ const SignIn = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    onBlur={handleBlur}
+                    className={`w-full pl-10 pr-4 py-3 bg-white/80 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                      errors.email && touched.email 
+                        ? 'border-red-300 focus:ring-red-500' 
+                        : 'border-slate-200 focus:ring-blue-500'
+                    }`}
                     placeholder="Enter your email or phone"
                   />
                 </div>
+                {errors.email && touched.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
               </div>
 
               <div>
@@ -130,7 +235,12 @@ const SignIn = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-12 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    onBlur={handleBlur}
+                    className={`w-full pl-10 pr-12 py-3 bg-white/80 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                      errors.password && touched.password 
+                        ? 'border-red-300 focus:ring-red-500' 
+                        : 'border-slate-200 focus:ring-blue-500'
+                    }`}
                     placeholder="Enter your password"
                   />
                   <button
@@ -141,6 +251,9 @@ const SignIn = () => {
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
                 </div>
+                {errors.password && touched.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                )}
               </div>
 
               <div className="text-right">
@@ -168,9 +281,14 @@ const SignIn = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
+                disabled={loading}
+                className={`w-full py-3 text-white rounded-xl font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 ${
+                  loading 
+                    ? 'bg-blue-400 cursor-not-allowed' 
+                    : 'bg-blue-500 hover:bg-blue-600'
+                }`}
               >
-                Sign In
+                {loading ? 'Signing In...' : 'Sign In'}
               </button>
             </form>
 

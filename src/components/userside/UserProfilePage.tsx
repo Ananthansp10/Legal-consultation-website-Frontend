@@ -195,7 +195,7 @@ export default function UserProfilePage() {
     if (editData) {
       setEditData({
         ...editData,
-        profileImage: "/placeholder.svg?height=120&width=120",
+        profileImage: "",
       });
     }
   };

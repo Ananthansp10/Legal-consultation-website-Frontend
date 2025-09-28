@@ -41,7 +41,6 @@ function ResetPasswordPage() {
     hasSpecialChar: false
   });
 
-
   let email: string | undefined = useSelector((state: RootState) => state.auth?.user?.email)
 
   const navigate = useNavigate()
@@ -58,12 +57,57 @@ function ResetPasswordPage() {
     return Object.values(criteria).every(Boolean);
   };
 
+  const validateField = (field: keyof typeof passwords, value: string) => {
+    let error = '';
+
+    switch (field) {
+      case 'oldPassword':
+        if (!value.trim()) {
+          error = 'Current password is required';
+        }
+        break;
+
+      case 'newPassword':
+        if (!value.trim()) {
+          error = 'New password is required';
+        } else if (!validatePasswordCriteria(value)) {
+          error = 'Password must meet all requirements';
+        } else if (value === passwords.oldPassword) {
+          error = 'New password must be different from current password';
+        }
+        break;
+
+      case 'confirmPassword':
+        if (!value.trim()) {
+          error = 'Please confirm your new password';
+        } else if (passwords.newPassword !== value) {
+          error = 'Passwords do not match';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(prev => ({ ...prev, [field]: error }));
+    return error === '';
+  };
+
   const handleInputChange = (field: keyof typeof passwords, value: string) => {
     setPasswords(prev => ({ ...prev, [field]: value }));
 
     // Validate password criteria for new password
     if (field === 'newPassword') {
       validatePasswordCriteria(value);
+      // Also revalidate confirm password if it exists
+      if (passwords.confirmPassword) {
+        validateField('confirmPassword', passwords.confirmPassword);
+      }
+    }
+
+    // Revalidate confirm password when new password changes
+    if (field === 'newPassword' && passwords.confirmPassword) {
+      setTimeout(() => validateField('confirmPassword', passwords.confirmPassword), 0);
     }
 
     // Clear error when user starts typing
@@ -72,35 +116,20 @@ function ResetPasswordPage() {
     }
   };
 
+  const handleBlur = (field: keyof typeof passwords) => {
+    validateField(field, passwords[field]);
+  };
+
   const togglePasswordVisibility = (field: keyof typeof showPasswords) => {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
   };
 
   const validateForm = () => {
-    const newErrors = {
-      oldPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    };
+    const oldPasswordValid = validateField('oldPassword', passwords.oldPassword);
+    const newPasswordValid = validateField('newPassword', passwords.newPassword);
+    const confirmPasswordValid = validateField('confirmPassword', passwords.confirmPassword);
 
-    if (!passwords.oldPassword) {
-      newErrors.oldPassword = 'Current password is required';
-    }
-
-    if (!passwords.newPassword) {
-      newErrors.newPassword = 'New password is required';
-    } else if (!validatePasswordCriteria(passwords.newPassword)) {
-      newErrors.newPassword = 'Password must meet all requirements';
-    }
-
-    if (!passwords.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your new password';
-    } else if (passwords.newPassword !== passwords.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error !== '');
+    return oldPasswordValid && newPasswordValid && confirmPasswordValid;
   };
 
   // Check if form is valid for button activation
@@ -110,10 +139,12 @@ function ResetPasswordPage() {
       passwords.newPassword.length > 0 &&
       passwords.confirmPassword.length > 0 &&
       Object.values(passwordCriteria).every(Boolean) &&
-      passwords.newPassword === passwords.confirmPassword;
+      passwords.newPassword === passwords.confirmPassword &&
+      passwords.newPassword !== passwords.oldPassword &&
+      !Object.values(errors).some(error => error !== '');
 
     setIsFormValid(isValid);
-  }, [passwords, passwordCriteria]);
+  }, [passwords, passwordCriteria, errors]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,7 +241,12 @@ function ResetPasswordPage() {
                       type={showPasswords.oldPassword ? 'text' : 'password'}
                       value={passwords.oldPassword}
                       onChange={(e) => handleInputChange('oldPassword', e.target.value)}
-                      className="w-full pl-10 pr-12 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                      onBlur={() => handleBlur('oldPassword')}
+                      className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm ${
+                        errors.oldPassword 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-slate-200 focus:ring-blue-500'
+                      }`}
                       placeholder="Enter your current password"
                     />
                     <button
@@ -240,7 +276,12 @@ function ResetPasswordPage() {
                       type={showPasswords.newPassword ? 'text' : 'password'}
                       value={passwords.newPassword}
                       onChange={(e) => handleInputChange('newPassword', e.target.value)}
-                      className="w-full pl-10 pr-12 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                      onBlur={() => handleBlur('newPassword')}
+                      className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm ${
+                        errors.newPassword 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-slate-200 focus:ring-blue-500'
+                      }`}
                       placeholder="Enter your new password"
                     />
                     <button
@@ -319,7 +360,12 @@ function ResetPasswordPage() {
                       type={showPasswords.confirmPassword ? 'text' : 'password'}
                       value={passwords.confirmPassword}
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      className="w-full pl-10 pr-12 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                      onBlur={() => handleBlur('confirmPassword')}
+                      className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm ${
+                        errors.confirmPassword 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-slate-200 focus:ring-blue-500'
+                      }`}
                       placeholder="Confirm your new password"
                     />
                     <button
@@ -335,7 +381,7 @@ function ResetPasswordPage() {
                   )}
 
                   {/* Password Match Indicator */}
-                  {passwords.confirmPassword && passwords.newPassword && (
+                  {passwords.confirmPassword && passwords.newPassword && !errors.confirmPassword && (
                     <div className="mt-2 flex items-center space-x-2">
                       {passwords.newPassword === passwords.confirmPassword ? (
                         <>

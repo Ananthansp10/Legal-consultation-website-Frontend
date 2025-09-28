@@ -5,6 +5,7 @@ import { PAYMENT_API } from "../../constants/paymentApi";
 interface OrderData {
     id: string;
     fee: number;
+    lawyerId: string;
 }
 
 interface PaymentData {

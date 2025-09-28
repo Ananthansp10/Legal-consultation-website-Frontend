@@ -10,23 +10,21 @@ function SpecializationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [specializations, setSpecializations] = useState<Array<{ _id: string, name: string, description: string }>>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 4
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const [totalPages, setTotalPages] = useState(0)
 
   function fetchSpecialization() {
-    getSpecialization().then((response) => {
+    getSpecialization(startIndex, itemsPerPage).then((response) => {
       setSpecializations(response.data.data)
+      setTotalPages(Math.ceil(response.data.totalSpecialization / itemsPerPage))
     })
   }
 
   useEffect(() => {
     fetchSpecialization()
-  }, [isModalOpen])
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 4
-  const totalPages = Math.ceil(specializations.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const lastIndex = startIndex + itemsPerPage
-  const currentData = specializations.slice(startIndex, lastIndex)
+  }, [isModalOpen, currentPage])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 relative overflow-hidden">
@@ -44,7 +42,7 @@ function SpecializationPage() {
           <EmptyState onAddClick={() => setIsModalOpen(true)} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
-            {currentData.map((specialization, index) => (
+            {specializations.map((specialization, index) => (
               <SpecializationCard
                 key={index}
                 specId={specialization?._id}

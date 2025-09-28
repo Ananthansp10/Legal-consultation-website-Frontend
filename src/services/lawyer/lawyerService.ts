@@ -146,3 +146,11 @@ export const checkBankDetails = async (lawyerId: string) => {
     throw error
   }
 }
+
+export const getConsultationHistory = async (caseId: string) => {
+  try {
+    return await axios.get(LAWYER_API.GET_CONSULTATION_HISTORY(caseId))
+  } catch (error) {
+    throw error
+  }
+}

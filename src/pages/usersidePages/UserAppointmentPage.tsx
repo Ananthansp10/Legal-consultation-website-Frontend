@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Calendar, Clock, Video, MapPin, Briefcase, User, X, CreditCard } from 'lucide-react';
+import { Calendar, Clock, Video, MapPin, Briefcase, User, X, CreditCard, FileText, MessageCircle } from 'lucide-react';
 import UserNavbar from '../../components/userside/Navbar';
 import { cancelAppointment, getAppointments, resheduleAppointment } from '../../services/user/userService';
 import { useSelector } from 'react-redux';
@@ -34,6 +34,9 @@ function UserAppointmentPage() {
     problem: string;
     paymentDate?: string;
     paymentMode?: string;
+    meetStart?: boolean;
+    note?: string;
+    caseId: number;
   }
 
   interface AppointmentCardData {
@@ -66,14 +69,13 @@ function UserAppointmentPage() {
 
   useEffect(() => {
     getAppointments(user?.id!, activeTab, startIndex, itemsPerPage).then((response) => {
-      console.log(response.data)
       setAppointments(response.data.data)
       setTotalPages(Math.ceil(response.data.totalAppointments / itemsPerPage))
     })
   }, [activeTab, currentPage])
 
-  function generateRazorpay(id: string, fee: number) {
-    createRazorpayOrder({ id: id, fee: fee }).then((response) => {
+  function generateRazorpay(id: string, fee: number, lawyerId: string) {
+    createRazorpayOrder({ id: id, fee: fee, lawyerId: lawyerId }).then((response) => {
       handlePayment(response.data.data, user!, id).then((response) => {
         toast.success(response.data.message)
         setActiveTab('Upcoming')
@@ -119,6 +121,10 @@ function UserAppointmentPage() {
     }
   }
 
+  function handleContinueConsultation(lawyerId: string, caseId: number) {
+    navigate(`/user/continue-slot-booking/${lawyerId}/${caseId}`);
+  }
+
   const PaymentHistoryModal = ({ isOpen, onClose, appointment }: PaymentHistoryModalProps) => {
     if (!isOpen) return null;
 
@@ -159,7 +165,7 @@ function UserAppointmentPage() {
                     ? 'bg-red-100 text-red-700'
                     : 'bg-yellow-100 text-yellow-700'
                   }`}>
-                  {appointment.payment || 'Refunded'}
+                  {appointment.status== 'Cancelled' ? appointment.status : appointment.payment || 'Refunded'}
                 </span>
               </div>
 
@@ -226,7 +232,6 @@ function UserAppointmentPage() {
     <div
       className={`bg-white rounded-xl shadow-md hover:shadow-lg hover:ring-1 hover:ring-blue-100 transition-all duration-300 p-6 mb-4 ${appointment.status === 'Booked' ? 'cursor-pointer' : appointment.status === 'Completed' ? 'cursor-pointer' : appointment.status === 'Cancelled' ? 'cursor-pointer' : ''
         }`}
-      onClick={() => handleCardClick(appointment)}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-4">
@@ -255,6 +260,19 @@ function UserAppointmentPage() {
             <p className="text-slate-600 text-sm mb-3">{appointment.lawyer.specialization[0]}</p>
 
             <p className="text-slate-600 text-sm mb-3">{appointment.problem}</p>
+
+            {/* Note section for completed appointments */}
+            {appointment.status === 'Completed' && appointment.note && (
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-3 mb-3 rounded-r-lg">
+                <div className="flex items-start space-x-2">
+                  <FileText className="w-4 h-4 text-blue-600 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-medium text-blue-800 mb-1">Lawyer's Note:</p>
+                    <p className="text-sm text-blue-700">{appointment.note}</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center space-x-4 text-sm text-slate-500 mb-3">
               <div className="flex items-center space-x-1">
@@ -298,7 +316,7 @@ function UserAppointmentPage() {
               ) : appointment.status === 'Accepted' ? (
                 // Pay Now or Repay button for accepted appointments + Cancel and Reschedule buttons
                 <div className="flex items-center justify-between w-full ml-4" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={() => generateRazorpay(appointment._id, Number(appointment.lawyer.fee))}
+                  <button onClick={() => generateRazorpay(appointment._id, Number(appointment.lawyer.fee), appointment.lawyer._id)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${appointment.payment === 'Failed'
                       ? 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700'
                       : 'bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700'
@@ -320,8 +338,8 @@ function UserAppointmentPage() {
                     </button>
                   </div>
                 </div>
-              ) : appointment.status === 'Booked' && appointment.mode == 'online' ? (
-                // Join Link button + Cancel and Reschedule buttons for booked appointments
+              ) : appointment.status === 'Booked' && appointment.mode == 'online' && appointment.meetStart ? (
+                // Join Link button + Cancel button for booked online appointments when meetStart is true
                 <div className="flex items-center justify-between w-full ml-4" onClick={(e) => e.stopPropagation()}>
                   <button
                     onClick={() => navigate(`/user/video-call/${appointment._id}`)}
@@ -330,11 +348,6 @@ function UserAppointmentPage() {
                     Join Link
                   </button>
                   <div className="flex items-center space-x-2 ps-12">
-                    {/* <button
-                      className="bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                    >
-                      Reschedule
-                    </button> */}
                     <button
                       onClick={() => cancelModal(appointment._id)}
                       className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
@@ -344,18 +357,24 @@ function UserAppointmentPage() {
                   </div>
                 </div>
               ) : appointment.status === 'Booked' ? (
-                // Cancel and Reschedule buttons for offline booked appointments
+                // Cancel button only for booked appointments (offline or online without meetStart)
                 <div className="flex items-center space-x-2 ps-12" onClick={(e) => e.stopPropagation()}>
-                  {/* <button
-                    className="bg-orange-50 text-orange-600 hover:bg-orange-100 hover:text-orange-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                  >
-                    Reschedule
-                  </button> */}
                   <button
                     onClick={() => cancelModal(appointment._id)}
                     className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all"
                   >
                     Cancel
+                  </button>
+                </div>
+              ) : appointment.status === 'Completed' ? (
+                // Continue Consultation button for completed appointments
+                <div className="flex items-center space-x-2 ps-12" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    onClick={() => handleContinueConsultation(appointment.lawyer._id,appointment.caseId)}
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm flex items-center space-x-2"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Continue Consultation</span>
                   </button>
                 </div>
               ) : (
@@ -375,21 +394,21 @@ function UserAppointmentPage() {
 
       {/* Click hint for booked appointments */}
       {appointment.status === 'Booked' && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
+        <div onClick={() => handleCardClick(appointment)} className="mt-3 pt-3 border-t border-gray-100">
           <p className="text-xs text-blue-600 text-center">
             💡 Click to view payment history
           </p>
         </div>
       )}
       {appointment.status === 'Cancelled' && appointment.paymentDate && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
+        <div onClick={() => handleCardClick(appointment)} className="mt-3 pt-3 border-t border-gray-100">
           <p className="text-xs text-blue-600 text-center">
             💡 Click to view payment history
           </p>
         </div>
       )}
       {appointment.status === 'Completed' && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
+        <div onClick={() => handleCardClick(appointment)} className="mt-3 pt-3 border-t border-gray-100">
           <p className="text-xs text-blue-600 text-center">
             💡 Click to view payment history
           </p>

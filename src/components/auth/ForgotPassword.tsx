@@ -8,28 +8,45 @@ import { useApi } from '../../hooks/UseApi';
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const { data, error, loading, execute } = useApi(forgotPassword)
 
+  const validateEmail = (emailValue: string) => {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    
+    if (!emailValue.trim()) {
+      setEmailError('Email is required');
+      return false;
+    }
+    
+    if (!emailRegex.test(emailValue.trim())) {
+      setEmailError('Invalid email format');
+      return false;
+    }
+    
+    setEmailError('');
+    return true;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    
+    // Clear error when user starts typing
+    if (emailError) {
+      setEmailError('');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const emailRegex = /^\S+@\S+\.\S+$/;
-    if (!email) {
-      return toast.error("Email is required")
+    
+    const isEmailValid = validateEmail(email);
+    
+    if (!isEmailValid) {
+      return;
     }
-    if (!emailRegex.test(email.trim())) {
-      return toast.error("Invalid email format")
-    }
-    // forgotPassword(email).then((response)=>{
-    //   if(response.data.success){
-    //     const data={...response.data.data,forgotPassword:true}
-    //     localStorage.setItem('userDetails',JSON.stringify(data))
-    //     toast.success(response.data.message)
-    //     navigate('/auth/otp-verification');
-    //   }
-    // }).catch((error)=>{
-    //   toast.error(error.response.data.message)
-    // })
 
     await execute(email)
   };
@@ -53,7 +70,7 @@ const ForgotPassword = () => {
     <div className="min-h-screen flex">
       {/* Back to Home Button */}
       <Link
-        to="/"
+        to="/user"
         className="fixed top-4 left-4 z-50 flex items-center space-x-2 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-white/20 text-slate-600 hover:text-blue-500 transition-all duration-200"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -99,18 +116,26 @@ const ForgotPassword = () => {
                     id="email"
                     name="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    onChange={handleEmailChange}
+                    className={`w-full pl-10 pr-4 py-3 bg-white/80 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                      emailError 
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-slate-200 focus:ring-blue-500'
+                    }`}
                     placeholder="Enter your email"
                   />
                 </div>
+                {emailError && (
+                  <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                )}
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
+                disabled={loading}
+                className="w-full py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
               >
-                Send Reset Link
+                {loading ? 'Sending...' : 'Send Reset Link'}
               </button>
             </form>
 
