@@ -1,24 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { Users, UserCheck, Calendar, AlertTriangle, TrendingUp, MessageSquare, Star } from 'lucide-react';
-import StatCard from '../../components/admin/StatCard';
-import GlassCard from '../../components/admin/GlassCard';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { getSummaryReport } from '../../services/admin/adminService';
-import { StringValidation } from 'zod';
+import React, { useEffect, useState } from "react";
+import {
+  Users,
+  UserCheck,
+  Calendar,
+  AlertTriangle,
+  TrendingUp,
+  Star,
+} from "lucide-react";
+import StatCard from "../../components/admin/StatCard";
+import GlassCard from "../../components/admin/GlassCard";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { getSummaryReport } from "../../services/admin/adminService";
 
 const AdminDashboard: React.FC = () => {
-
   function getColour(avg: number) {
     if (avg >= 90 && avg < 100) {
-      return '#ef4444'
+      return "#ef4444";
     }
     if (avg >= 1 && avg <= 10) {
-      return '#f59e0b'
+      return "#f59e0b";
     }
     if (avg <= 0) {
-      return '#10b981'
+      return "#10b981";
     }
-    return '#3b82f6'
+    return "#3b82f6";
   }
 
   interface RevenueData {
@@ -27,7 +45,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   interface RevenueChart {
-    _id: RevenueData,
+    _id: RevenueData;
     revenue: number;
   }
 
@@ -54,7 +72,7 @@ const AdminDashboard: React.FC = () => {
     profileImage: string;
     state: string;
     country: string;
-    totalConsultation: number
+    totalConsultation: number;
   }
 
   interface StateChartData {
@@ -81,29 +99,46 @@ const AdminDashboard: React.FC = () => {
     countryChart: CountryChartData[];
   }
 
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
-  const [summaryReport, setSummaryReport] = useState<SummaryReport | null>(null)
+  const [summaryReport, setSummaryReport] = useState<SummaryReport | null>(
+    null
+  );
 
   useEffect(() => {
     getSummaryReport().then((response) => {
-      setSummaryReport(response.data.data)
-    })
-  }, [])
+      setSummaryReport(response.data.data);
+    });
+  }, []);
 
   const revenueChartObj = summaryReport?.revenueChart.map((data) => {
     return {
       month: months[data._id.month - 1],
-      revenue: data.revenue
-    }
-  })
+      revenue: data.revenue,
+    };
+  });
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-800">Dashboard</h1>
-        <p className="text-slate-600 mt-2">Welcome back! Here's what's happening with your platform today.</p>
+        <p className="text-slate-600 mt-2">
+          Welcome back! Here's what's happening with your platform today.
+        </p>
       </div>
 
       {/* Stats Cards */}
@@ -137,7 +172,9 @@ const AdminDashboard: React.FC = () => {
       {/* Revenue Chart */}
       <GlassCard className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-slate-800">Revenue Overview</h3>
+          <h3 className="text-lg font-semibold text-slate-800">
+            Revenue Overview
+          </h3>
           <div className="flex items-center space-x-2 text-green-500">
             <TrendingUp className="w-5 h-5" />
             <span className="text-sm font-medium">+15% this month</span>
@@ -154,7 +191,7 @@ const AdminDashboard: React.FC = () => {
               dataKey="revenue"
               stroke="#3b82f6"
               strokeWidth={3}
-              dot={{ fill: '#3b82f6', strokeWidth: 2, r: 6 }}
+              dot={{ fill: "#3b82f6", strokeWidth: 2, r: 6 }}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -164,21 +201,29 @@ const AdminDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Appointment Trends */}
         <GlassCard className="p-6">
-          <h3 className="text-lg font-semibold text-slate-800 mb-6">Weekly Appointments</h3>
+          <h3 className="text-lg font-semibold text-slate-800 mb-6">
+            Weekly Appointments
+          </h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={summaryReport?.weeklyAppointments}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="dayName" stroke="#64748b" />
               <YAxis stroke="#64748b" />
               <Tooltip />
-              <Bar dataKey="appointmentsCount" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey="appointmentsCount"
+                fill="#3b82f6"
+                radius={[4, 4, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </GlassCard>
 
         {/* Speciality Distribution */}
         <GlassCard className="p-6">
-          <h3 className="text-lg font-semibold text-slate-800 mb-6">Lawyer Specialities</h3>
+          <h3 className="text-lg font-semibold text-slate-800 mb-6">
+            Lawyer Specialities
+          </h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
@@ -186,7 +231,9 @@ const AdminDashboard: React.FC = () => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ specializationName, average }) => `${specializationName}: ${(average)}%`}
+                label={({ specializationName, average }) =>
+                  `${specializationName}: ${average}%`
+                }
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="average"
@@ -205,25 +252,38 @@ const AdminDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Lawyers */}
         <GlassCard className="p-6">
-          <h3 className="text-lg font-semibold text-slate-800 mb-6">Top Performing Lawyers</h3>
+          <h3 className="text-lg font-semibold text-slate-800 mb-6">
+            Top Performing Lawyers
+          </h3>
           <div className="space-y-4">
             {summaryReport?.topLawyers.map((lawyer, index) => (
-              <div key={index} className="flex items-center space-x-4 p-4 bg-white/50 rounded-xl hover:bg-white/70 transition-all duration-200">
+              <div
+                key={index}
+                className="flex items-center space-x-4 p-4 bg-white/50 rounded-xl hover:bg-white/70 transition-all duration-200"
+              >
                 <img
                   src={lawyer.profileImage}
                   alt={lawyer.name}
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex-1">
-                  <h4 className="font-semibold text-slate-800">{lawyer.name}</h4>
-                  <p className="text-sm text-slate-600">{lawyer.specialization}</p>
+                  <h4 className="font-semibold text-slate-800">
+                    {lawyer.name}
+                  </h4>
+                  <p className="text-sm text-slate-600">
+                    {lawyer.specialization}
+                  </p>
                   <div className="flex items-center space-x-2 mt-1">
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-sm text-slate-600">{lawyer.rating}</span>
+                    <span className="text-sm text-slate-600">
+                      {lawyer.rating}
+                    </span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-slate-800">{lawyer.totalConsultation}</p>
+                  <p className="font-semibold text-slate-800">
+                    {lawyer.totalConsultation}
+                  </p>
                   <p className="text-sm text-slate-600">consultations</p>
                 </div>
               </div>
@@ -233,10 +293,15 @@ const AdminDashboard: React.FC = () => {
 
         {/* Top Users */}
         <GlassCard className="p-6">
-          <h3 className="text-lg font-semibold text-slate-800 mb-6">Most Active Users</h3>
+          <h3 className="text-lg font-semibold text-slate-800 mb-6">
+            Most Active Users
+          </h3>
           <div className="space-y-4">
             {summaryReport?.topUsers.map((user, index) => (
-              <div key={index} className="flex items-center space-x-4 p-4 bg-white/50 rounded-xl hover:bg-white/70 transition-all duration-200">
+              <div
+                key={index}
+                className="flex items-center space-x-4 p-4 bg-white/50 rounded-xl hover:bg-white/70 transition-all duration-200"
+              >
                 <img
                   src={user.profileImage}
                   alt={user.name}
@@ -244,10 +309,14 @@ const AdminDashboard: React.FC = () => {
                 />
                 <div className="flex-1">
                   <h4 className="font-semibold text-slate-800">{user.name}</h4>
-                  <p className="text-sm text-slate-600">{user.country},{user.state}</p>
+                  <p className="text-sm text-slate-600">
+                    {user.country},{user.state}
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-slate-800">{user.totalConsultation}</p>
+                  <p className="font-semibold text-slate-800">
+                    {user.totalConsultation}
+                  </p>
                   <p className="text-sm text-slate-600">consultations</p>
                 </div>
               </div>
@@ -265,8 +334,12 @@ const AdminDashboard: React.FC = () => {
               <TrendingUp className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-800">State Insights</h3>
-              <p className="text-slate-600 text-sm">Consultations by Indian states</p>
+              <h3 className="text-lg font-semibold text-slate-800">
+                State Insights
+              </h3>
+              <p className="text-slate-600 text-sm">
+                Consultations by Indian states
+              </p>
             </div>
           </div>
 
@@ -281,26 +354,30 @@ const AdminDashboard: React.FC = () => {
                   <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.5} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#e2e8f0"
+                strokeOpacity={0.5}
+              />
               <XAxis
                 dataKey="_id"
-                tick={{ fontSize: 12, fill: '#64748b' }}
+                tick={{ fontSize: 12, fill: "#64748b" }}
                 angle={-45}
                 textAnchor="end"
                 height={80}
               />
               <YAxis
-                tick={{ fontSize: 12, fill: '#64748b' }}
+                tick={{ fontSize: 12, fill: "#64748b" }}
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                  backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  borderRadius: "12px",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                 }}
               />
               <Bar
@@ -319,31 +396,65 @@ const AdminDashboard: React.FC = () => {
               <Users className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-800">Country Insights</h3>
-              <p className="text-slate-600 text-sm">Global consultation distribution</p>
+              <h3 className="text-lg font-semibold text-slate-800">
+                Country Insights
+              </h3>
+              <p className="text-slate-600 text-sm">
+                Global consultation distribution
+              </p>
             </div>
           </div>
 
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <defs>
-                <linearGradient id="countryGradient0" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient
+                  id="countryGradient0"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
                   <stop offset="0%" stopColor="#10B981" stopOpacity={0.8} />
                   <stop offset="100%" stopColor="#059669" stopOpacity={0.6} />
                 </linearGradient>
-                <linearGradient id="countryGradient1" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient
+                  id="countryGradient1"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
                   <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.8} />
                   <stop offset="100%" stopColor="#1E40AF" stopOpacity={0.6} />
                 </linearGradient>
-                <linearGradient id="countryGradient2" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient
+                  id="countryGradient2"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
                   <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8} />
                   <stop offset="100%" stopColor="#7C3AED" stopOpacity={0.6} />
                 </linearGradient>
-                <linearGradient id="countryGradient3" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient
+                  id="countryGradient3"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
                   <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.8} />
                   <stop offset="100%" stopColor="#D97706" stopOpacity={0.6} />
                 </linearGradient>
-                <linearGradient id="countryGradient4" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient
+                  id="countryGradient4"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
                   <stop offset="0%" stopColor="#EF4444" stopOpacity={0.8} />
                   <stop offset="100%" stopColor="#DC2626" stopOpacity={0.6} />
                 </linearGradient>
@@ -368,15 +479,17 @@ const AdminDashboard: React.FC = () => {
               </Pie>
               <Tooltip
                 formatter={(value: any, name: any, props: any) => [
-                  `${value} consultations (${value * 10 > 100 ? 100 : value * 10}%)`,
-                  props.payload.country
+                  `${value} consultations (${
+                    value * 10 > 100 ? 100 : value * 10
+                  }%)`,
+                  props.payload.country,
                 ]}
                 contentStyle={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+                  backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  borderRadius: "12px",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                 }}
               />
             </PieChart>
@@ -389,12 +502,17 @@ const AdminDashboard: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: 'red' }}
+                    style={{ backgroundColor: "red" }}
                   />
-                  <span className="text-sm font-medium text-slate-700">{item._id}</span>
+                  <span className="text-sm font-medium text-slate-700">
+                    {item._id}
+                  </span>
                 </div>
                 <div className="text-sm text-slate-600">
-                  {item.consultations * 10 > 100 ? 100 : item.consultations * 10}% ({item.consultations})
+                  {item.consultations * 10 > 100
+                    ? 100
+                    : item.consultations * 10}
+                  % ({item.consultations})
                 </div>
               </div>
             ))}

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { X, Upload } from 'lucide-react';
-import { reportAccount } from '../../services/user/userService';
-import { toast } from 'react-toastify';
+import React, { useState } from "react";
+import { X } from "lucide-react";
+import { reportAccount } from "../../services/user/userService";
+import { toast } from "react-toastify";
 
 interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  reportType: 'user' | 'lawyer';
+  reportType: "user" | "lawyer";
   reportedId: string;
   reporterId: string;
 }
@@ -16,61 +16,59 @@ const ReportModal: React.FC<ReportModalProps> = ({
   onClose,
   reportType,
   reportedId,
-  reporterId
-
+  reporterId,
 }) => {
-  const [reason, setReason] = useState('');
-  const [description, setDescription] = useState('');
-  const [isDragOver, setIsDragOver] = useState(false);
+  const [reason, setReason] = useState("");
+  const [description, setDescription] = useState("");
 
   const reasons = [
-    'Harassment',
-    'Spam',
-    'Fake Profile',
-    'Misconduct',
-    'Fraud',
-    'Other'
+    "Harassment",
+    "Spam",
+    "Fake Profile",
+    "Misconduct",
+    "Fraud",
+    "Other",
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     reportAccount({
       reportedId: reportedId,
-      userType: reportType == 'user' ? 'user' : 'lawyer',
+      userType: reportType == "user" ? "user" : "lawyer",
       reason: reason,
       description: description,
-      reporterId
+      reporterId,
     }).then((response) => {
       onClose();
-      toast.success(response.data.message)
-    })
+      toast.success(response.data.message);
+    });
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      console.log('Files uploaded:', files);
-    }
-  };
+  // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = e.target.files;
+  //   if (files) {
+  //     console.log("Files uploaded:", files);
+  //   }
+  // };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
+  // const handleDragOver = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   setIsDragOver(true);
+  // };
 
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  };
+  // const handleDragLeave = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   setIsDragOver(false);
+  // };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    const files = e.dataTransfer.files;
-    if (files) {
-      console.log('Files dropped:', files);
-    }
-  };
+  // const handleDrop = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   setIsDragOver(false);
+  //   const files = e.dataTransfer.files;
+  //   if (files) {
+  //     console.log("Files dropped:", files);
+  //   }
+  // };
 
   if (!isOpen) return null;
 
@@ -88,10 +86,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
         <div className="flex items-start justify-between mb-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Report {reportType === 'user' ? 'User' : 'Lawyer'}
+              Report {reportType === "user" ? "User" : "Lawyer"}
             </h2>
             <p className="text-sm text-gray-600">
-              Help us keep the platform safe by reporting inappropriate behavior.
+              Help us keep the platform safe by reporting inappropriate
+              behavior.
             </p>
           </div>
 
@@ -108,7 +107,10 @@ const ReportModal: React.FC<ReportModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Reason Dropdown */}
           <div>
-            <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="reason"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Reason for reporting
             </label>
             <select
@@ -129,7 +131,10 @@ const ReportModal: React.FC<ReportModalProps> = ({
 
           {/* Description Textarea */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Description
             </label>
             <textarea

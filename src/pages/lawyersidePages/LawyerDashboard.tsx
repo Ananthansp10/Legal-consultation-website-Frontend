@@ -1,11 +1,9 @@
-import LawyerNavbar from '../../components/lawyer/Navbar';
-import WelcomeSection from '../../components/lawyer/WelcomeSection';
-import ImageSlider from '../../components/lawyer/ImageSlider';
-import QuickActions from '../../components/lawyer/QuickActions';
-import UpcomingAppointments from '../../components/lawyer/SummaryDashboard';
-import RecentActivity from '../../components/lawyer/RecentActivity';
-import Footer from '../../components/lawyer/Footer';
-import SummaryDashboard from '../../components/lawyer/SummaryDashboard';
+import LawyerNavbar from "../../components/lawyer/Navbar";
+import WelcomeSection from "../../components/lawyer/WelcomeSection";
+import ImageSlider from "../../components/lawyer/ImageSlider";
+import QuickActions from "../../components/lawyer/QuickActions";
+import Footer from "../../components/lawyer/Footer";
+import SummaryDashboard from "../../components/lawyer/SummaryDashboard";
 
 function LawyerDashboard() {
   return (
@@ -21,9 +19,7 @@ function LawyerDashboard() {
           <div className="xl:col-span-2">
             <SummaryDashboard />
           </div>
-          <div className="xl:col-span-1">
-            {/* <RecentActivity /> */}
-          </div>
+          <div className="xl:col-span-1">{/* <RecentActivity /> */}</div>
         </div>
       </main>
 

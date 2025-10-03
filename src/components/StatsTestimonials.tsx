@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 const StatsTestimonials = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -8,31 +8,37 @@ const StatsTestimonials = () => {
     { number: 5000, label: "Happy Clients", suffix: "+" },
     { number: 100, label: "Expert Lawyers", suffix: "+" },
     { number: 98, label: "Success Rate", suffix: "%" },
-    { number: 24, label: "Support Hours", suffix: "/7" }
+    { number: 24, label: "Support Hours", suffix: "/7" },
   ];
 
   const testimonials = [
     {
       name: "Jennifer Martinez",
       role: "Business Owner",
-      content: "LegalConnect helped me find the perfect lawyer for my business needs. The process was smooth and professional.",
+      content:
+        "LegalConnect helped me find the perfect lawyer for my business needs. The process was smooth and professional.",
       rating: 5,
-      image: "https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=100"
+      image:
+        "https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=100",
     },
     {
       name: "Robert Johnson",
       role: "Individual Client",
-      content: "Excellent service! The lawyer I connected with was knowledgeable and helped resolve my case efficiently.",
+      content:
+        "Excellent service! The lawyer I connected with was knowledgeable and helped resolve my case efficiently.",
       rating: 5,
-      image: "https://images.pexels.com/photos/3777943/pexels-photo-3777943.jpeg?auto=compress&cs=tinysrgb&w=100"
+      image:
+        "https://images.pexels.com/photos/3777943/pexels-photo-3777943.jpeg?auto=compress&cs=tinysrgb&w=100",
     },
     {
       name: "Sarah Chen",
       role: "Family Client",
-      content: "Professional, reliable, and compassionate. I couldn't have asked for better legal representation.",
+      content:
+        "Professional, reliable, and compassionate. I couldn't have asked for better legal representation.",
       rating: 5,
-      image: "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=100"
-    }
+      image:
+        "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=100",
+    },
   ];
 
   const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
@@ -48,7 +54,7 @@ const StatsTestimonials = () => {
             current = stat.number;
             clearInterval(timer);
           }
-          setAnimatedStats(prev => {
+          setAnimatedStats((prev) => {
             const newStats = [...prev];
             newStats[index] = Math.floor(current);
             return newStats;
@@ -57,7 +63,7 @@ const StatsTestimonials = () => {
       }, index * 200);
     });
 
-    return () => timers.forEach(timer => clearTimeout(timer));
+    return () => timers.forEach((timer) => clearTimeout(timer));
   }, []);
 
   const nextTestimonial = () => {
@@ -65,7 +71,9 @@ const StatsTestimonials = () => {
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentTestimonial(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+    );
   };
 
   return (
@@ -79,9 +87,13 @@ const StatsTestimonials = () => {
             </h2>
             <div className="grid grid-cols-2 gap-8">
               {stats.map((stat, index) => (
-                <div key={index} className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 text-center">
+                <div
+                  key={index}
+                  className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 text-center"
+                >
                   <div className="text-3xl lg:text-4xl font-bold text-blue-500 mb-2">
-                    {animatedStats[index]}{stat.suffix}
+                    {animatedStats[index]}
+                    {stat.suffix}
                   </div>
                   <div className="text-slate-600 font-medium">{stat.label}</div>
                 </div>
@@ -103,15 +115,24 @@ const StatsTestimonials = () => {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div>
-                    <div className="font-bold text-slate-800">{testimonials[currentTestimonial].name}</div>
-                    <div className="text-slate-600 text-sm">{testimonials[currentTestimonial].role}</div>
+                    <div className="font-bold text-slate-800">
+                      {testimonials[currentTestimonial].name}
+                    </div>
+                    <div className="text-slate-600 text-sm">
+                      {testimonials[currentTestimonial].role}
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex space-x-1">
-                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
+                  {[...Array(testimonials[currentTestimonial].rating)].map(
+                    (_, i) => (
+                      <Star
+                        key={i}
+                        className="h-4 w-4 text-yellow-400 fill-current"
+                      />
+                    )
+                  )}
                 </div>
               </div>
 
@@ -125,8 +146,11 @@ const StatsTestimonials = () => {
                     <button
                       key={index}
                       onClick={() => setCurrentTestimonial(index)}
-                      className={`w-2 h-2 rounded-full transition-colors duration-300 ${index === currentTestimonial ? 'bg-blue-500' : 'bg-slate-300'
-                        }`}
+                      className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                        index === currentTestimonial
+                          ? "bg-blue-500"
+                          : "bg-slate-300"
+                      }`}
                     />
                   ))}
                 </div>

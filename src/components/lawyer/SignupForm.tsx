@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Upload, X, CheckCircle, Scale, Gavel, BookOpen, User, Mail, Lock, GraduationCap, FileText, Camera } from 'lucide-react';
-import { register } from '../../services/lawyer/authService';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import { AxiosResponse } from 'axios';
+import React, { useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Upload,
+  X,
+  CheckCircle,
+  Scale,
+  Gavel,
+  BookOpen,
+  User,
+  Mail,
+  Lock,
+  GraduationCap,
+} from "lucide-react";
+import { register } from "../../services/lawyer/authService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { AxiosResponse } from "axios";
 
 interface FormData {
   fullName: string;
@@ -18,73 +31,84 @@ interface FormData {
 }
 
 const specializations = [
-  'Criminal Law',
-  'Corporate Law',
-  'Family Law',
-  'Immigration Law',
-  'Real Estate Law',
-  'Intellectual Property',
-  'Tax Law',
-  'Labor Law',
-  'Environmental Law',
-  'Constitutional Law'
+  "Criminal Law",
+  "Corporate Law",
+  "Family Law",
+  "Immigration Law",
+  "Real Estate Law",
+  "Intellectual Property",
+  "Tax Law",
+  "Labor Law",
+  "Environmental Law",
+  "Constitutional Law",
 ];
 
 const experienceOptions = [
-  '0-2 years',
-  '3-5 years',
-  '6-10 years',
-  '11-15 years',
-  '16-20 years',
-  '20+ years'
+  "0-2 years",
+  "3-5 years",
+  "6-10 years",
+  "11-15 years",
+  "16-20 years",
+  "20+ years",
 ];
 
 function SignupForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    experience: '',
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    experience: "",
     specialization: [],
-    barCouncilNumber: '',
+    barCouncilNumber: "",
     lawDegree: null,
-    barCertificate: null
+    barCertificate: null,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [dragActive, setDragActive] = useState<string | null>(null);
 
-  const updateFormData = (field: keyof FormData, value: string | string[] | File | null) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const updateFormData = (
+    field: keyof FormData,
+    value: string | string[] | File | null
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (step === 1) {
-      if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+      if (!formData.fullName.trim())
+        newErrors.fullName = "Full name is required";
       else if (!/^[A-Za-z\s]+$/.test(formData.fullName.trim())) {
-        newErrors.fullName = 'Full name must contain only alphabets';
+        newErrors.fullName = "Full name must contain only alphabets";
       }
-      if (!formData.email.trim()) newErrors.email = 'Email is required';
-      else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
-      if (!formData.password) newErrors.password = 'Password is required';
-      else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
-      if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+      if (!formData.email.trim()) newErrors.email = "Email is required";
+      else if (!/\S+@\S+\.\S+/.test(formData.email))
+        newErrors.email = "Invalid email format";
+      if (!formData.password) newErrors.password = "Password is required";
+      else if (formData.password.length < 8)
+        newErrors.password = "Password must be at least 8 characters";
+      if (formData.password !== formData.confirmPassword)
+        newErrors.confirmPassword = "Passwords do not match";
     } else if (step === 2) {
-      if (!formData.experience) newErrors.experience = 'Experience is required';
-      if (formData.specialization.length === 0) newErrors.specialization = 'At least one specialization is required';
-      if (!formData.barCouncilNumber.trim()) newErrors.barCouncilNumber = 'Bar Council Number is required';
+      if (!formData.experience) newErrors.experience = "Experience is required";
+      if (formData.specialization.length === 0)
+        newErrors.specialization = "At least one specialization is required";
+      if (!formData.barCouncilNumber.trim())
+        newErrors.barCouncilNumber = "Bar Council Number is required";
     } else if (step === 3) {
-      if (!formData.lawDegree) newErrors.lawDegree = 'Law degree certificate is required';
-      if (!formData.barCertificate) newErrors.barCertificate = 'Bar council certificate is required';
+      if (!formData.lawDegree)
+        newErrors.lawDegree = "Law degree certificate is required";
+      if (!formData.barCertificate)
+        newErrors.barCertificate = "Bar council certificate is required";
     }
 
     setErrors(newErrors);
@@ -93,51 +117,57 @@ function SignupForm() {
 
   const nextStep = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 3));
+      setCurrentStep((prev) => Math.min(prev + 1, 3));
     }
   };
 
   const prevStep = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 1));
+    setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
   const handleSubmit = () => {
     if (validateStep(3)) {
       const data = new FormData();
 
-      data.append('name', formData.fullName);
-      data.append('email', formData.email);
-      data.append('password', formData.password);
-      data.append('experience', formData.experience);
-      data.append('barCouncilNumber', formData.barCouncilNumber);
+      data.append("name", formData.fullName);
+      data.append("email", formData.email);
+      data.append("password", formData.password);
+      data.append("experience", formData.experience);
+      data.append("barCouncilNumber", formData.barCouncilNumber);
 
       formData.specialization.forEach((spec) => {
-        data.append('specialization[]', spec);
+        data.append("specialization[]", spec);
       });
 
-      if (formData.lawDegree) data.append('files', formData.lawDegree);
-      if (formData.barCertificate) data.append('files', formData.barCertificate);
+      if (formData.lawDegree) data.append("files", formData.lawDegree);
+      if (formData.barCertificate)
+        data.append("files", formData.barCertificate);
 
-      register(data).then((response: AxiosResponse) => {
-        toast.success(response.data.message)
-        navigate('/auth/lawyer/signin')
-      }).catch((error) => {
-        toast.error(error.response.data.message)
-      })
+      register(data)
+        .then((response: AxiosResponse) => {
+          toast.success(response.data.message);
+          navigate("/auth/lawyer/signin");
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
     }
   };
 
   const handleDrag = (e: React.DragEvent, type: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
+    if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(type);
-    } else if (e.type === 'dragleave') {
+    } else if (e.type === "dragleave") {
       setDragActive(null);
     }
   };
 
-  const handleDrop = (e: React.DragEvent, type: 'lawDegree' | 'barCertificate') => {
+  const handleDrop = (
+    e: React.DragEvent,
+    type: "lawDegree" | "barCertificate"
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(null);
@@ -147,7 +177,10 @@ function SignupForm() {
     }
   };
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>, type: 'lawDegree' | 'barCertificate') => {
+  const handleFileInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "lawDegree" | "barCertificate"
+  ) => {
     if (e.target.files && e.target.files[0]) {
       updateFormData(type, e.target.files[0]);
     }
@@ -156,22 +189,34 @@ function SignupForm() {
   const toggleSpecialization = (spec: string) => {
     const current = formData.specialization;
     if (current.includes(spec)) {
-      updateFormData('specialization', current.filter(s => s !== spec));
+      updateFormData(
+        "specialization",
+        current.filter((s) => s !== spec)
+      );
     } else {
-      updateFormData('specialization', [...current, spec]);
+      updateFormData("specialization", [...current, spec]);
     }
   };
 
-  const FileUploadArea = ({ type, file, label }: { type: 'lawDegree' | 'barCertificate', file: File | null, label: string }) => (
+  const FileUploadArea = ({
+    type,
+    file,
+    label,
+  }: {
+    type: "lawDegree" | "barCertificate";
+    file: File | null;
+    label: string;
+  }) => (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-white/90">{label}</label>
       <div
-        className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 ${dragActive === type
-            ? 'border-blue-400 bg-blue-400/10'
+        className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 ${
+          dragActive === type
+            ? "border-blue-400 bg-blue-400/10"
             : file
-              ? 'border-green-400 bg-green-400/10'
-              : 'border-white/30 hover:border-white/50'
-          }`}
+            ? "border-green-400 bg-green-400/10"
+            : "border-white/30 hover:border-white/50"
+        }`}
         onDragEnter={(e) => handleDrag(e, type)}
         onDragLeave={(e) => handleDrag(e, type)}
         onDragOver={(e) => handleDrag(e, type)}
@@ -190,7 +235,9 @@ function SignupForm() {
               <CheckCircle className="h-8 w-8 text-green-400" />
               <div>
                 <p className="text-green-400 font-medium">{file.name}</p>
-                <p className="text-white/60 text-sm">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <p className="text-white/60 text-sm">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB
+                </p>
               </div>
               <button
                 type="button"
@@ -205,7 +252,9 @@ function SignupForm() {
               <Upload className="h-8 w-8 text-white/60 mx-auto mb-2" />
               <p className="text-white/90 font-medium">Drop your file here</p>
               <p className="text-white/60 text-sm">or click to browse</p>
-              <p className="text-white/40 text-xs mt-1">PDF, JPG, PNG up to 10MB</p>
+              <p className="text-white/40 text-xs mt-1">
+                PDF, JPG, PNG up to 10MB
+              </p>
             </div>
           )}
         </div>
@@ -221,24 +270,27 @@ function SignupForm() {
           <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-10 w-10 text-green-400" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Application Submitted!</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Application Submitted!
+          </h2>
           <p className="text-white/80 mb-6">
-            Thank you for your application. We'll review your credentials and get back to you within 24-48 hours.
+            Thank you for your application. We'll review your credentials and
+            get back to you within 24-48 hours.
           </p>
           <button
             onClick={() => {
               setIsSubmitted(false);
               setCurrentStep(1);
               setFormData({
-                fullName: '',
-                email: '',
-                password: '',
-                confirmPassword: '',
-                experience: '',
+                fullName: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                experience: "",
                 specialization: [],
-                barCouncilNumber: '',
+                barCouncilNumber: "",
                 lawDegree: null,
-                barCertificate: null
+                barCertificate: null,
               });
             }}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
@@ -268,7 +320,9 @@ function SignupForm() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold">LegalAccess Pro</h1>
-                <p className="text-blue-200 text-sm">Professional Legal Platform</p>
+                <p className="text-blue-200 text-sm">
+                  Professional Legal Platform
+                </p>
               </div>
             </div>
           </div>
@@ -277,7 +331,9 @@ function SignupForm() {
             <blockquote className="text-xl font-light italic border-l-4 border-blue-400 pl-6">
               "Justice delayed is justice denied."
             </blockquote>
-            <p className="text-lg font-medium">Secure legal access for professionals</p>
+            <p className="text-lg font-medium">
+              Secure legal access for professionals
+            </p>
             <div className="flex items-center space-x-8 text-sm text-blue-200">
               <div className="flex items-center space-x-2">
                 <Gavel className="h-4 w-4" />
@@ -300,17 +356,27 @@ function SignupForm() {
             <div className="flex items-center justify-between mb-4">
               {[1, 2, 3].map((step) => (
                 <div key={step} className="flex items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${step < currentStep
-                      ? 'bg-green-500 text-white'
-                      : step === currentStep
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white/20 text-white/60'
-                    }`}>
-                    {step < currentStep ? <CheckCircle className="h-5 w-5" /> : step}
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+                      step < currentStep
+                        ? "bg-green-500 text-white"
+                        : step === currentStep
+                        ? "bg-blue-600 text-white"
+                        : "bg-white/20 text-white/60"
+                    }`}
+                  >
+                    {step < currentStep ? (
+                      <CheckCircle className="h-5 w-5" />
+                    ) : (
+                      step
+                    )}
                   </div>
                   {step < 3 && (
-                    <div className={`w-20 h-1 mx-2 transition-all duration-300 ${step < currentStep ? 'bg-green-500' : 'bg-white/20'
-                      }`} />
+                    <div
+                      className={`w-20 h-1 mx-2 transition-all duration-300 ${
+                        step < currentStep ? "bg-green-500" : "bg-white/20"
+                      }`}
+                    />
                   )}
                 </div>
               ))}
@@ -327,69 +393,105 @@ function SignupForm() {
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold text-white mb-2">Create Your Account</h2>
-                  <p className="text-white/70">Join our professional legal network</p>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    Create Your Account
+                  </h2>
+                  <p className="text-white/70">
+                    Join our professional legal network
+                  </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">Full Name</label>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Full Name
+                    </label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
                       <input
                         type="text"
                         value={formData.fullName}
-                        onChange={(e) => updateFormData('fullName', e.target.value)}
+                        onChange={(e) =>
+                          updateFormData("fullName", e.target.value)
+                        }
                         className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         placeholder="Enter your full name"
                       />
                     </div>
-                    {errors.fullName && <p className="text-red-400 text-sm mt-1">{errors.fullName}</p>}
+                    {errors.fullName && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.fullName}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">Email</label>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Email
+                    </label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
                       <input
                         type="email"
                         value={formData.email}
-                        onChange={(e) => updateFormData('email', e.target.value)}
+                        onChange={(e) =>
+                          updateFormData("email", e.target.value)
+                        }
                         className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         placeholder="Enter your email"
                       />
                     </div>
-                    {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+                    {errors.email && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">Password</label>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Password
+                    </label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
                       <input
                         type="password"
                         value={formData.password}
-                        onChange={(e) => updateFormData('password', e.target.value)}
+                        onChange={(e) =>
+                          updateFormData("password", e.target.value)
+                        }
                         className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         placeholder="Create a password"
                       />
                     </div>
-                    {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
+                    {errors.password && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.password}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">Confirm Password</label>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Confirm Password
+                    </label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
                       <input
                         type="password"
                         value={formData.confirmPassword}
-                        onChange={(e) => updateFormData('confirmPassword', e.target.value)}
+                        onChange={(e) =>
+                          updateFormData("confirmPassword", e.target.value)
+                        }
                         className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         placeholder="Confirm your password"
                       />
                     </div>
-                    {errors.confirmPassword && <p className="text-red-400 text-sm mt-1">{errors.confirmPassword}</p>}
+                    {errors.confirmPassword && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.confirmPassword}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -406,59 +508,90 @@ function SignupForm() {
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold text-white mb-2">Your Legal Details</h2>
-                  <p className="text-white/70">Tell us about your professional background</p>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    Your Legal Details
+                  </h2>
+                  <p className="text-white/70">
+                    Tell us about your professional background
+                  </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">Years of Experience</label>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Years of Experience
+                    </label>
                     <select
                       value={formData.experience}
-                      onChange={(e) => updateFormData('experience', e.target.value)}
+                      onChange={(e) =>
+                        updateFormData("experience", e.target.value)
+                      }
                       className="w-full py-3 px-4 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     >
-                      <option value="" className="bg-slate-800">Select experience level</option>
+                      <option value="" className="bg-slate-800">
+                        Select experience level
+                      </option>
                       {experienceOptions.map((exp) => (
-                        <option key={exp} value={exp} className="bg-slate-800">{exp}</option>
+                        <option key={exp} value={exp} className="bg-slate-800">
+                          {exp}
+                        </option>
                       ))}
                     </select>
-                    {errors.experience && <p className="text-red-400 text-sm mt-1">{errors.experience}</p>}
+                    {errors.experience && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.experience}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">Areas of Specialization</label>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Areas of Specialization
+                    </label>
                     <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
                       {specializations.map((spec) => (
                         <button
                           key={spec}
                           type="button"
                           onClick={() => toggleSpecialization(spec)}
-                          className={`text-left py-2 px-3 rounded-lg text-sm transition-all ${formData.specialization.includes(spec)
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-white/10 text-white/80 hover:bg-white/20'
-                            }`}
+                          className={`text-left py-2 px-3 rounded-lg text-sm transition-all ${
+                            formData.specialization.includes(spec)
+                              ? "bg-blue-600 text-white"
+                              : "bg-white/10 text-white/80 hover:bg-white/20"
+                          }`}
                         >
                           {spec}
                         </button>
                       ))}
                     </div>
-                    {errors.specialization && <p className="text-red-400 text-sm mt-1">{errors.specialization}</p>}
+                    {errors.specialization && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.specialization}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">Bar Council Number</label>
+                    <label className="block text-sm font-medium text-white/90 mb-2">
+                      Bar Council Number
+                    </label>
                     <div className="relative">
                       <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
                       <input
                         type="text"
                         value={formData.barCouncilNumber}
-                        onChange={(e) => updateFormData('barCouncilNumber', e.target.value)}
+                        onChange={(e) =>
+                          updateFormData("barCouncilNumber", e.target.value)
+                        }
                         className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         placeholder="Enter your bar council number"
                       />
                     </div>
-                    {errors.barCouncilNumber && <p className="text-red-400 text-sm mt-1">{errors.barCouncilNumber}</p>}
+                    {errors.barCouncilNumber && (
+                      <p className="text-red-400 text-sm mt-1">
+                        {errors.barCouncilNumber}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -484,8 +617,12 @@ function SignupForm() {
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold text-white mb-2">Upload Certificates</h2>
-                  <p className="text-white/70">Verify your credentials with official documents</p>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    Upload Certificates
+                  </h2>
+                  <p className="text-white/70">
+                    Verify your credentials with official documents
+                  </p>
                 </div>
 
                 <div className="space-y-6">

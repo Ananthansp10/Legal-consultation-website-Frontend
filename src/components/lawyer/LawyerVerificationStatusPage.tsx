@@ -1,28 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Clock,
   CheckCircle,
   Search,
   User,
   Mail,
-  AlertCircle
-} from 'lucide-react';
+  AlertCircle,
+} from "lucide-react";
 
 function LawyerVerificationStatusPage() {
   const [isVisible, setIsVisible] = useState(false);
-  const [statusMessage, setStatusMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
-    setStatusMessage("Your verification is pending. You'll be notified via email once it's approved.");
+    setStatusMessage(
+      "Your verification is pending. You'll be notified via email once it's approved."
+    );
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-4">
       <div
-        className={`w-full max-w-3xl bg-white/30 border border-white/40 shadow-2xl rounded-3xl p-8 backdrop-blur-xl transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-          }`}
+        className={`w-full max-w-3xl bg-white/30 border border-white/40 shadow-2xl rounded-3xl p-8 backdrop-blur-xl transition-all duration-1000 ease-out ${
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+        }`}
       >
         {/* Header Icon */}
         <div className="text-center mb-6">
@@ -67,7 +70,9 @@ function LawyerVerificationStatusPage() {
                 <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-md mb-2">
                   <CheckCircle size={20} className="text-white" />
                 </div>
-                <span className="text-xs font-medium text-slate-700 text-center">Sign Up</span>
+                <span className="text-xs font-medium text-slate-700 text-center">
+                  Sign Up
+                </span>
               </div>
 
               {/* Step 2 */}
@@ -75,7 +80,9 @@ function LawyerVerificationStatusPage() {
                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-md mb-2 animate-pulse">
                   <Search size={20} className="text-white" />
                 </div>
-                <span className="text-xs font-medium text-slate-700 text-center">Admin Review</span>
+                <span className="text-xs font-medium text-slate-700 text-center">
+                  Admin Review
+                </span>
               </div>
 
               {/* Step 3 */}
@@ -83,7 +90,9 @@ function LawyerVerificationStatusPage() {
                 <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center shadow-md mb-2">
                   <CheckCircle size={20} className="text-gray-500" />
                 </div>
-                <span className="text-xs font-medium text-gray-500 text-center">Approval</span>
+                <span className="text-xs font-medium text-gray-500 text-center">
+                  Approval
+                </span>
               </div>
 
               {/* Step 4 */}
@@ -91,7 +100,9 @@ function LawyerVerificationStatusPage() {
                 <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center shadow-md mb-2">
                   <User size={20} className="text-gray-500" />
                 </div>
-                <span className="text-xs font-medium text-gray-500 text-center">Dashboard</span>
+                <span className="text-xs font-medium text-gray-500 text-center">
+                  Dashboard
+                </span>
               </div>
             </div>
           </div>
@@ -102,22 +113,22 @@ function LawyerVerificationStatusPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="text-yellow-600 mt-1" size={20} />
             <p className="text-sm text-slate-700">
-              <span className="font-semibold">Reason:</span>{' '}
-              Qualification documents are under review by the admin.
+              <span className="font-semibold">Reason:</span> Qualification
+              documents are under review by the admin.
             </p>
           </div>
           <div className="flex items-start gap-3">
             <Clock className="text-blue-500 mt-1" size={20} />
             <p className="text-sm text-slate-700">
-              <span className="font-semibold">Estimated Time:</span>{' '}
-              Usually within 24 hours of submission.
+              <span className="font-semibold">Estimated Time:</span> Usually
+              within 24 hours of submission.
             </p>
           </div>
           <div className="flex items-start gap-3">
             <Mail className="text-green-600 mt-1" size={20} />
             <p className="text-sm text-slate-700">
-              <span className="font-semibold">Notification:</span>{' '}
-              You will receive an email once your verification is complete.
+              <span className="font-semibold">Notification:</span> You will
+              receive an email once your verification is complete.
             </p>
           </div>
         </div>

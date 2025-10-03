@@ -1,67 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { Menu, X, User, Settings, LogOut, Key } from 'lucide-react';
-import { useSelector } from 'react-redux';
-import { logout } from '../../services/lawyer/authService';
-import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import { lawyerLogout } from '../../redux/slices/lawyerAuthSlice';
-import { useNavigate } from 'react-router-dom';
-import { RootState } from '../../redux/store';
-import { getProfileImage } from '../../services/lawyer/lawyerProfileService';
+import React, { useEffect, useState } from "react";
+import { Menu, X, User, LogOut, Key } from "lucide-react";
+import { useSelector } from "react-redux";
+import { logout } from "../../services/lawyer/authService";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { lawyerLogout } from "../../redux/slices/lawyerAuthSlice";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "../../redux/store";
+import { getProfileImage } from "../../services/lawyer/lawyerProfileService";
 
 const LawyerNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState('')
+  const [profileImage, setProfileImage] = useState("");
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
 
-  const lawyer = useSelector((state: RootState) => state.lawyerAuth.lawyer)
+  const lawyer = useSelector((state: RootState) => state.lawyerAuth.lawyer);
 
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function logoutLawyer() {
-    logout().then((response) => {
-      dispatch(lawyerLogout())
-      toast.success(response.data.message)
-      navigate('/auth/lawyer/signin')
-    }).catch((error) => {
-      toast.error(error.response.data.message)
-    })
+    logout()
+      .then((response) => {
+        dispatch(lawyerLogout());
+        toast.success(response.data.message);
+        navigate("/auth/lawyer/signin");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
   }
 
   function pageNavigate(link: string) {
-    if (link == 'Schedule') {
-      navigate('/lawyer/add-availablity')
+    if (link == "Schedule") {
+      navigate("/lawyer/add-availablity");
     }
-    if (link == 'Appointments') {
-      navigate('/lawyer/appointments')
-    }
-
-    if (link == 'Home') {
-      navigate('/lawyer-dashboard')
+    if (link == "Appointments") {
+      navigate("/lawyer/appointments");
     }
 
-    if (link == 'Subscription Plans') {
-      navigate('/lawyer/subscription-plans')
+    if (link == "Home") {
+      navigate("/lawyer-dashboard");
     }
 
-    if (link == 'Chat') {
-      navigate('/lawyer/chat-list')
+    if (link == "Subscription Plans") {
+      navigate("/lawyer/subscription-plans");
     }
 
-    if (link == 'Reviews') {
-      navigate(`/lawyer/reviews/${lawyer?._id}/lawyer`)
+    if (link == "Chat") {
+      navigate("/lawyer/chat-list");
+    }
+
+    if (link == "Reviews") {
+      navigate(`/lawyer/reviews/${lawyer?._id}/lawyer`);
     }
   }
 
   useEffect(() => {
     getProfileImage(lawyer?._id!).then((response) => {
-      setProfileImage(response.data.data)
-    })
-  }, [])
+      setProfileImage(response.data.data);
+    });
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -69,13 +71,25 @@ const LawyerNavbar: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 onClick={() => navigate('/lawyer-dashboard')} className="text-2xl font-bold text-slate-800">LegalConnect</h1>
+            <h1
+              onClick={() => navigate("/lawyer-dashboard")}
+              className="text-2xl font-bold text-slate-800"
+            >
+              LegalConnect
+            </h1>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {['Home', 'Appointments', 'Schedule', 'Reviews', 'Subscription Plans', 'Chat'].map((item) => (
+              {[
+                "Home",
+                "Appointments",
+                "Schedule",
+                "Reviews",
+                "Subscription Plans",
+                "Chat",
+              ].map((item) => (
                 <button
                   key={item}
                   onClick={() => pageNavigate(item)}
@@ -100,28 +114,32 @@ const LawyerNavbar: React.FC = () => {
                     src={profileImage}
                     alt="Profile"
                   />
-                  <span className="text-sm font-medium text-slate-700">{lawyer?.name}</span>
+                  <span className="text-sm font-medium text-slate-700">
+                    {lawyer?.name}
+                  </span>
                 </button>
 
                 {/* Profile Dropdown */}
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md rounded-md shadow-lg border border-gray-200">
                     <div className="py-1">
-                      <button onClick={() => navigate('/lawyer-profile-page')}
+                      <button
+                        onClick={() => navigate("/lawyer-profile-page")}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         <User className="mr-3 h-4 w-4" />
                         My Profile
                       </button>
                       <button
-                        onClick={() => navigate('/lawyer/reset-password')}
+                        onClick={() => navigate("/lawyer/reset-password")}
                         className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         <Key className="mr-3 h-4 w-4" />
                         Reset Password
                       </button>
                       <button
-                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-red-50 hover:text-red-600 transition-colors" onClick={logoutLawyer}
+                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-red-50 hover:text-red-600 transition-colors"
+                        onClick={logoutLawyer}
                       >
                         <LogOut className="mr-3 h-4 w-4" />
                         Logout
@@ -139,7 +157,11 @@ const LawyerNavbar: React.FC = () => {
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-slate-600 hover:text-blue-600 hover:bg-white/50 transition-colors duration-200"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -149,15 +171,17 @@ const LawyerNavbar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white/90 backdrop-blur-md border-t border-gray-200">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {['Home', 'Appointments', 'Schedule', 'Reviews', 'Chat'].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors"
-              >
-                {item}
-              </a>
-            ))}
+            {["Home", "Appointments", "Schedule", "Reviews", "Chat"].map(
+              (item) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="text-slate-600 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                >
+                  {item}
+                </a>
+              )
+            )}
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
             <div className="flex items-center px-5">
@@ -167,12 +191,17 @@ const LawyerNavbar: React.FC = () => {
                 alt="Profile"
               />
               <div className="ml-3">
-                <div className="text-base font-medium text-slate-800">Ananthan SP</div>
-                <div className="text-sm font-medium text-slate-500">Legal Consultant</div>
+                <div className="text-base font-medium text-slate-800">
+                  Ananthan SP
+                </div>
+                <div className="text-sm font-medium text-slate-500">
+                  Legal Consultant
+                </div>
               </div>
             </div>
             <div className="mt-3 space-y-1 px-2">
-              <button onClick={() => navigate('/lawyer-profile-page')}
+              <button
+                onClick={() => navigate("/lawyer-profile-page")}
                 className="flex items-center px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
               >
                 <User className="mr-3 h-5 w-5" />

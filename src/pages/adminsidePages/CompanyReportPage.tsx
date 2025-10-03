@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react';
-import { FileDown, DollarSign, Calendar, Users, UserCheck, Filter } from 'lucide-react';
-import { getReports } from '../../services/admin/adminService';
+import { useEffect, useState } from "react";
+import {
+  FileDown,
+  DollarSign,
+  Calendar,
+  Users,
+  UserCheck,
+  Filter,
+} from "lucide-react";
+import { getReports } from "../../services/admin/adminService";
 
 interface SubscriptionReportData {
   _id: string;
-  specializationCount: number
+  specializationCount: number;
 }
 
 interface StateReportData {
@@ -22,7 +29,7 @@ interface LawyerDetailsData {
 }
 
 interface RevenueChartData {
-  _id: { day: number, month: number | string, year: number, week: number };
+  _id: { day: number; month: number | string; year: number; week: number };
   totalRevenue: number;
   year: number;
   month: string;
@@ -45,39 +52,19 @@ interface KPIData {
   specializationChart: SpecializationChartData[];
 }
 
-interface ChartData {
-  monthlyRevenue: { month: string; revenue: number }[];
-  appointmentsBySpecialization: { specialization: string; count: number; color: string }[];
-  lawyersByPlan: { plan: string; count: number }[];
-  usersByState: { state: string; count: number }[];
-}
-
-interface LawyerData {
-  id: number;
-  name: string;
-  specialization: string;
-  plan: string;
-  revenue: number;
-  appointments: number;
-  joinDate: string;
-}
-
 function convertToDate(date: Date) {
-  return new Date(date).toISOString().split('T')[0]
+  return new Date(date).toISOString().split("T")[0];
 }
-
 
 function getColour(count: number) {
   if (count < 2) {
-    return '#3B82F6'
+    return "#3B82F6";
   } else if (count == 3) {
-    return '#F97316'
+    return "#F97316";
   } else {
-    return '#14B8A6'
+    return "#14B8A6";
   }
 }
-
-
 
 const generatePDFReport = (
   kpiData: KPIData | null,
@@ -223,12 +210,12 @@ const generatePDFReport = (
     <body>
       <div class="header">
         <h1>Overall Report</h1>
-        <p>Generated on ${new Date().toLocaleDateString('en-IN', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })}</p>
+        <p>Generated on ${new Date().toLocaleDateString("en-IN", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}</p>
       </div>
 
       <div class="kpi-section">
@@ -252,38 +239,51 @@ const generatePDFReport = (
 
       <h2 class="section-title">Monthly Revenue Breakdown</h2>
       <div class="chart-data">
-        ${revenueData?.map(item =>
-    `<div class="chart-item">
-            <span>${dateRange == 'Daily' ? item._id.day + '-' + item._id.month + '-' + item._id.year
-      : dateRange === 'Weekly'
-        ? 'Week ' + item._id.week + ', ' + item._id.year
-        : dateRange === 'Monthly'
-          ? item.month + ' ' + item.year
-          : dateRange === 'Yearly'
-            ? item.year : item.totalRevenue}</span>
+        ${revenueData
+          ?.map(
+            (item) =>
+              `<div class="chart-item">
+            <span>${
+              dateRange == "Daily"
+                ? item._id.day + "-" + item._id.month + "-" + item._id.year
+                : dateRange === "Weekly"
+                ? "Week " + item._id.week + ", " + item._id.year
+                : dateRange === "Monthly"
+                ? item.month + " " + item.year
+                : dateRange === "Yearly"
+                ? item.year
+                : item.totalRevenue
+            }</span>
             <span>₹${item.totalRevenue.toLocaleString()}</span>
           </div>`
-  ).join('')}
+          )
+          .join("")}
       </div>
 
       <h2 class="section-title">Appointments by Specialization</h2>
       <div class="chart-data">
-        ${specializationData?.map(item =>
-    `<div class="chart-item">
+        ${specializationData
+          ?.map(
+            (item) =>
+              `<div class="chart-item">
             <span>${item._id}</span>
             <span>${item.specializationCount} appointments</span>
           </div>`
-  ).join('')}
+          )
+          .join("")}
       </div>
 
       <h2 class="section-title">Lawyer Subscriptions by Plan</h2>
       <div class="chart-data">
-        ${sunscriptionPlanData?.map(item =>
-    `<div class="chart-item">
+        ${sunscriptionPlanData
+          ?.map(
+            (item) =>
+              `<div class="chart-item">
             <span>${item._id}</span>
             <span>${item.specializationCount} lawyers</span>
           </div>`
-  ).join('')}
+          )
+          .join("")}
       </div>
 
       <h2 class="section-title">Lawyer Details</h2>
@@ -299,16 +299,21 @@ const generatePDFReport = (
           </tr>
         </thead>
         <tbody>
-          ${lawyerData?.map(lawyer =>
-    `<tr>
+          ${lawyerData
+            ?.map(
+              (lawyer) =>
+                `<tr>
               <td>${lawyer?.name}</td>
               <td>${lawyer?.specialization}</td>
-              <td><span class="plan-badge plan-${lawyer?.planName[0]}">${lawyer?.planName[0]}</span></td>
+              <td><span class="plan-badge plan-${lawyer?.planName[0]}">${
+                  lawyer?.planName[0]
+                }</span></td>
               <td>₹${lawyer?.totalRevenue?.toLocaleString()}</td>
               <td>${lawyer?.totalAppointments}</td>
               <td>${lawyer?.joinDate}</td>
             </tr>`
-  ).join('')}
+            )
+            .join("")}
         </tbody>
       </table>
 
@@ -321,15 +326,15 @@ const generatePDFReport = (
   `;
 
   // Create a Blob with the HTML content
-  const blob = new Blob([html], { type: 'text/html' });
+  const blob = new Blob([html], { type: "text/html" });
 
   // Create a temporary URL for the blob
   const url = URL.createObjectURL(blob);
 
   // Create a temporary anchor element and trigger download
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = `overall-report-${new Date().toISOString().split('T')[0]}.html`;
+  a.download = `overall-report-${new Date().toISOString().split("T")[0]}.html`;
   document.body.appendChild(a);
   a.click();
 
@@ -338,48 +343,53 @@ const generatePDFReport = (
   URL.revokeObjectURL(url);
 };
 function CompanyReportPage() {
-  const [dateRange, setDateRange] = useState('Daily');
-  const [specialization, setSpecialization] = useState('All');
+  const [dateRange, setDateRange] = useState("Daily");
+  const [specialization, setSpecialization] = useState("All");
 
-  const [reports, setReports] = useState<KPIData | null>()
-
+  const [reports, setReports] = useState<KPIData | null>();
 
   useEffect(() => {
     getReports(dateRange, specialization).then((response) => {
-      console.log(response.data.data)
-      setReports(response.data.data)
-    })
-  }, [dateRange, specialization])
+      console.log(response.data.data);
+      setReports(response.data.data);
+    });
+  }, [dateRange, specialization]);
 
   const handlePDFDownload = () => {
-    generatePDFReport(reports ? reports : null, reports?.revenueDateChart || [], reports?.specializationChart || [], reports?.subscriptionPlanReport || [], reports?.lawyerDetails, dateRange);
+    generatePDFReport(
+      reports ? reports : null,
+      reports?.revenueDateChart || [],
+      reports?.specializationChart || [],
+      reports?.subscriptionPlanReport || [],
+      reports?.lawyerDetails,
+      dateRange
+    );
   };
-
 
   const summaryCards = [
     {
-      title: 'Total Revenue',
-      value: `₹${reports?.totalRevenue.toLocaleString()}` || '',
+      title: "Total Revenue",
+      value: `₹${reports?.totalRevenue.toLocaleString()}` || "",
       icon: DollarSign,
-      color: 'bg-teal-500',
+      color: "bg-teal-500",
     },
     {
-      title: 'Total Appointments',
-      value: reports?.totalAppointments.toLocaleString() || '',
+      title: "Total Appointments",
+      value: reports?.totalAppointments.toLocaleString() || "",
       icon: Calendar,
-      color: 'bg-blue-500',
+      color: "bg-blue-500",
     },
     {
-      title: 'Total Subscribed Lawyers',
-      value: reports?.totalSubscribedLawyers.toLocaleString() || '',
+      title: "Total Subscribed Lawyers",
+      value: reports?.totalSubscribedLawyers.toLocaleString() || "",
       icon: UserCheck,
-      color: 'bg-green-500',
+      color: "bg-green-500",
     },
     {
-      title: 'Total Users',
-      value: reports?.totalUsers.toLocaleString() || '',
+      title: "Total Users",
+      value: reports?.totalUsers.toLocaleString() || "",
       icon: Users,
-      color: 'bg-purple-500',
+      color: "bg-purple-500",
     },
   ];
 
@@ -412,8 +422,12 @@ function CompanyReportPage() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">{card.title}</p>
-                  <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+                  <p className="text-sm font-medium text-gray-600 mb-1">
+                    {card.title}
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {card.value}
+                  </p>
                 </div>
                 <div className={`p-3 rounded-full ${card.color}`}>
                   <card.icon className="h-6 w-6 text-white" />
@@ -474,35 +488,55 @@ function CompanyReportPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Monthly Revenue Line Chart */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Revenue</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+              Revenue
+            </h3>
             <div className="h-64 flex items-end justify-between space-x-2">
-              {reports?.revenueDateChart && reports.revenueDateChart.length > 0 ? (
+              {reports?.revenueDateChart &&
+              reports.revenueDateChart.length > 0 ? (
                 (() => {
-                  const maxRevenue = Math.max(...reports.revenueDateChart.map(r => r.totalRevenue));
+                  const maxRevenue = Math.max(
+                    ...reports.revenueDateChart.map((r) => r.totalRevenue)
+                  );
                   return reports.revenueDateChart.map((item, index) => (
-                    <div key={index} className="flex-1 flex flex-col items-center">
+                    <div
+                      key={index}
+                      className="flex-1 flex flex-col items-center"
+                    >
                       <div
                         className="w-full bg-teal-500 rounded-t transition-all duration-500 hover:bg-teal-600"
                         style={{
                           height: `${(item.totalRevenue / maxRevenue) * 200}px`,
-                          minHeight: '4px'
+                          minHeight: "4px",
                         }}
                       ></div>
                       <span className="text-xs text-gray-600 mt-2 whitespace-nowrap">
-                        {dateRange == 'Daily' ? `${item._id.day}/${item._id.month}/${item._id.year}` : dateRange == 'Weekly' ? `${item._id.week}/${item._id.year}` : dateRange == 'Monthly' ? `${item._id.week}/${item._id.year}` : dateRange == 'Yearly' ? `${item.year}` : `${item.totalRevenue}`}
+                        {dateRange == "Daily"
+                          ? `${item._id.day}/${item._id.month}/${item._id.year}`
+                          : dateRange == "Weekly"
+                          ? `${item._id.week}/${item._id.year}`
+                          : dateRange == "Monthly"
+                          ? `${item._id.week}/${item._id.year}`
+                          : dateRange == "Yearly"
+                          ? `${item.year}`
+                          : `${item.totalRevenue}`}
                       </span>
                     </div>
                   ));
                 })()
               ) : (
-                <div className="text-gray-400 text-sm">No revenue data for the selected range</div>
+                <div className="text-gray-400 text-sm">
+                  No revenue data for the selected range
+                </div>
               )}
             </div>
           </div>
 
           {/* Appointments by Specialization Donut Chart */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Appointments by Specialization</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+              Appointments by Specialization
+            </h3>
             <div className="flex items-center justify-center h-64">
               <div className="relative">
                 <svg width="180" height="180" className="transform -rotate-90">
@@ -515,11 +549,16 @@ function CompanyReportPage() {
                     strokeWidth="20"
                   />
                   {(reports?.specializationChart || []).map((item, index) => {
-                    const total = reports?.specializationChart.reduce((sum, d) => sum + d.specializationCount, 0) || 1;
+                    const total =
+                      reports?.specializationChart.reduce(
+                        (sum, d) => sum + d.specializationCount,
+                        0
+                      ) || 1;
                     const percentage = (item.specializationCount / total) * 100;
                     const circumference = 2 * Math.PI * 70;
                     const strokeDasharray = circumference;
-                    const strokeDashoffset = circumference - (percentage / 100) * circumference;
+                    const strokeDashoffset =
+                      circumference - (percentage / 100) * circumference;
 
                     return (
                       <circle
@@ -541,7 +580,10 @@ function CompanyReportPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <p className="text-2xl font-bold text-gray-900">
-                      {reports?.specializationChart.reduce((sum, d) => sum + d.specializationCount, 0)}
+                      {reports?.specializationChart.reduce(
+                        (sum, d) => sum + d.specializationCount,
+                        0
+                      )}
                     </p>
                     <p className="text-sm text-gray-600">Total</p>
                   </div>
@@ -553,7 +595,9 @@ function CompanyReportPage() {
                 <div key={index} className="flex items-center">
                   <div
                     className="w-3 h-3 rounded-full mr-2"
-                    style={{ backgroundColor: getColour(item.specializationCount) }}
+                    style={{
+                      backgroundColor: getColour(item.specializationCount),
+                    }}
                   ></div>
                   <span className="text-sm text-gray-700">{item._id}</span>
                 </div>
@@ -563,19 +607,29 @@ function CompanyReportPage() {
 
           {/* Lawyer Subscriptions by Plan Bar Chart */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Lawyer Subscriptions by Plan</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+              Lawyer Subscriptions by Plan
+            </h3>
             <div className="h-64 flex items-end justify-between space-x-4">
               {reports?.subscriptionPlanReport.map((item, index) => (
                 <div key={index} className="flex-1 flex flex-col items-center">
                   <div
                     className="w-full bg-blue-500 rounded-t transition-all duration-500 hover:bg-blue-600"
                     style={{
-                      height: `${(item.specializationCount / reports.totalSubscribedLawyers) * 200}px`,
-                      minHeight: '4px'
+                      height: `${
+                        (item.specializationCount /
+                          reports.totalSubscribedLawyers) *
+                        200
+                      }px`,
+                      minHeight: "4px",
                     }}
                   ></div>
-                  <span className="text-sm text-gray-700 mt-2 font-medium">{item._id}</span>
-                  <span className="text-xs text-gray-500">{item.specializationCount}</span>
+                  <span className="text-sm text-gray-700 mt-2 font-medium">
+                    {item._id}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {item.specializationCount}
+                  </span>
                 </div>
               ))}
             </div>
@@ -583,20 +637,30 @@ function CompanyReportPage() {
 
           {/* Users by State Horizontal Bar Chart */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Users by State</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+              Users by State
+            </h3>
             <div className="space-y-4">
               {reports?.stateReport.map((item, index) => (
                 <div key={index} className="flex items-center">
-                  <div className="w-20 text-sm text-gray-700 font-medium">{item._id}</div>
+                  <div className="w-20 text-sm text-gray-700 font-medium">
+                    {item._id}
+                  </div>
                   <div className="flex-1 mx-4">
                     <div className="bg-gray-200 rounded-full h-3">
                       <div
                         className="bg-green-500 h-3 rounded-full transition-all duration-500"
-                        style={{ width: `${(item.usersCount / reports.totalUsers) * 100}%` }}
+                        style={{
+                          width: `${
+                            (item.usersCount / reports.totalUsers) * 100
+                          }%`,
+                        }}
                       ></div>
                     </div>
                   </div>
-                  <div className="w-12 text-sm text-gray-600 text-right">{item.usersCount}</div>
+                  <div className="w-12 text-sm text-gray-600 text-right">
+                    {item.usersCount}
+                  </div>
                 </div>
               ))}
             </div>
@@ -606,7 +670,9 @@ function CompanyReportPage() {
         {/* Data Table */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 mb-8 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Lawyer Details</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Lawyer Details
+            </h3>
           </div>
 
           <div className="overflow-x-auto">
@@ -635,9 +701,14 @@ function CompanyReportPage() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {reports?.lawyerDetails.map((lawyer) => (
-                  <tr key={lawyer.name} className="hover:bg-gray-50 transition-colors duration-150">
+                  <tr
+                    key={lawyer.name}
+                    className="hover:bg-gray-50 transition-colors duration-150"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{lawyer.name}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {lawyer.name}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -645,12 +716,15 @@ function CompanyReportPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${lawyer.planName[0] === 'Standard Plan'
-                        ? 'bg-purple-100 text-purple-800'
-                        : lawyer.planName[0] === 'Premium Plan'
-                          ? 'bg-teal-100 text-teal-800'
-                          : 'bg-gray-100 text-gray-800'
-                        }`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          lawyer.planName[0] === "Standard Plan"
+                            ? "bg-purple-100 text-purple-800"
+                            : lawyer.planName[0] === "Premium Plan"
+                            ? "bg-teal-100 text-teal-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
                         {lawyer.planName[0]}
                       </span>
                     </td>
@@ -674,7 +748,8 @@ function CompanyReportPage() {
         <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-lg shadow-sm p-8 text-center text-white">
           <h3 className="text-2xl font-bold mb-4">Generate Complete Report</h3>
           <p className="text-teal-100 mb-6 text-lg">
-            Download a comprehensive PDF report with all charts, data tables, and analytics
+            Download a comprehensive PDF report with all charts, data tables,
+            and analytics
           </p>
           <button
             onClick={handlePDFDownload}

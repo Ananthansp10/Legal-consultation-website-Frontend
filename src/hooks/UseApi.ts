@@ -1,5 +1,3 @@
-
-
 import { AxiosError, AxiosResponse } from "axios";
 import { useState } from "react";
 import { ErrorResponse } from "../interface/errorInterface";
@@ -54,5 +52,4 @@ export function useApi<T = unknown, A extends unknown[] = unknown[]>(
   };
 
   return { data, error, loading, execute };
-
 }

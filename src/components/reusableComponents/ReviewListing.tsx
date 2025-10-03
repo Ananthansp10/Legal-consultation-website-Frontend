@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Star } from 'lucide-react';
-import { useParams } from 'react-router-dom';
-import { getReview } from '../../services/user/userService';
-import Pagination from './Pagination';
-import UserNavbar from '../userside/Navbar';
-import LawyerNavbar from '../lawyer/Navbar';
+import { useEffect, useState } from "react";
+import { Star } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { getReview } from "../../services/user/userService";
+import Pagination from "./Pagination";
+import UserNavbar from "../userside/Navbar";
+import LawyerNavbar from "../lawyer/Navbar";
 
 interface Review {
   userName: string;
@@ -22,27 +22,29 @@ interface ReviewsData {
 function ReviewListing() {
   const { lawyerId, userType } = useParams();
   const [reviews, setReviews] = useState<ReviewsData | null>(null);
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8
-  const totalPages = Math.ceil(reviews?.reviews.length ? reviews.reviews.length / itemsPerPage : 0)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const data = reviews?.reviews.slice(startIndex, endIndex)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+  const totalPages = Math.ceil(
+    reviews?.reviews.length ? reviews.reviews.length / itemsPerPage : 0
+  );
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const data = reviews?.reviews.slice(startIndex, endIndex);
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
       .toUpperCase();
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -53,10 +55,9 @@ function ReviewListing() {
         <Star
           key={i}
           size={18}
-          className={`${i <= rating
-              ? 'fill-yellow-400 text-yellow-400'
-              : 'text-gray-300'
-            } transition-colors duration-200`}
+          className={`${
+            i <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+          } transition-colors duration-200`}
         />
       );
     }
@@ -73,7 +74,7 @@ function ReviewListing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {userType == 'user' ? <UserNavbar navLink='Lawyers' /> : <LawyerNavbar />}
+      {userType == "user" ? <UserNavbar navLink="Lawyers" /> : <LawyerNavbar />}
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-800 mb-4 tracking-tight">
@@ -97,8 +98,12 @@ function ReviewListing() {
                   {getInitials(review.userName)}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-gray-800 text-lg">{review.userName}</h3>
-                  <p className="text-gray-500 text-sm">{formatDate(review.date)}</p>
+                  <h3 className="font-bold text-gray-800 text-lg">
+                    {review.userName}
+                  </h3>
+                  <p className="text-gray-500 text-sm">
+                    {formatDate(review.date)}
+                  </p>
                 </div>
               </div>
 
@@ -118,7 +123,11 @@ function ReviewListing() {
           ))}
         </div>
       </div>
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Star, Check, User, Heart, Award, Shield } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { addReview, getLawyerChatProfile } from '../../services/user/userService';
-import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import React, { useEffect, useState } from "react";
+import { Star, Check, User, Heart, Award, Shield } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  addReview,
+  getLawyerChatProfile,
+} from "../../services/user/userService";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 function AddFeedbackPage() {
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
-  const [feedback, setFeedback] = useState<string>('');
+  const [feedback, setFeedback] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const userName = useSelector((state: RootState) => state.auth.user?.name)
+  const userName = useSelector((state: RootState) => state.auth.user?.name);
 
   const maxCharacters = 500;
   const characterCount = feedback.length;
@@ -26,7 +29,7 @@ function AddFeedbackPage() {
     courtName: string;
   }
 
-  const [lawyer, setLawyer] = useState<LawyerData | null>(null)
+  const [lawyer, setLawyer] = useState<LawyerData | null>(null);
 
   const handleStarClick = (starIndex: number) => {
     setRating(starIndex);
@@ -44,28 +47,28 @@ function AddFeedbackPage() {
     e.preventDefault();
     addReview(lawyerId!, {
       userName: userName!,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       feedback: feedback,
-      rating: rating
+      rating: rating,
     }).then((response) => {
-      toast.success(response.data.message)
-      navigate(-1)
-    })
+      toast.success(response.data.message);
+      navigate(-1);
+    });
   };
 
   const handleCancel = () => {
     setRating(0);
-    setFeedback('');
+    setFeedback("");
     setIsSubmitted(false);
   };
 
-  const { lawyerId } = useParams()
+  const { lawyerId } = useParams();
 
   useEffect(() => {
     getLawyerChatProfile(lawyerId!).then((response) => {
-      setLawyer(response.data.data)
-    })
-  }, [])
+      setLawyer(response.data.data);
+    });
+  }, []);
 
   if (isSubmitted) {
     return (
@@ -79,12 +82,22 @@ function AddFeedbackPage() {
             <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
               <Check className="w-10 h-10 text-white" />
             </div>
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">Thank you!</h2>
-            <p className="text-gray-600 text-lg">Your review has been submitted successfully.</p>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">
+              Thank you!
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Your review has been submitted successfully.
+            </p>
             <div className="flex justify-center space-x-2 mt-4">
               <Heart className="w-5 h-5 text-red-400 animate-pulse" />
-              <Heart className="w-5 h-5 text-red-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
-              <Heart className="w-5 h-5 text-red-400 animate-pulse" style={{ animationDelay: '0.4s' }} />
+              <Heart
+                className="w-5 h-5 text-red-400 animate-pulse"
+                style={{ animationDelay: "0.2s" }}
+              />
+              <Heart
+                className="w-5 h-5 text-red-400 animate-pulse"
+                style={{ animationDelay: "0.4s" }}
+              />
             </div>
           </div>
         </div>
@@ -96,7 +109,10 @@ function AddFeedbackPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full -translate-x-36 -translate-y-36 animate-pulse"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-indigo-200/20 to-pink-200/20 rounded-full translate-x-48 translate-y-48 animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div
+        className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-indigo-200/20 to-pink-200/20 rounded-full translate-x-48 translate-y-48 animate-pulse"
+        style={{ animationDelay: "1s" }}
+      ></div>
 
       <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-10 w-full max-w-2xl relative overflow-hidden">
         {/* Card decorations */}
@@ -109,8 +125,12 @@ function AddFeedbackPage() {
                 <Award className="w-8 h-8 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-600 bg-clip-text text-transparent mb-3">Share Your Experience</h1>
-            <p className="text-gray-600 text-lg">Help others by reviewing this attorney</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-600 bg-clip-text text-transparent mb-3">
+              Share Your Experience
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Help others by reviewing this attorney
+            </p>
           </div>
 
           {/* Lawyer Profile */}
@@ -121,8 +141,10 @@ function AddFeedbackPage() {
                 alt={lawyer?.name}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  e.currentTarget.style.display = "none";
+                  e.currentTarget.nextElementSibling?.classList.remove(
+                    "hidden"
+                  );
                 }}
               />
               <div className="hidden w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-400 to-indigo-500">
@@ -130,11 +152,17 @@ function AddFeedbackPage() {
               </div>
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-800 mb-1">{lawyer?.name}</h2>
-              <p className="text-gray-600 text-lg mb-2">{lawyer?.specialization}</p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-1">
+                {lawyer?.name}
+              </h2>
+              <p className="text-gray-600 text-lg mb-2">
+                {lawyer?.specialization}
+              </p>
               <div className="flex items-center space-x-2">
                 <Shield className="w-4 h-4 text-blue-500" />
-                <span className="text-sm text-blue-600 font-medium">Verified Attorney</span>
+                <span className="text-sm text-blue-600 font-medium">
+                  Verified Attorney
+                </span>
               </div>
             </div>
           </div>
@@ -156,17 +184,26 @@ function AddFeedbackPage() {
                     className="p-2 transition-all duration-200 hover:scale-125 hover:rotate-12 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 rounded-full"
                   >
                     <Star
-                      className={`w-10 h-10 transition-all duration-300 ${star <= (hoverRating || rating)
-                          ? 'text-yellow-400 fill-yellow-400 drop-shadow-lg'
-                          : 'text-gray-300 hover:text-yellow-200'
-                        }`}
+                      className={`w-10 h-10 transition-all duration-300 ${
+                        star <= (hoverRating || rating)
+                          ? "text-yellow-400 fill-yellow-400 drop-shadow-lg"
+                          : "text-gray-300 hover:text-yellow-200"
+                      }`}
                     />
                   </button>
                 ))}
               </div>
               {rating > 0 && (
                 <p className="text-center text-sm text-gray-600 mt-2">
-                  {rating === 5 ? 'Excellent!' : rating === 4 ? 'Very Good!' : rating === 3 ? 'Good!' : rating === 2 ? 'Fair' : 'Poor'}
+                  {rating === 5
+                    ? "Excellent!"
+                    : rating === 4
+                    ? "Very Good!"
+                    : rating === 3
+                    ? "Good!"
+                    : rating === 2
+                    ? "Fair"
+                    : "Poor"}
                 </p>
               )}
             </div>
@@ -188,8 +225,13 @@ function AddFeedbackPage() {
 
             {/* Character Counter */}
             <div className="flex justify-end mb-8">
-              <span className={`text-sm font-medium ${characterCount > maxCharacters * 0.9 ? 'text-red-500' : 'text-gray-600'
-                }`}>
+              <span
+                className={`text-sm font-medium ${
+                  characterCount > maxCharacters * 0.9
+                    ? "text-red-500"
+                    : "text-gray-600"
+                }`}
+              >
                 {characterCount}/{maxCharacters} characters
               </span>
             </div>
@@ -217,10 +259,13 @@ function AddFeedbackPage() {
           <div className="mt-10 text-center">
             <div className="flex justify-center items-center space-x-2 mb-2">
               <Shield className="w-4 h-4 text-blue-500" />
-              <span className="text-sm font-medium text-blue-600">Secure & Confidential</span>
+              <span className="text-sm font-medium text-blue-600">
+                Secure & Confidential
+              </span>
             </div>
             <p className="text-sm text-gray-500">
-              Your review will help others make informed decisions while maintaining your privacy
+              Your review will help others make informed decisions while
+              maintaining your privacy
             </p>
           </div>
         </div>

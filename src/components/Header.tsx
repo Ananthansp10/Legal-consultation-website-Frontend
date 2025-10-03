@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Scale, Menu, X, User, LogIn } from 'lucide-react';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Scale, Menu, X, User, LogIn } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,17 +14,49 @@ const Header = () => {
             <div className="p-2 bg-blue-500/10 rounded-lg">
               <Scale className="h-6 w-6 text-blue-500" />
             </div>
-            <span className="text-xl font-bold text-slate-700">LegalConnect</span>
+            <span className="text-xl font-bold text-slate-700">
+              LegalConnect
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Home</a>
-            <a href="#about" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">About Us</a>
-            <a href="#services" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Services</a>
-            <a href="#lawyers" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Top Lawyers</a>
-            <a href="#faq" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">FAQ</a>
-            <a href="#contact" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Contact</a>
+            <a
+              href="#home"
+              className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+            >
+              Home
+            </a>
+            <a
+              href="#about"
+              className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+            >
+              About Us
+            </a>
+            <a
+              href="#services"
+              className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+            >
+              Services
+            </a>
+            <a
+              href="#lawyers"
+              className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+            >
+              Top Lawyers
+            </a>
+            <a
+              href="#faq"
+              className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+            >
+              FAQ
+            </a>
+            <a
+              href="#contact"
+              className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+            >
+              Contact
+            </a>
           </div>
 
           {/* Desktop Buttons */}
@@ -50,7 +82,11 @@ const Header = () => {
             className="md:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
 
@@ -58,12 +94,27 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden bg-white/95 backdrop-blur-md rounded-lg mt-2 p-4 border border-white/20">
             <div className="flex flex-col space-y-4">
-              <a href="#home" className="text-slate-600 hover:text-blue-500">Home</a>
-              <a href="#about" className="text-slate-600 hover:text-blue-500">About Us</a>
-              <a href="#services" className="text-slate-600 hover:text-blue-500">Services</a>
-              <a href="#lawyers" className="text-slate-600 hover:text-blue-500">Top Lawyers</a>
-              <a href="#faq" className="text-slate-600 hover:text-blue-500">FAQ</a>
-              <a href="#contact" className="text-slate-600 hover:text-blue-500">Contact</a>
+              <a href="#home" className="text-slate-600 hover:text-blue-500">
+                Home
+              </a>
+              <a href="#about" className="text-slate-600 hover:text-blue-500">
+                About Us
+              </a>
+              <a
+                href="#services"
+                className="text-slate-600 hover:text-blue-500"
+              >
+                Services
+              </a>
+              <a href="#lawyers" className="text-slate-600 hover:text-blue-500">
+                Top Lawyers
+              </a>
+              <a href="#faq" className="text-slate-600 hover:text-blue-500">
+                FAQ
+              </a>
+              <a href="#contact" className="text-slate-600 hover:text-blue-500">
+                Contact
+              </a>
               <hr className="border-slate-200" />
               <Link
                 to="/auth/signin"

@@ -1,5 +1,4 @@
-import React from 'react';
-import { UserPlus, Users, MessageCircle } from 'lucide-react';
+import { UserPlus, Users, MessageCircle } from "lucide-react";
 
 const HowItWorks = () => {
   const steps = [
@@ -7,20 +6,20 @@ const HowItWorks = () => {
       icon: UserPlus,
       title: "Sign Up",
       description: "Create your account and tell us about your legal needs",
-      number: "01"
+      number: "01",
     },
     {
       icon: Users,
       title: "Choose a Lawyer",
       description: "Browse our verified lawyers and select the perfect match",
-      number: "02"
+      number: "02",
     },
     {
       icon: MessageCircle,
       title: "Get Consultation",
       description: "Connect online or offline for personalized legal advice",
-      number: "03"
-    }
+      number: "03",
+    },
   ];
 
   return (
@@ -31,7 +30,8 @@ const HowItWorks = () => {
             How It Works
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Getting expert legal help has never been easier. Follow these simple steps to connect with the right lawyer for your needs.
+            Getting expert legal help has never been easier. Follow these simple
+            steps to connect with the right lawyer for your needs.
           </p>
         </div>
 
@@ -52,8 +52,12 @@ const HowItWorks = () => {
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-slate-800 mb-4">{step.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">{step.description}</p>
+                  <h3 className="text-xl font-bold text-slate-800 mb-4">
+                    {step.title}
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
 
                 {/* Connecting Line */}

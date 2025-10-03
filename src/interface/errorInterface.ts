@@ -1,7 +1,4 @@
-
-
-
 export interface ErrorResponse {
-    success: boolean;
-    message: string;
+  success: boolean;
+  message: string;
 }

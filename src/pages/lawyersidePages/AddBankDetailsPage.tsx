@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Shield, AlertCircle, CheckCircle } from 'lucide-react';
-import LawyerNavbar from '../../components/lawyer/Navbar';
-import { addBankAccount } from '../../services/user/userService';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Shield, AlertCircle, CheckCircle } from "lucide-react";
+import { addBankAccount } from "../../services/user/userService";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   fullName: string;
@@ -23,43 +22,57 @@ interface FormErrors {
 
 function AddBankDetailsPage() {
   const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    accountNumber: '',
-    confirmAccountNumber: '',
-    ifscCode: '',
-    bankName: ''
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    accountNumber: "",
+    confirmAccountNumber: "",
+    ifscCode: "",
+    bankName: "",
   });
 
-  const lawyerId: string | undefined = useSelector((state: RootState) => state.lawyerAuth.lawyer?._id)
+  const lawyerId: string | undefined = useSelector(
+    (state: RootState) => state.lawyerAuth.lawyer?._id
+  );
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const validateField = (name: string, value: string): string => {
     switch (name) {
-      case 'fullName':
-        return value.trim().length < 2 ? 'Full name must be at least 2 characters' : '';
-      case 'email':
+      case "fullName":
+        return value.trim().length < 2
+          ? "Full name must be at least 2 characters"
+          : "";
+      case "email":
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return !emailRegex.test(value) ? 'Please enter a valid email address' : '';
-      case 'phoneNumber':
+        return !emailRegex.test(value)
+          ? "Please enter a valid email address"
+          : "";
+      case "phoneNumber":
         const phoneRegex = /^[6-9]\d{9}$/;
-        return !phoneRegex.test(value) ? 'Please enter a valid 10-digit phone number' : '';
-      case 'accountNumber':
-        return value.length < 9 || value.length > 18 ? 'Account number must be 9-18 digits' : '';
-      case 'confirmAccountNumber':
-        return value !== formData.accountNumber ? 'Account numbers do not match' : '';
-      case 'ifscCode':
+        return !phoneRegex.test(value)
+          ? "Please enter a valid 10-digit phone number"
+          : "";
+      case "accountNumber":
+        return value.length < 9 || value.length > 18
+          ? "Account number must be 9-18 digits"
+          : "";
+      case "confirmAccountNumber":
+        return value !== formData.accountNumber
+          ? "Account numbers do not match"
+          : "";
+      case "ifscCode":
         const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
-        return !ifscRegex.test(value.toUpperCase()) ? 'Please enter a valid IFSC code (e.g., SBIN0123456)' : '';
+        return !ifscRegex.test(value.toUpperCase())
+          ? "Please enter a valid IFSC code (e.g., SBIN0123456)"
+          : "";
       default:
-        return '';
+        return "";
     }
   };
 
@@ -68,44 +81,51 @@ function AddBankDetailsPage() {
 
     // Format specific fields
     let formattedValue = value;
-    if (name === 'ifscCode') {
+    if (name === "ifscCode") {
       formattedValue = value.toUpperCase();
-    } else if (name === 'phoneNumber' || name === 'accountNumber' || name === 'confirmAccountNumber') {
-      formattedValue = value.replace(/\D/g, '');
+    } else if (
+      name === "phoneNumber" ||
+      name === "accountNumber" ||
+      name === "confirmAccountNumber"
+    ) {
+      formattedValue = value.replace(/\D/g, "");
     }
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: formattedValue
+      [name]: formattedValue,
     }));
 
     // Validate on change if field has been touched
     if (touched[name]) {
       const error = validateField(name, formattedValue);
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: error
+        [name]: error,
       }));
     }
 
     // Special case for confirm account number - validate when account number changes
-    if (name === 'accountNumber' && touched.confirmAccountNumber) {
-      const confirmError = formData.confirmAccountNumber !== formattedValue ? 'Account numbers do not match' : '';
-      setErrors(prev => ({
+    if (name === "accountNumber" && touched.confirmAccountNumber) {
+      const confirmError =
+        formData.confirmAccountNumber !== formattedValue
+          ? "Account numbers do not match"
+          : "";
+      setErrors((prev) => ({
         ...prev,
-        confirmAccountNumber: confirmError
+        confirmAccountNumber: confirmError,
       }));
     }
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setTouched(prev => ({ ...prev, [name]: true }));
+    setTouched((prev) => ({ ...prev, [name]: true }));
 
     const error = validateField(name, value);
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      [name]: error
+      [name]: error,
     }));
   };
 
@@ -114,15 +134,22 @@ function AddBankDetailsPage() {
     setIsSubmitting(true);
 
     const newErrors: FormErrors = {};
-    const requiredFields = ['fullName', 'email', 'phoneNumber', 'accountNumber', 'confirmAccountNumber', 'ifscCode'];
+    const requiredFields = [
+      "fullName",
+      "email",
+      "phoneNumber",
+      "accountNumber",
+      "confirmAccountNumber",
+      "ifscCode",
+    ];
 
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       const error = validateField(field, formData[field as keyof FormData]);
       if (error) newErrors[field] = error;
     });
 
     const newTouched: { [key: string]: boolean } = {};
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       newTouched[field] = true;
     });
     setTouched(newTouched);
@@ -136,11 +163,11 @@ function AddBankDetailsPage() {
         bankAccountNumber: formData.accountNumber,
         ifscCode: formData.ifscCode,
         bankName: formData.bankName,
-        lawyerId: lawyerId
+        lawyerId: lawyerId,
       }).then((response) => {
-        toast.success(response.data.message)
-        navigate(-1)
-      })
+        toast.success(response.data.message);
+        navigate(-1);
+      });
     }
 
     setIsSubmitting(false);
@@ -153,19 +180,24 @@ function AddBankDetailsPage() {
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-8 h-8 text-green-600" />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-900 mb-3">Bank Details Saved!</h2>
-          <p className="text-gray-600 mb-6">Your bank details have been securely saved and are ready for payouts.</p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+            Bank Details Saved!
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Your bank details have been securely saved and are ready for
+            payouts.
+          </p>
           <button
             onClick={() => {
               setIsSubmitted(false);
               setFormData({
-                fullName: '',
-                email: '',
-                phoneNumber: '',
-                accountNumber: '',
-                confirmAccountNumber: '',
-                ifscCode: '',
-                bankName: ''
+                fullName: "",
+                email: "",
+                phoneNumber: "",
+                accountNumber: "",
+                confirmAccountNumber: "",
+                ifscCode: "",
+                bankName: "",
               });
               setErrors({});
               setTouched({});
@@ -183,14 +215,21 @@ function AddBankDetailsPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">Add Bank Details</h1>
-          <p className="text-gray-600 text-sm">Enter your bank information for secure payouts</p>
+          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+            Add Bank Details
+          </h1>
+          <p className="text-gray-600 text-sm">
+            Enter your bank information for secure payouts
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Full Name */}
           <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="fullName"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Full Name (as per bank) <span className="text-red-500">*</span>
             </label>
             <input
@@ -200,8 +239,11 @@ function AddBankDetailsPage() {
               value={formData.fullName}
               onChange={handleInputChange}
               onBlur={handleBlur}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.fullName && touched.fullName ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                errors.fullName && touched.fullName
+                  ? "border-red-300 bg-red-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
               placeholder="Enter your full name"
             />
             {errors.fullName && touched.fullName && (
@@ -214,7 +256,10 @@ function AddBankDetailsPage() {
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Email Address <span className="text-red-500">*</span>
             </label>
             <input
@@ -224,8 +269,11 @@ function AddBankDetailsPage() {
               value={formData.email}
               onChange={handleInputChange}
               onBlur={handleBlur}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.email && touched.email ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                errors.email && touched.email
+                  ? "border-red-300 bg-red-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
               placeholder="your.email@example.com"
             />
             {errors.email && touched.email && (
@@ -238,7 +286,10 @@ function AddBankDetailsPage() {
 
           {/* Phone Number */}
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="phoneNumber"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Phone Number <span className="text-red-500">*</span>
             </label>
             <input
@@ -249,8 +300,11 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={10}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.phoneNumber && touched.phoneNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                errors.phoneNumber && touched.phoneNumber
+                  ? "border-red-300 bg-red-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
               placeholder="9876543210"
             />
             {errors.phoneNumber && touched.phoneNumber && (
@@ -263,7 +317,10 @@ function AddBankDetailsPage() {
 
           {/* Bank Account Number */}
           <div>
-            <label htmlFor="accountNumber" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="accountNumber"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Bank Account Number <span className="text-red-500">*</span>
             </label>
             <input
@@ -274,8 +331,11 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={18}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.accountNumber && touched.accountNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                errors.accountNumber && touched.accountNumber
+                  ? "border-red-300 bg-red-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
               placeholder="123456789012"
             />
             {errors.accountNumber && touched.accountNumber && (
@@ -288,7 +348,10 @@ function AddBankDetailsPage() {
 
           {/* Confirm Account Number */}
           <div>
-            <label htmlFor="confirmAccountNumber" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="confirmAccountNumber"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Confirm Account Number <span className="text-red-500">*</span>
             </label>
             <input
@@ -299,8 +362,11 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={18}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.confirmAccountNumber && touched.confirmAccountNumber ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                errors.confirmAccountNumber && touched.confirmAccountNumber
+                  ? "border-red-300 bg-red-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
               placeholder="Re-enter account number"
             />
             {errors.confirmAccountNumber && touched.confirmAccountNumber && (
@@ -313,7 +379,10 @@ function AddBankDetailsPage() {
 
           {/* IFSC Code */}
           <div>
-            <label htmlFor="ifscCode" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="ifscCode"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               IFSC Code <span className="text-red-500">*</span>
             </label>
             <input
@@ -324,8 +393,11 @@ function AddBankDetailsPage() {
               onChange={handleInputChange}
               onBlur={handleBlur}
               maxLength={11}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${errors.ifscCode && touched.ifscCode ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                errors.ifscCode && touched.ifscCode
+                  ? "border-red-300 bg-red-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
               placeholder="SBIN0123456"
             />
             {errors.ifscCode && touched.ifscCode && (
@@ -338,7 +410,10 @@ function AddBankDetailsPage() {
 
           {/* Bank Name */}
           <div>
-            <label htmlFor="bankName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="bankName"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Bank Name
             </label>
             <input
@@ -372,7 +447,7 @@ function AddBankDetailsPage() {
                 Saving Bank Details...
               </div>
             ) : (
-              'Save Bank Details'
+              "Save Bank Details"
             )}
           </button>
         </form>

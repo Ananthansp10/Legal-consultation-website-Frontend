@@ -1,6 +1,3 @@
-
-
-
 export const USER_AUTH_API = {
   SIGNUP: "/user/signup",
   SIGNIN: "/user/signin",

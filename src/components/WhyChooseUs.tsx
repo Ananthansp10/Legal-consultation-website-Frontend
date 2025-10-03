@@ -1,38 +1,46 @@
-import React from 'react';
-import { Shield, Video, Lock, FileText, MessageSquare, CheckCircle } from 'lucide-react';
+import {
+  Shield,
+  Video,
+  Lock,
+  FileText,
+  MessageSquare,
+  CheckCircle,
+} from "lucide-react";
 
 const WhyChooseUs = () => {
   const features = [
     {
       icon: CheckCircle,
       title: "Verified Lawyers",
-      description: "All our lawyers are thoroughly vetted and verified professionals"
+      description:
+        "All our lawyers are thoroughly vetted and verified professionals",
     },
     {
       icon: Video,
       title: "Online & Offline",
-      description: "Choose between convenient online consultations or in-person meetings"
+      description:
+        "Choose between convenient online consultations or in-person meetings",
     },
     {
       icon: Lock,
       title: "Secure & Confidential",
-      description: "Your information is protected with bank-level security"
+      description: "Your information is protected with bank-level security",
     },
     {
       icon: FileText,
       title: "Document Sharing",
-      description: "Easily upload and share documents with your lawyer"
+      description: "Easily upload and share documents with your lawyer",
     },
     {
       icon: MessageSquare,
       title: "Chat Management",
-      description: "Integrated chat and appointment management system"
+      description: "Integrated chat and appointment management system",
     },
     {
       icon: Shield,
       title: "Money Back Guarantee",
-      description: "100% satisfaction guaranteed or your money back"
-    }
+      description: "100% satisfaction guaranteed or your money back",
+    },
   ];
 
   return (
@@ -43,7 +51,8 @@ const WhyChooseUs = () => {
             Why Choose LegalConnect
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            We provide the most comprehensive and secure platform for legal consultations with features designed for your convenience.
+            We provide the most comprehensive and secure platform for legal
+            consultations with features designed for your convenience.
           </p>
         </div>
 
@@ -51,13 +60,20 @@ const WhyChooseUs = () => {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="group bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105 text-center">
+              <div
+                key={index}
+                className="group bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-105 text-center"
+              >
                 <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-500/20 transition-colors duration-300">
                   <Icon className="h-8 w-8 text-blue-500" />
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-800 mb-4">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-bold text-slate-800 mb-4">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             );
           })}

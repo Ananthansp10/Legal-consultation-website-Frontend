@@ -1,6 +1,21 @@
-import React from 'react';
-import { User, Briefcase, Mail, Phone, MapPin, Award, Calendar, Users, GraduationCap, DollarSign, FileImage, CreditCard, Globe, Clock, Building, Scale } from 'lucide-react';
-import Navbar from '../admin/Navbar';
+import React from "react";
+import {
+  User,
+  Briefcase,
+  Mail,
+  Phone,
+  MapPin,
+  Award,
+  Calendar,
+  GraduationCap,
+  DollarSign,
+  FileImage,
+  Globe,
+  Clock,
+  Building,
+  Scale,
+} from "lucide-react";
+import Navbar from "../admin/Navbar";
 
 interface Address {
   street: string;
@@ -69,30 +84,46 @@ interface ProfileViewProps {
 }
 
 const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
-  const isLawyer = 'personalInfo' in profile;
-  const isUser = 'name' in profile && !('personalInfo' in profile);
+  const isLawyer = "personalInfo" in profile;
+  const isUser = "name" in profile && !("personalInfo" in profile);
 
   const getPersonalDetailItems = () => {
     if (isLawyer) {
       const lawyer = profile as LawyerProfileEntity;
       return [
-        { icon: Mail, label: 'Email', value: lawyer.personalInfo.email },
-        { icon: Phone, label: 'Phone', value: lawyer.personalInfo.phoneNumber },
-        { icon: Calendar, label: 'Date of Birth', value: lawyer.personalInfo.DOB },
-        { icon: User, label: 'Gender', value: lawyer.personalInfo.gender },
-        { icon: MapPin, label: 'Address', value: `${lawyer.personalInfo.address.street}, ${lawyer.personalInfo.address.city}, ${lawyer.personalInfo.address.state}` },
-        { icon: Globe, label: 'Languages', value: lawyer.personalInfo.language.join(', ') },
+        { icon: Mail, label: "Email", value: lawyer.personalInfo.email },
+        { icon: Phone, label: "Phone", value: lawyer.personalInfo.phoneNumber },
+        {
+          icon: Calendar,
+          label: "Date of Birth",
+          value: lawyer.personalInfo.DOB,
+        },
+        { icon: User, label: "Gender", value: lawyer.personalInfo.gender },
+        {
+          icon: MapPin,
+          label: "Address",
+          value: `${lawyer.personalInfo.address.street}, ${lawyer.personalInfo.address.city}, ${lawyer.personalInfo.address.state}`,
+        },
+        {
+          icon: Globe,
+          label: "Languages",
+          value: lawyer.personalInfo.language.join(", "),
+        },
       ];
     } else if (isUser) {
       const user = profile as UserProfileEntity;
       return [
-        { icon: Mail, label: 'Email', value: user.email },
-        { icon: Phone, label: 'Phone', value: user.phoneNumber },
-        { icon: Calendar, label: 'Date of Birth', value: user.DOB },
-        { icon: User, label: 'Gender', value: user.gender },
-        { icon: Briefcase, label: 'Profession', value: user.profession },
-        { icon: Building, label: 'Company', value: user.company },
-        { icon: MapPin, label: 'Address', value: `${user.address.street}, ${user.address.city}, ${user.address.state}` },
+        { icon: Mail, label: "Email", value: user.email },
+        { icon: Phone, label: "Phone", value: user.phoneNumber },
+        { icon: Calendar, label: "Date of Birth", value: user.DOB },
+        { icon: User, label: "Gender", value: user.gender },
+        { icon: Briefcase, label: "Profession", value: user.profession },
+        { icon: Building, label: "Company", value: user.company },
+        {
+          icon: MapPin,
+          label: "Address",
+          value: `${user.address.street}, ${user.address.city}, ${user.address.state}`,
+        },
       ];
     }
     return [];
@@ -102,15 +133,51 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
     if (isLawyer) {
       const lawyer = profile as LawyerProfileEntity;
       return [
-        { icon: Scale, label: 'Practice Areas', value: lawyer.professionalInfo.practiceAreas.join(', ') },
-        { icon: Award, label: 'Bar Register Number', value: lawyer.professionalInfo.barRegisterNumber },
-        { icon: Calendar, label: 'Experience', value: lawyer.professionalInfo.experience },
-        { icon: Building, label: 'Court Name', value: lawyer.professionalInfo.courtName },
-        { icon: MapPin, label: 'Work Location', value: lawyer.professionalInfo.workLocation },
-        { icon: DollarSign, label: 'Consultation Fee', value: lawyer.professionalInfo.fee },
-        { icon: Calendar, label: 'Available Days', value: lawyer.professionalInfo.availableDays.join(', ') },
-        { icon: Clock, label: 'Working Hours', value: `${lawyer.professionalInfo.startTime} - ${lawyer.professionalInfo.endTime}` },
-        { icon: GraduationCap, label: 'Education', value: `${lawyer.professionalInfo.education.degree} from ${lawyer.professionalInfo.education.university} (${lawyer.professionalInfo.education.year})` },
+        {
+          icon: Scale,
+          label: "Practice Areas",
+          value: lawyer.professionalInfo.practiceAreas.join(", "),
+        },
+        {
+          icon: Award,
+          label: "Bar Register Number",
+          value: lawyer.professionalInfo.barRegisterNumber,
+        },
+        {
+          icon: Calendar,
+          label: "Experience",
+          value: lawyer.professionalInfo.experience,
+        },
+        {
+          icon: Building,
+          label: "Court Name",
+          value: lawyer.professionalInfo.courtName,
+        },
+        {
+          icon: MapPin,
+          label: "Work Location",
+          value: lawyer.professionalInfo.workLocation,
+        },
+        {
+          icon: DollarSign,
+          label: "Consultation Fee",
+          value: lawyer.professionalInfo.fee,
+        },
+        {
+          icon: Calendar,
+          label: "Available Days",
+          value: lawyer.professionalInfo.availableDays.join(", "),
+        },
+        {
+          icon: Clock,
+          label: "Working Hours",
+          value: `${lawyer.professionalInfo.startTime} - ${lawyer.professionalInfo.endTime}`,
+        },
+        {
+          icon: GraduationCap,
+          label: "Education",
+          value: `${lawyer.professionalInfo.education.degree} from ${lawyer.professionalInfo.education.university} (${lawyer.professionalInfo.education.year})`,
+        },
       ];
     }
     return [];
@@ -125,7 +192,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
     } else if (isUser) {
       return (profile as UserProfileEntity).name;
     }
-    return '';
+    return "";
   };
 
   const getProfileImage = () => {
@@ -134,7 +201,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
     } else if (isUser) {
       return (profile as UserProfileEntity).profileImage;
     }
-    return '';
+    return "";
   };
 
   const getProfileEmail = () => {
@@ -143,7 +210,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
     } else if (isUser) {
       return (profile as UserProfileEntity).email;
     }
-    return '';
+    return "";
   };
 
   return (
@@ -181,12 +248,15 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
               {getProfileName()}
             </h1>
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${isLawyer
-                  ? 'bg-teal-100 text-teal-700'
-                  : 'bg-blue-100 text-blue-700'
-                }`}>
+              <div
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
+                  isLawyer
+                    ? "bg-teal-100 text-teal-700"
+                    : "bg-blue-100 text-blue-700"
+                }`}
+              >
                 {isLawyer ? <Briefcase size={16} /> : <User size={16} />}
-                {isLawyer ? 'Legal Professional' : 'Client'}
+                {isLawyer ? "Legal Professional" : "Client"}
               </div>
             </div>
             <p className="text-lg text-gray-600">{getProfileEmail()}</p>
@@ -195,8 +265,11 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
           {/* Personal Details Section */}
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className={`text-2xl font-semibold mb-8 ${isLawyer ? 'text-teal-600' : 'text-blue-600'
-                }`}>
+              <h2
+                className={`text-2xl font-semibold mb-8 ${
+                  isLawyer ? "text-teal-600" : "text-blue-600"
+                }`}
+              >
                 Personal Details
               </h2>
             </div>
@@ -209,10 +282,13 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
                   className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/30 shadow-md hover:shadow-lg transform transition-all duration-300 hover:-translate-y-1 min-w-0"
                 >
                   <div className="flex flex-col space-y-3">
-                    <div className={`p-3 rounded-xl ${isLawyer
-                        ? 'bg-teal-100 text-teal-600'
-                        : 'bg-blue-100 text-blue-600'
-                      } w-fit`}>
+                    <div
+                      className={`p-3 rounded-xl ${
+                        isLawyer
+                          ? "bg-teal-100 text-teal-600"
+                          : "bg-blue-100 text-blue-600"
+                      } w-fit`}
+                    >
                       <item.icon size={24} />
                     </div>
                     <div className="w-full">
@@ -263,34 +339,41 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
             )}
 
             {/* Documents Section for Lawyers */}
-            {isLawyer && (profile as LawyerProfileEntity).professionalInfo.documents.length > 0 && (
-              <div className="mt-12">
-                <h3 className="text-xl font-semibold text-teal-600 mb-6 text-center">
-                  Professional Documents
-                </h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {(profile as LawyerProfileEntity).professionalInfo.documents.map((document, index) => (
-                    <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/30 shadow-md hover:shadow-lg transform transition-all duration-300 hover:-translate-y-1">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-lg bg-teal-100 text-teal-600">
-                          <FileImage size={20} />
+            {isLawyer &&
+              (profile as LawyerProfileEntity).professionalInfo.documents
+                .length > 0 && (
+                <div className="mt-12">
+                  <h3 className="text-xl font-semibold text-teal-600 mb-6 text-center">
+                    Professional Documents
+                  </h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {(
+                      profile as LawyerProfileEntity
+                    ).professionalInfo.documents.map((document, index) => (
+                      <div
+                        key={index}
+                        className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/30 shadow-md hover:shadow-lg transform transition-all duration-300 hover:-translate-y-1"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-lg bg-teal-100 text-teal-600">
+                            <FileImage size={20} />
+                          </div>
+                          <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wide flex-1">
+                            Document {index + 1}
+                          </h4>
                         </div>
-                        <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wide flex-1">
-                          Document {index + 1}
-                        </h4>
+                        <div className="rounded-lg overflow-hidden border border-gray-200 w-full">
+                          <img
+                            src={document}
+                            alt={`Document ${index + 1}`}
+                            className="w-full h-40 sm:h-48 object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
                       </div>
-                      <div className="rounded-lg overflow-hidden border border-gray-200 w-full">
-                        <img
-                          src={document}
-                          alt={`Document ${index + 1}`}
-                          className="w-full h-40 sm:h-48 object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Professional Summary for Lawyers */}
             {isLawyer && (
@@ -302,28 +385,51 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile }) => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-center">
                     <div className="bg-white/60 rounded-xl p-4">
                       <div className="text-xl sm:text-2xl font-bold text-teal-600 break-words">
-                        {(profile as LawyerProfileEntity).professionalInfo.experience}
+                        {
+                          (profile as LawyerProfileEntity).professionalInfo
+                            .experience
+                        }
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-600 mt-1">Experience</div>
+                      <div className="text-xs sm:text-sm text-gray-600 mt-1">
+                        Experience
+                      </div>
                     </div>
                     <div className="bg-white/60 rounded-xl p-4">
                       <div className="text-lg sm:text-xl font-bold text-purple-600 break-words leading-tight">
-                        {(profile as LawyerProfileEntity).professionalInfo.practiceAreas.slice(0, 2).join(', ')}
+                        {(
+                          profile as LawyerProfileEntity
+                        ).professionalInfo.practiceAreas
+                          .slice(0, 2)
+                          .join(", ")}
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-600 mt-1">Practice Areas</div>
+                      <div className="text-xs sm:text-sm text-gray-600 mt-1">
+                        Practice Areas
+                      </div>
                     </div>
                     <div className="bg-white/60 rounded-xl p-4">
                       <div className="text-lg sm:text-xl font-bold text-green-600 break-words leading-tight">
                         {(profile as LawyerProfileEntity).professionalInfo.fee}
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-600 mt-1">Consultation Fee</div>
+                      <div className="text-xs sm:text-sm text-gray-600 mt-1">
+                        Consultation Fee
+                      </div>
                     </div>
                   </div>
                   <div className="mt-6 bg-white/60 rounded-xl p-4 text-center">
                     <div className="text-base sm:text-lg font-semibold text-indigo-600 break-words leading-relaxed">
-                      {(profile as LawyerProfileEntity).professionalInfo.education.degree} from {(profile as LawyerProfileEntity).professionalInfo.education.university}
+                      {
+                        (profile as LawyerProfileEntity).professionalInfo
+                          .education.degree
+                      }{" "}
+                      from{" "}
+                      {
+                        (profile as LawyerProfileEntity).professionalInfo
+                          .education.university
+                      }
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-600 mt-2">Educational Background</div>
+                    <div className="text-xs sm:text-sm text-gray-600 mt-2">
+                      Educational Background
+                    </div>
                   </div>
                 </div>
               </div>

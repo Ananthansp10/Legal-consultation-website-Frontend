@@ -59,6 +59,7 @@ import UserVideoCallPage from './pages/usersidePages/UserVideoCallPage';
 import LawyerVideoCallPage from './pages/lawyersidePages/LawyerVideoCallPage';
 import ConsultationHistoryPage from './components/reusableComponents/ConsultationHistoryPage';
 
+
 function App() {
   return (
     <Router>
@@ -102,7 +103,7 @@ function App() {
             <Route path='/user/chat' element={<ChatPage />} />
             <Route path='/feedback/:lawyerId' element={<AddFeedbackPage />} />
             <Route path='/reviews/:lawyerId' element={<ReviewListing />} />
-            <Route path='/user/video-call/:appointmentId' element={<UserVideoCallPage />} />
+            <Route path='/user/video-call/:appointmentId' element={<UserVideoCallPage/>} />
             <Route path='/user/continue-slot-booking/:lawyerId/:caseId' element={<SlotBookingPage />} />
           </Route>
 
@@ -119,7 +120,7 @@ function App() {
             <Route path='/lawyer/chat-view/:userId' element={<LawyerChatViewPage />} />
             <Route path='/lawyer/add-bank-details' element={<AddBankDetailsPage />} />
             <Route path='/lawyer/reviews/:lawyerId/:userType' element={<ReviewListing />} />
-            <Route path='/lawyer/video-call/:appointmentId' element={<LawyerVideoCallPage />} />
+            <Route path='/lawyer/video-call/:appointmentId' element={<LawyerVideoCallPage/>} />
             <Route path='/lawyer/consultation-history/:caseId' element={<ConsultationHistoryPage/>}/>
           </Route>
 

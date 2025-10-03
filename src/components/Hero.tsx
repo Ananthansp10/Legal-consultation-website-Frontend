@@ -1,9 +1,11 @@
-import React from 'react';
-import { Calendar, Search, ArrowRight } from 'lucide-react';
+import { Calendar, Search, ArrowRight } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section id="home" className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pt-16 flex items-center">
+    <section
+      id="home"
+      className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pt-16 flex items-center"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Hero Content */}
@@ -14,7 +16,8 @@ const Hero = () => {
                 <span className="text-blue-500 block">Legal Expert</span>
               </h1>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Connect with top-rated lawyers in your area. Get expert legal advice and representation tailored to your specific needs.
+                Connect with top-rated lawyers in your area. Get expert legal
+                advice and representation tailored to your specific needs.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">

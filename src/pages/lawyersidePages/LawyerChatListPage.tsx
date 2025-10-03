@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Search, MessageCircle, Users } from 'lucide-react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { useNavigate } from 'react-router-dom';
-import { getAllChats } from '../../services/lawyer/lawyerService';
+import { useState, useMemo, useEffect } from "react";
+import { Search, MessageCircle, Users } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { getAllChats } from "../../services/lawyer/lawyerService";
 
 interface Chat {
   userId: string;
@@ -16,21 +16,24 @@ interface Chat {
 }
 
 function LawyerChatListPage() {
-  const [chats, setChats] = useState<Chat[]>([])
-  const [searchQuery, setSearchQuery] = useState('');
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  const lawyerId: string | undefined = useSelector((state: RootState) => state.lawyerAuth.lawyer?._id)
-  const navigate = useNavigate()
+  const lawyerId: string | undefined = useSelector(
+    (state: RootState) => state.lawyerAuth.lawyer?._id
+  );
+  const navigate = useNavigate();
 
   const filteredChats = useMemo(() => {
     if (!searchQuery.trim()) {
       return chats;
     }
 
-    return chats.filter(chat =>
-      chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+    return chats.filter(
+      (chat) =>
+        chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [chats, searchQuery]);
 
@@ -39,12 +42,12 @@ function LawyerChatListPage() {
   const handleSearchClick = () => {
     setIsSearchVisible(!isSearchVisible);
     if (!isSearchVisible) {
-      setSearchQuery('');
+      setSearchQuery("");
     }
   };
 
   const handleChatClick = (userId: string) => {
-    navigate(`/lawyer/chat-view/${userId}`)
+    navigate(`/lawyer/chat-view/${userId}`);
   };
 
   const formatTime = (timestamp: string) => {
@@ -53,40 +56,41 @@ function LawyerChatListPage() {
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-      return date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
+      return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
       });
     } else if (diffInHours < 168) {
-      return date.toLocaleDateString('en-US', { weekday: 'short' });
+      return date.toLocaleDateString("en-US", { weekday: "short" });
     } else {
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
       });
     }
   };
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
   useEffect(() => {
-    const baseTitle = 'ChatFlow';
-    document.title = totalUnread > 0 ? `(${totalUnread}) ${baseTitle}` : baseTitle;
+    const baseTitle = "ChatFlow";
+    document.title =
+      totalUnread > 0 ? `(${totalUnread}) ${baseTitle}` : baseTitle;
   }, [totalUnread]);
 
   useEffect(() => {
     getAllChats(lawyerId!).then((response) => {
-      setChats(response.data.data || [])
-    })
-  }, [])
+      setChats(response.data.data || []);
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -133,9 +137,11 @@ function LawyerChatListPage() {
       <main className="max-w-4xl mx-auto mt-7">
         {filteredChats.length === 0 && searchQuery ? (
           <div className="py-16 px-4 text-center">
-            <p className="text-gray-600">No conversations found for "{searchQuery}"</p>
+            <p className="text-gray-600">
+              No conversations found for "{searchQuery}"
+            </p>
             <button
-              onClick={() => setSearchQuery('')}
+              onClick={() => setSearchQuery("")}
               className="mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
             >
               Clear search
@@ -153,10 +159,12 @@ function LawyerChatListPage() {
               </div>
             </div>
 
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">No chats yet</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              No chats yet
+            </h3>
             <p className="text-gray-600 text-center max-w-md leading-relaxed mb-8">
-              Start a new conversation to connect with friends, colleagues, or family members.
-              Your conversations will appear here.
+              Start a new conversation to connect with friends, colleagues, or
+              family members. Your conversations will appear here.
             </p>
           </div>
         ) : (
@@ -187,7 +195,9 @@ function LawyerChatListPage() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-semibold text-gray-900 truncate">{chat.name}</h3>
+                    <h3 className="font-semibold text-gray-900 truncate">
+                      {chat.name}
+                    </h3>
                     <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
                       {formatTime(chat.lastMessageTime)}
                     </span>
@@ -198,7 +208,7 @@ function LawyerChatListPage() {
                     </p>
                     {chat.unreadCount > 0 && (
                       <span className="ml-2 bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-full min-w-[20px] text-center">
-                        {chat.unreadCount > 99 ? '99+' : chat.unreadCount}
+                        {chat.unreadCount > 99 ? "99+" : chat.unreadCount}
                       </span>
                     )}
                   </div>
