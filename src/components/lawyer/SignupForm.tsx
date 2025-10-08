@@ -71,7 +71,7 @@ function SignupForm() {
 
   const updateFormData = (
     field: keyof FormData,
-    value: string | string[] | File | null
+    value: string | string[] | File | null,
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -166,7 +166,7 @@ function SignupForm() {
 
   const handleDrop = (
     e: React.DragEvent,
-    type: "lawDegree" | "barCertificate"
+    type: "lawDegree" | "barCertificate",
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -179,7 +179,7 @@ function SignupForm() {
 
   const handleFileInput = (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "lawDegree" | "barCertificate"
+    type: "lawDegree" | "barCertificate",
   ) => {
     if (e.target.files && e.target.files[0]) {
       updateFormData(type, e.target.files[0]);
@@ -191,7 +191,7 @@ function SignupForm() {
     if (current.includes(spec)) {
       updateFormData(
         "specialization",
-        current.filter((s) => s !== spec)
+        current.filter((s) => s !== spec),
       );
     } else {
       updateFormData("specialization", [...current, spec]);
@@ -214,8 +214,8 @@ function SignupForm() {
           dragActive === type
             ? "border-blue-400 bg-blue-400/10"
             : file
-            ? "border-green-400 bg-green-400/10"
-            : "border-white/30 hover:border-white/50"
+              ? "border-green-400 bg-green-400/10"
+              : "border-white/30 hover:border-white/50"
         }`}
         onDragEnter={(e) => handleDrag(e, type)}
         onDragLeave={(e) => handleDrag(e, type)}
@@ -361,8 +361,8 @@ function SignupForm() {
                       step < currentStep
                         ? "bg-green-500 text-white"
                         : step === currentStep
-                        ? "bg-blue-600 text-white"
-                        : "bg-white/20 text-white/60"
+                          ? "bg-blue-600 text-white"
+                          : "bg-white/20 text-white/60"
                     }`}
                   >
                     {step < currentStep ? (

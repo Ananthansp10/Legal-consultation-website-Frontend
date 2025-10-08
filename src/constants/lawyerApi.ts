@@ -11,7 +11,7 @@ export const LAWYER_API = {
     lawyerId: string,
     appointmentStatus: string,
     startIndex: number,
-    limit: number
+    limit: number,
   ) =>
     `/lawyer/get-appointments/${lawyerId}/${appointmentStatus}/${startIndex}/${limit}`,
   UPDATE_APPOINTMENT_STATUS: (id: string, status: string, lawyerId: string) =>
@@ -38,6 +38,10 @@ export const LAWYER_API = {
     `/lawyer/get-consultation-history/${caseId}`,
   START_MEETING: (appointmentId: string) =>
     `/lawyer/start-meeting/${appointmentId}`,
-  ADD_FINAL_NOTE : (appointmentId: string) => `/lawyer/add-notes/${appointmentId}`,
-  ADD_FEEDBACK : (appointmentId: string) => `/lawyer/add-feedback/${appointmentId}`
+  ADD_FINAL_NOTE: (appointmentId: string) =>
+    `/lawyer/add-notes/${appointmentId}`,
+  ADD_FEEDBACK: (appointmentId: string) =>
+    `/lawyer/add-feedback/${appointmentId}`,
+  FIND_STARTER_PLAN: (lawyerId: string) =>
+    `/lawyer/find-starter-plan/${lawyerId}`,
 };

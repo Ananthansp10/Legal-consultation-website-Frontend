@@ -1,5 +1,5 @@
-import React from 'react';
-import { Plus, Sparkles } from 'lucide-react';
+import React from "react";
+import { Plus, Sparkles } from "lucide-react";
 
 interface AdminHeaderProps {
   onAddClick: () => void;
@@ -17,7 +17,9 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ onAddClick }) => {
             Manage Specializations
           </h1>
         </div>
-        <p className="text-slate-600 text-lg font-medium ml-14">Create and manage legal practice areas with precision</p>
+        <p className="text-slate-600 text-lg font-medium ml-14">
+          Create and manage legal practice areas with precision
+        </p>
       </div>
 
       <button

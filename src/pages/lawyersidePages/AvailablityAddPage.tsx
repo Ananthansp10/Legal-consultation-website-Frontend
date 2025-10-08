@@ -1,11 +1,20 @@
-import { useState } from 'react';
-import { Calendar, Clock, Settings, Info, Plus, Trash2, Save, X } from 'lucide-react';
-import LawyerNavbar from '../../components/lawyer/Navbar';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { addSlot } from '../../services/lawyer/lawyerService';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import {
+  Calendar,
+  Clock,
+  Settings,
+  Info,
+  Plus,
+  Trash2,
+  Save,
+  X,
+} from "lucide-react";
+import LawyerNavbar from "../../components/lawyer/Navbar";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { addSlot } from "../../services/lawyer/lawyerService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface BreakTime {
   id: string;
@@ -27,47 +36,47 @@ interface BookingRule {
 }
 
 const DAYS_OF_WEEK = [
-  { id: 'mon', label: 'Mon', full: 'Monday' },
-  { id: 'tue', label: 'Tue', full: 'Tuesday' },
-  { id: 'wed', label: 'Wed', full: 'Wednesday' },
-  { id: 'thu', label: 'Thu', full: 'Thursday' },
-  { id: 'fri', label: 'Fri', full: 'Friday' },
-  { id: 'sat', label: 'Sat', full: 'Saturday' },
-  { id: 'sun', label: 'Sun', full: 'Sunday' },
+  { id: "mon", label: "Mon", full: "Monday" },
+  { id: "tue", label: "Tue", full: "Tuesday" },
+  { id: "wed", label: "Wed", full: "Wednesday" },
+  { id: "thu", label: "Thu", full: "Thursday" },
+  { id: "fri", label: "Fri", full: "Friday" },
+  { id: "sat", label: "Sat", full: "Saturday" },
+  { id: "sun", label: "Sun", full: "Sunday" },
 ];
 
 const convertTo12Hour = (time24: string): string => {
-  if (!time24) return '';
-  const [hours, minutes] = time24.split(':');
+  if (!time24) return "";
+  const [hours, minutes] = time24.split(":");
   const hour = parseInt(hours, 10);
-  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const ampm = hour >= 12 ? "PM" : "AM";
   const hour12 = hour % 12 || 12;
   return `${hour12}:${minutes} ${ampm}`;
 };
 
 const convertTo24Hour = (time12: string): string => {
-  if (!time12) return '';
-  const [time, ampm] = time12.split(' ');
-  const [hours, minutes] = time.split(':');
+  if (!time12) return "";
+  const [time, ampm] = time12.split(" ");
+  const [hours, minutes] = time.split(":");
   let hour = parseInt(hours, 10);
 
-  if (ampm === 'PM' && hour !== 12) {
+  if (ampm === "PM" && hour !== 12) {
     hour += 12;
-  } else if (ampm === 'AM' && hour === 12) {
+  } else if (ampm === "AM" && hour === 12) {
     hour = 0;
   }
-  return `${hour.toString().padStart(2, '0')}:${minutes}`;
+  return `${hour.toString().padStart(2, "0")}:${minutes}`;
 };
 
 const generateTimeOptions = (): string[] => {
   const options: string[] = [];
   for (let hour = 1; hour <= 12; hour++) {
-    for (let minute of ['00', '15', '30', '45']) {
+    for (let minute of ["00", "15", "30", "45"]) {
       options.push(`${hour}:${minute} AM`);
     }
   }
   for (let hour = 1; hour <= 12; hour++) {
-    for (let minute of ['00', '15', '30', '45']) {
+    for (let minute of ["00", "15", "30", "45"]) {
       options.push(`${hour}:${minute} PM`);
     }
   }
@@ -78,28 +87,32 @@ const TIME_OPTIONS = generateTimeOptions();
 
 function AvailabilityAddPage() {
   const [rule, setRule] = useState<BookingRule>({
-    ruleName: '',
-    description: '',
+    ruleName: "",
+    description: "",
     daysOfWeek: [],
-    startTime: '',
-    endTime: '',
-    startDate: '',
-    endDate: '',
+    startTime: "",
+    endTime: "",
+    startDate: "",
+    endDate: "",
     priority: 1,
     breakTimes: [],
     bufferTime: 30,
   });
 
   const [showTooltip, setShowTooltip] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+  const [validationErrors, setValidationErrors] = useState<{
+    [key: string]: string;
+  }>({});
   const navigate = useNavigate();
-  const lawyerId: string | undefined = useSelector((state: RootState) => state?.lawyerAuth?.lawyer?._id);
+  const lawyerId: string | undefined = useSelector(
+    (state: RootState) => state?.lawyerAuth?.lawyer?._id,
+  );
 
   // Helper for excluding today's date
   const getTomorrow = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split('T')[0];
+    return tomorrow.toISOString().split("T")[0];
   };
 
   const isTimeAfter = (startTime: string, endTime: string): boolean => {
@@ -118,50 +131,59 @@ function AvailabilityAddPage() {
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
 
-    if (!rule.ruleName.trim()) errors.ruleName = 'Rule name is required';
-    if (!rule.description.trim()) errors.description = 'Description is required';
-    if (!rule.daysOfWeek.length) errors.daysOfWeek = 'Select at least one day';
-    if (!rule.startTime) errors.startTime = 'Start time is required';
-    if (!rule.endTime) errors.endTime = 'End time is required';
+    if (!rule.ruleName.trim()) errors.ruleName = "Rule name is required";
+    if (!rule.description.trim())
+      errors.description = "Description is required";
+    if (!rule.daysOfWeek.length) errors.daysOfWeek = "Select at least one day";
+    if (!rule.startTime) errors.startTime = "Start time is required";
+    if (!rule.endTime) errors.endTime = "End time is required";
 
     // Time range validation
-    if (rule.startTime && rule.endTime && !isTimeAfter(rule.startTime, rule.endTime)) {
-      errors.timeRange = 'Start time must be before end time';
+    if (
+      rule.startTime &&
+      rule.endTime &&
+      !isTimeAfter(rule.startTime, rule.endTime)
+    ) {
+      errors.timeRange = "Start time must be before end time";
     }
 
     // Date validation: start date must not be today or before today
     if (!rule.startDate) {
-      errors.startDate = 'Start date is required';
+      errors.startDate = "Start date is required";
     } else {
       const selectedStart = new Date(rule.startDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       if (selectedStart <= today) {
-        errors.startDate = 'Start date must be in the future (not today)';
+        errors.startDate = "Start date must be in the future (not today)";
       }
     }
 
     // End date must be after start date (or empty)
     if (rule.startDate && !rule.endDate) {
-      errors.endDate = 'End date required if start date is set';
+      errors.endDate = "End date required if start date is set";
     }
-    if (rule.startDate && rule.endDate && !isDateAfter(rule.startDate, rule.endDate)) {
-      errors.dateRange = 'Start date must be before or equal to end date';
+    if (
+      rule.startDate &&
+      rule.endDate &&
+      !isDateAfter(rule.startDate, rule.endDate)
+    ) {
+      errors.dateRange = "Start date must be before or equal to end date";
     }
 
     // Priority validation
     if (!String(rule.priority) || rule.priority < 1) {
-      errors.priority = 'Priority must be greater than 0';
+      errors.priority = "Priority must be greater than 0";
     }
 
     // Break time validation
     rule.breakTimes.forEach((b, idx) => {
       if (!b.startTime) {
-        errors[`breakTime_${idx}`] = 'Break start time required';
+        errors[`breakTime_${idx}`] = "Break start time required";
       } else if (!b.endTime) {
-        errors[`breakTime_${idx}`] = 'Break end time required';
+        errors[`breakTime_${idx}`] = "Break end time required";
       } else if (!isTimeAfter(b.startTime, b.endTime)) {
-        errors[`breakTime_${idx}`] = 'Break start must be before end';
+        errors[`breakTime_${idx}`] = "Break start must be before end";
       }
     });
 
@@ -172,37 +194,41 @@ function AvailabilityAddPage() {
   const addBreakTime = () => {
     const newBreakTime: BreakTime = {
       id: Date.now().toString(),
-      startTime: '',
-      endTime: '',
+      startTime: "",
+      endTime: "",
     };
-    setRule(prev => ({
+    setRule((prev) => ({
       ...prev,
       breakTimes: [...prev.breakTimes, newBreakTime],
     }));
   };
 
   const removeBreakTime = (id: string) => {
-    setRule(prev => ({
+    setRule((prev) => ({
       ...prev,
-      breakTimes: prev.breakTimes.filter(bt => bt.id !== id),
+      breakTimes: prev.breakTimes.filter((bt) => bt.id !== id),
     }));
     const newErrors = { ...validationErrors };
-    const breakIndex = rule.breakTimes.findIndex(bt => bt.id === id);
+    const breakIndex = rule.breakTimes.findIndex((bt) => bt.id === id);
     delete newErrors[`breakTime_${breakIndex}`];
     setValidationErrors(newErrors);
   };
 
-  const updateBreakTime = (id: string, field: 'startTime' | 'endTime', value: string) => {
-    setRule(prev => ({
+  const updateBreakTime = (
+    id: string,
+    field: "startTime" | "endTime",
+    value: string,
+  ) => {
+    setRule((prev) => ({
       ...prev,
-      breakTimes: prev.breakTimes.map(bt =>
-        bt.id === id ? { ...bt, [field]: value } : bt
+      breakTimes: prev.breakTimes.map((bt) =>
+        bt.id === id ? { ...bt, [field]: value } : bt,
       ),
     }));
-    const breakIndex = rule.breakTimes.findIndex(bt => bt.id === id);
+    const breakIndex = rule.breakTimes.findIndex((bt) => bt.id === id);
     const errorKey = `breakTime_${breakIndex}`;
     if (validationErrors[errorKey]) {
-      setValidationErrors(prev => {
+      setValidationErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[errorKey];
         return newErrors;
@@ -211,14 +237,14 @@ function AvailabilityAddPage() {
   };
 
   const toggleDay = (dayId: string) => {
-    setRule(prev => ({
+    setRule((prev) => ({
       ...prev,
       daysOfWeek: prev.daysOfWeek.includes(dayId)
-        ? prev.daysOfWeek.filter(d => d !== dayId)
+        ? prev.daysOfWeek.filter((d) => d !== dayId)
         : [...prev.daysOfWeek, dayId],
     }));
     if (validationErrors.daysOfWeek) {
-      setValidationErrors(prev => {
+      setValidationErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors.daysOfWeek;
         return newErrors;
@@ -226,17 +252,17 @@ function AvailabilityAddPage() {
     }
   };
 
-  const handleTimeChange = (field: 'startTime' | 'endTime', value: string) => {
-    setRule(prev => ({ ...prev, [field]: value }));
+  const handleTimeChange = (field: "startTime" | "endTime", value: string) => {
+    setRule((prev) => ({ ...prev, [field]: value }));
     if (validationErrors[field]) {
-      setValidationErrors(prev => {
+      setValidationErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[field];
         return newErrors;
       });
     }
     if (validationErrors.timeRange) {
-      setValidationErrors(prev => {
+      setValidationErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors.timeRange;
         return newErrors;
@@ -244,17 +270,17 @@ function AvailabilityAddPage() {
     }
   };
 
-  const handleDateChange = (field: 'startDate' | 'endDate', value: string) => {
-    setRule(prev => ({ ...prev, [field]: value }));
+  const handleDateChange = (field: "startDate" | "endDate", value: string) => {
+    setRule((prev) => ({ ...prev, [field]: value }));
     if (validationErrors[field]) {
-      setValidationErrors(prev => {
+      setValidationErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[field];
         return newErrors;
       });
     }
     if (validationErrors.dateRange) {
-      setValidationErrors(prev => {
+      setValidationErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors.dateRange;
         return newErrors;
@@ -269,7 +295,7 @@ function AvailabilityAddPage() {
     const breakTimes = rule.breakTimes.map((time) => {
       return {
         startTime: time.startTime,
-        endTime: time.endTime
+        endTime: time.endTime,
       };
     });
     const ruleData = {
@@ -278,18 +304,20 @@ function AvailabilityAddPage() {
       days: rule.daysOfWeek,
       breakTimes: breakTimes,
       startTime: rule.startTime,
-      endTime: rule.endTime
+      endTime: rule.endTime,
     };
-    addSlot(lawyerId!, ruleData).then((response) => {
-      toast.success(response.data.message);
-      navigate('/lawyer/slot-list-page');
-    }).catch((error) => {
-      toast.error("Something went wrong");
-    });
+    addSlot(lawyerId!, ruleData)
+      .then((response) => {
+        toast.success(response.data.message);
+        navigate("/lawyer/slot-list-page");
+      })
+      .catch((error) => {
+        toast.error("Something went wrong");
+      });
   };
 
   const handleCancel = () => {
-    console.log('Cancelling form');
+    console.log("Cancelling form");
   };
 
   return (
@@ -302,8 +330,12 @@ function AvailabilityAddPage() {
       <div className="pt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Booking Rule</h1>
-            <p className="text-gray-600">Set up automated slot booking rules for your calendar</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Create Booking Rule
+            </h1>
+            <p className="text-gray-600">
+              Set up automated slot booking rules for your calendar
+            </p>
           </div>
           {/* Main Form Card */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
@@ -314,7 +346,9 @@ function AvailabilityAddPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
                     <Settings className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Basic Information</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Basic Information
+                  </h2>
                 </div>
                 <div className="space-y-6">
                   <div>
@@ -324,12 +358,19 @@ function AvailabilityAddPage() {
                     <input
                       type="text"
                       value={rule.ruleName}
-                      onChange={(e) => setRule(prev => ({ ...prev, ruleName: e.target.value }))}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.ruleName ? 'border-red-300' : 'border-gray-300'}`}
+                      onChange={(e) =>
+                        setRule((prev) => ({
+                          ...prev,
+                          ruleName: e.target.value,
+                        }))
+                      }
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.ruleName ? "border-red-300" : "border-gray-300"}`}
                       placeholder="e.g., Morning Meetings"
                     />
                     {validationErrors.ruleName && (
-                      <p className="mt-2 text-sm text-red-600">{validationErrors.ruleName}</p>
+                      <p className="mt-2 text-sm text-red-600">
+                        {validationErrors.ruleName}
+                      </p>
                     )}
                   </div>
                   <div>
@@ -338,13 +379,20 @@ function AvailabilityAddPage() {
                     </label>
                     <textarea
                       value={rule.description}
-                      onChange={(e) => setRule(prev => ({ ...prev, description: e.target.value }))}
+                      onChange={(e) =>
+                        setRule((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
                       rows={4}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 resize-none ${validationErrors.description ? 'border-red-300' : 'border-gray-300'}`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 resize-none ${validationErrors.description ? "border-red-300" : "border-gray-300"}`}
                       placeholder="Describe when and how this rule should be applied..."
                     />
                     {validationErrors.description && (
-                      <p className="mt-2 text-sm text-red-600">{validationErrors.description}</p>
+                      <p className="mt-2 text-sm text-red-600">
+                        {validationErrors.description}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -356,7 +404,9 @@ function AvailabilityAddPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Days of Week</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Days of Week
+                  </h2>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {DAYS_OF_WEEK.map((day) => (
@@ -364,17 +414,20 @@ function AvailabilityAddPage() {
                       key={day.id}
                       type="button"
                       onClick={() => toggleDay(day.id)}
-                      className={`px-4 py-2 rounded-lg border-2 transition-all duration-200 ${rule.daysOfWeek.includes(day.id)
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-md'
-                          : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
-                        }`}
+                      className={`px-4 py-2 rounded-lg border-2 transition-all duration-200 ${
+                        rule.daysOfWeek.includes(day.id)
+                          ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-md"
+                          : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
+                      }`}
                     >
                       {day.label}
                     </button>
                   ))}
                 </div>
                 {validationErrors.daysOfWeek && (
-                  <p className="mt-2 text-sm text-red-600">{validationErrors.daysOfWeek}</p>
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.daysOfWeek}
+                  </p>
                 )}
               </div>
               <hr className="border-gray-200 mb-8" />
@@ -384,7 +437,9 @@ function AvailabilityAddPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center">
                     <Clock className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Time Range</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Time Range
+                  </h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -393,16 +448,22 @@ function AvailabilityAddPage() {
                     </label>
                     <select
                       value={rule.startTime}
-                      onChange={(e) => handleTimeChange('startTime', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.startTime ? 'border-red-300' : 'border-gray-300'}`}
+                      onChange={(e) =>
+                        handleTimeChange("startTime", e.target.value)
+                      }
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.startTime ? "border-red-300" : "border-gray-300"}`}
                     >
                       <option value="">Select start time</option>
                       {TIME_OPTIONS.map((time) => (
-                        <option key={time} value={time}>{time}</option>
+                        <option key={time} value={time}>
+                          {time}
+                        </option>
                       ))}
                     </select>
                     {validationErrors.startTime && (
-                      <p className="mt-2 text-sm text-red-600">{validationErrors.startTime}</p>
+                      <p className="mt-2 text-sm text-red-600">
+                        {validationErrors.startTime}
+                      </p>
                     )}
                   </div>
                   <div>
@@ -411,21 +472,29 @@ function AvailabilityAddPage() {
                     </label>
                     <select
                       value={rule.endTime}
-                      onChange={(e) => handleTimeChange('endTime', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.endTime ? 'border-red-300' : 'border-gray-300'}`}
+                      onChange={(e) =>
+                        handleTimeChange("endTime", e.target.value)
+                      }
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.endTime ? "border-red-300" : "border-gray-300"}`}
                     >
                       <option value="">Select end time</option>
                       {TIME_OPTIONS.map((time) => (
-                        <option key={time} value={time}>{time}</option>
+                        <option key={time} value={time}>
+                          {time}
+                        </option>
                       ))}
                     </select>
                     {validationErrors.endTime && (
-                      <p className="mt-2 text-sm text-red-600">{validationErrors.endTime}</p>
+                      <p className="mt-2 text-sm text-red-600">
+                        {validationErrors.endTime}
+                      </p>
                     )}
                   </div>
                 </div>
                 {validationErrors.timeRange && (
-                  <p className="mt-2 text-sm text-red-600">{validationErrors.timeRange}</p>
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.timeRange}
+                  </p>
                 )}
               </div>
               <hr className="border-gray-200 mb-8" />
@@ -435,7 +504,9 @@ function AvailabilityAddPage() {
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Date Range</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Date Range
+                  </h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -446,11 +517,15 @@ function AvailabilityAddPage() {
                       type="date"
                       value={rule.startDate}
                       min={getTomorrow()}
-                      onChange={(e) => handleDateChange('startDate', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.startDate ? 'border-red-300' : 'border-gray-300'}`}
+                      onChange={(e) =>
+                        handleDateChange("startDate", e.target.value)
+                      }
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.startDate ? "border-red-300" : "border-gray-300"}`}
                     />
                     {validationErrors.startDate && (
-                      <p className="mt-2 text-sm text-red-600">{validationErrors.startDate}</p>
+                      <p className="mt-2 text-sm text-red-600">
+                        {validationErrors.startDate}
+                      </p>
                     )}
                   </div>
                   <div>
@@ -461,16 +536,22 @@ function AvailabilityAddPage() {
                       type="date"
                       value={rule.endDate}
                       min={rule.startDate || getTomorrow()}
-                      onChange={(e) => handleDateChange('endDate', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.endDate ? 'border-red-300' : 'border-gray-300'}`}
+                      onChange={(e) =>
+                        handleDateChange("endDate", e.target.value)
+                      }
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.endDate ? "border-red-300" : "border-gray-300"}`}
                     />
                     {validationErrors.endDate && (
-                      <p className="mt-2 text-sm text-red-600">{validationErrors.endDate}</p>
+                      <p className="mt-2 text-sm text-red-600">
+                        {validationErrors.endDate}
+                      </p>
                     )}
                   </div>
                 </div>
                 {validationErrors.dateRange && (
-                  <p className="mt-2 text-sm text-red-600">{validationErrors.dateRange}</p>
+                  <p className="mt-2 text-sm text-red-600">
+                    {validationErrors.dateRange}
+                  </p>
                 )}
               </div>
               <hr className="border-gray-200 mb-8" />
@@ -480,16 +561,25 @@ function AvailabilityAddPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Priority
                   </label>
-                  <p className="text-xs text-gray-500 mb-3">Higher number = higher priority</p>
+                  <p className="text-xs text-gray-500 mb-3">
+                    Higher number = higher priority
+                  </p>
                   <input
                     type="number"
                     min="1"
                     value={rule.priority}
-                    onChange={(e) => setRule(prev => ({ ...prev, priority: parseInt(e.target.value) || 1 }))}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.priority ? 'border-red-300' : 'border-gray-300'}`}
+                    onChange={(e) =>
+                      setRule((prev) => ({
+                        ...prev,
+                        priority: parseInt(e.target.value) || 1,
+                      }))
+                    }
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 ${validationErrors.priority ? "border-red-300" : "border-gray-300"}`}
                   />
                   {validationErrors.priority && (
-                    <p className="mt-2 text-sm text-red-600">{validationErrors.priority}</p>
+                    <p className="mt-2 text-sm text-red-600">
+                      {validationErrors.priority}
+                    </p>
                   )}
                 </div>
                 <div>
@@ -514,13 +604,20 @@ function AvailabilityAddPage() {
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mb-3">Minutes between bookings</p>
+                  <p className="text-xs text-gray-500 mb-3">
+                    Minutes between bookings
+                  </p>
                   <input
                     disabled
                     type="number"
                     min="0"
                     value={rule.bufferTime}
-                    onChange={(e) => setRule(prev => ({ ...prev, bufferTime: parseInt(e.target.value) || 0 }))}
+                    onChange={(e) =>
+                      setRule((prev) => ({
+                        ...prev,
+                        bufferTime: parseInt(e.target.value) || 0,
+                      }))
+                    }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400"
                   />
                 </div>
@@ -533,7 +630,9 @@ function AvailabilityAddPage() {
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center">
                       <Clock className="w-5 h-5 text-white" />
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">Break Times</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      Break Times
+                    </h2>
                   </div>
                   <button
                     type="button"
@@ -549,28 +648,49 @@ function AvailabilityAddPage() {
                     const errorKey = `breakTime_${index}`;
                     const hasError = !!validationErrors[errorKey];
                     return (
-                      <div key={breakTime.id} className={`p-4 rounded-lg border ${hasError ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200'}`}>
+                      <div
+                        key={breakTime.id}
+                        className={`p-4 rounded-lg border ${hasError ? "bg-red-50 border-red-200" : "bg-gray-50 border-gray-200"}`}
+                      >
                         <div className="flex items-center gap-4">
-                          <span className="text-sm font-medium text-gray-700 w-16">Break {index + 1}</span>
+                          <span className="text-sm font-medium text-gray-700 w-16">
+                            Break {index + 1}
+                          </span>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
                             <select
                               value={breakTime.startTime}
-                              onChange={(e) => updateBreakTime(breakTime.id, 'startTime', e.target.value)}
-                              className={`px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${hasError ? 'border-red-300' : 'border-gray-300'}`}
+                              onChange={(e) =>
+                                updateBreakTime(
+                                  breakTime.id,
+                                  "startTime",
+                                  e.target.value,
+                                )
+                              }
+                              className={`px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${hasError ? "border-red-300" : "border-gray-300"}`}
                             >
                               <option value="">Select start time</option>
                               {TIME_OPTIONS.map((time) => (
-                                <option key={time} value={time}>{time}</option>
+                                <option key={time} value={time}>
+                                  {time}
+                                </option>
                               ))}
                             </select>
                             <select
                               value={breakTime.endTime}
-                              onChange={(e) => updateBreakTime(breakTime.id, 'endTime', e.target.value)}
-                              className={`px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${hasError ? 'border-red-300' : 'border-gray-300'}`}
+                              onChange={(e) =>
+                                updateBreakTime(
+                                  breakTime.id,
+                                  "endTime",
+                                  e.target.value,
+                                )
+                              }
+                              className={`px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${hasError ? "border-red-300" : "border-gray-300"}`}
                             >
                               <option value="">Select end time</option>
                               {TIME_OPTIONS.map((time) => (
-                                <option key={time} value={time}>{time}</option>
+                                <option key={time} value={time}>
+                                  {time}
+                                </option>
                               ))}
                             </select>
                           </div>
@@ -583,7 +703,9 @@ function AvailabilityAddPage() {
                           </button>
                         </div>
                         {hasError && (
-                          <p className="mt-2 text-sm text-red-600 ml-20">{validationErrors[errorKey]}</p>
+                          <p className="mt-2 text-sm text-red-600 ml-20">
+                            {validationErrors[errorKey]}
+                          </p>
                         )}
                       </div>
                     );
@@ -591,7 +713,9 @@ function AvailabilityAddPage() {
                   {rule.breakTimes.length === 0 && (
                     <div className="text-center py-8 text-gray-500">
                       <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p>No break times defined. Click "Add Break" to add one.</p>
+                      <p>
+                        No break times defined. Click "Add Break" to add one.
+                      </p>
                     </div>
                   )}
                 </div>

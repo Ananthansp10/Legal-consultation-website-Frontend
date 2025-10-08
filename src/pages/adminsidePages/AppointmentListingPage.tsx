@@ -1,8 +1,18 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { Calendar, Clock, User, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { getAppointments } from '../../services/admin/adminService';
-import Pagination from '../../components/reusableComponents/Pagination';
+import React, { useEffect } from "react";
+import { useState } from "react";
+import {
+  Calendar,
+  Clock,
+  User,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+} from "lucide-react";
+import {
+  getAppointments,
+  searchAppointment,
+} from "../../services/admin/adminService";
+import Pagination from "../../components/reusableComponents/Pagination";
 
 interface Appointment {
   userName: string;
@@ -11,61 +21,71 @@ interface Appointment {
   time: string;
   specialization: string;
   problem: string;
-  appointmentStatus: 'Pending' | 'Accepted' | 'Booked' | 'Completed' | 'Completed' | 'Cancelled' | 'Rejected';
+  appointmentStatus:
+    | "Pending"
+    | "Accepted"
+    | "Booked"
+    | "Completed"
+    | "Cancelled"
+    | "Rejected";
   userProfileImage: string;
   lawyerProfileImage: string;
 }
 
-const getStatusConfig = (status: Appointment['appointmentStatus']) => {
+const getStatusConfig = (status: Appointment["appointmentStatus"]) => {
   const configs = {
     Pending: {
-      text: 'Pending',
-      textColor: 'text-yellow-700',
-      bgColor: 'bg-yellow-100',
-      icon: <AlertCircle className="w-4 h-4" />
+      text: "Pending",
+      textColor: "text-yellow-700",
+      bgColor: "bg-yellow-100",
+      icon: <AlertCircle className="w-4 h-4" />,
     },
     Accepted: {
-      text: 'Accepted',
-      textColor: 'text-emerald-700',
-      bgColor: 'bg-emerald-100',
-      icon: <CheckCircle className="w-4 h-4" />
+      text: "Accepted",
+      textColor: "text-emerald-700",
+      bgColor: "bg-emerald-100",
+      icon: <CheckCircle className="w-4 h-4" />,
     },
     Booked: {
-      text: 'Booked',
-      textColor: 'text-blue-700',
-      bgColor: 'bg-blue-100',
-      icon: <Calendar className="w-4 h-4" />
+      text: "Booked",
+      textColor: "text-blue-700",
+      bgColor: "bg-blue-100",
+      icon: <Calendar className="w-4 h-4" />,
     },
     Completed: {
-      text: 'Completed',
-      textColor: 'text-emerald-700',
-      bgColor: 'bg-emerald-100',
-      icon: <CheckCircle className="w-4 h-4" />
+      text: "Completed",
+      textColor: "text-emerald-700",
+      bgColor: "bg-emerald-100",
+      icon: <CheckCircle className="w-4 h-4" />,
     },
     Cancelled: {
-      text: 'Cancelled',
-      textColor: 'text-red-700',
-      bgColor: 'bg-red-100',
-      icon: <XCircle className="w-4 h-4" />
+      text: "Cancelled",
+      textColor: "text-red-700",
+      bgColor: "bg-red-100",
+      icon: <XCircle className="w-4 h-4" />,
     },
     Rejected: {
-      text: 'Rejected',
-      textColor: 'text-orange-700',
-      bgColor: 'bg-orange-100',
-      icon: <XCircle className="w-4 h-4" />
-    }
+      text: "Rejected",
+      textColor: "text-orange-700",
+      bgColor: "bg-orange-100",
+      icon: <XCircle className="w-4 h-4" />,
+    },
   };
   return configs[status];
 };
 
-const AppointmentCard: React.FC<{ appointment: Appointment }> = ({ appointment }) => {
+const AppointmentCard: React.FC<{ appointment: Appointment }> = ({
+  appointment,
+}) => {
   const statusConfig = getStatusConfig(appointment.appointmentStatus);
 
   return (
     <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 ease-in-out">
       {/* Status Badge */}
       <div className="flex justify-end mb-4">
-        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold ${statusConfig.textColor} ${statusConfig.bgColor}`}>
+        <div
+          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold ${statusConfig.textColor} ${statusConfig.bgColor}`}
+        >
           {statusConfig.icon}
           {statusConfig.text}
         </div>
@@ -120,29 +140,41 @@ const AppointmentCard: React.FC<{ appointment: Appointment }> = ({ appointment }
 };
 
 function AppointmentListingPage() {
-  const [activeFilter, setActiveFilter] = useState<'All' | Appointment['appointmentStatus']>('All');
-  const [appointments, setAppointments] = useState<Appointment[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 3
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const [totalPages, setTotalPages] = useState(0)
+  const [activeFilter, setActiveFilter] = useState<
+    "All" | Appointment["appointmentStatus"]
+  >("All");
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     getAppointments(activeFilter, startIndex, itemsPerPage).then((response) => {
-      setAppointments(response.data.data.appointments)
-      setTotalPages(Math.ceil(response.data.data.totalAppointments / itemsPerPage))
-    })
-  }, [activeFilter, currentPage])
-
+      setAppointments(response.data.data.appointments);
+      setTotalPages(
+        Math.ceil(response.data.data.totalAppointments / itemsPerPage),
+      );
+    });
+  }, [activeFilter, currentPage]);
 
   const filterTabs = [
-    { key: 'All' as const, label: 'All' },
-    { key: 'Pending' as const, label: 'Pending' },
-    { key: 'Accepted' as const, label: 'Accepted' },
-    { key: 'Booked' as const, label: 'Booked' },
-    { key: 'Cancelled' as const, label: 'Cancelled' },
-    { key: 'Rejected' as const, label: 'Rejected' }
+    { key: "All" as const, label: "All" },
+    { key: "Pending" as const, label: "Pending" },
+    { key: "Accepted" as const, label: "Accepted" },
+    { key: "Booked" as const, label: "Booked" },
+    { key: "Cancelled" as const, label: "Cancelled" },
+    { key: "Rejected" as const, label: "Rejected" },
   ];
+
+  // Search bar state, not used for filtering yet
+  const [searchTerm, setSearchTerm] = useState("");
+
+  function appointmentSearch() {
+    searchAppointment(searchTerm).then((response) => {
+      setAppointments(response.data.data);
+    });
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
@@ -159,6 +191,24 @@ function AppointmentListingPage() {
             </p>
           </div>
 
+          {/* Search Bar */}
+          <div className="mb-6 flex items-center justify-center space-x-2 max-w-md mx-auto">
+            <input
+              type="text"
+              placeholder="Enter user name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 px-4 py-2 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+            />
+            <button
+              onClick={appointmentSearch}
+              type="button"
+              className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all"
+            >
+              Search
+            </button>
+          </div>
+
           {/* Filter Tabs */}
           <div className="mb-8">
             <div className="flex flex-wrap gap-2 justify-center">
@@ -166,21 +216,13 @@ function AppointmentListingPage() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveFilter(tab.key)}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${activeFilter === tab.key
-                    ? 'bg-blue-600 text-white shadow-lg scale-105'
-                    : 'bg-white/70 text-gray-700 hover:bg-white hover:shadow-md hover:scale-105'
-                    }`}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                    activeFilter === tab.key
+                      ? "bg-blue-600 text-white shadow-lg scale-105"
+                      : "bg-white/70 text-gray-700 hover:bg-white hover:shadow-md hover:scale-105"
+                  }`}
                 >
                   {tab.label}
-                  {/* {tab.count > 0 && (
-                    <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                      activeFilter === tab.key
-                        ? 'bg-white/20 text-white'
-                        : 'bg-gray-200 text-gray-600'
-                    }`}>
-                      {tab.count}
-                    </span>
-                  )} */}
                 </button>
               ))}
             </div>
@@ -190,6 +232,7 @@ function AppointmentListingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {appointments?.map((appointment) => (
               <AppointmentCard
+                key={`${appointment.userName}-${appointment.date}-${appointment.time}`}
                 appointment={appointment}
               />
             ))}
@@ -200,18 +243,23 @@ function AppointmentListingPage() {
             <div className="text-center py-12">
               <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {activeFilter === 'All' ? 'No appointments found' : `No ${activeFilter} appointments`}
+                {activeFilter === "All"
+                  ? "No appointments found"
+                  : `No ${activeFilter} appointments`}
               </h3>
               <p className="text-gray-600">
-                {activeFilter === 'All'
+                {activeFilter === "All"
                   ? "You don't have any appointments scheduled at the moment."
-                  : `There are no ${activeFilter} appointments to display.`
-                }
+                  : `There are no ${activeFilter} appointments to display.`}
               </p>
             </div>
           )}
         </div>
-        <Pagination currentPage={currentPage} totalPages={totalPages || 0} onPageChange={setCurrentPage} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages || 0}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

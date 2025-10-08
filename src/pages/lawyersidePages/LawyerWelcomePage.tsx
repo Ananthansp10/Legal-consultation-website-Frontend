@@ -24,7 +24,7 @@ function LawyerWelcomePage() {
 
   const navigate = useNavigate();
   const lawyerDetails = useSelector(
-    (state: RootState) => state.lawyerAuth.isAuthenticate
+    (state: RootState) => state.lawyerAuth.isAuthenticate,
   );
 
   useEffect(() => {

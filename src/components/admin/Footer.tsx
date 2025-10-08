@@ -1,5 +1,5 @@
-import React from 'react';
-import { Scale } from 'lucide-react';
+import React from "react";
+import { Scale } from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
@@ -16,7 +16,8 @@ const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-slate-600 text-sm leading-relaxed max-w-md">
-              Empowering legal professionals through seamless administration and connecting clients with trusted lawyers worldwide.
+              Empowering legal professionals through seamless administration and
+              connecting clients with trusted lawyers worldwide.
             </p>
           </div>
 
@@ -24,10 +25,38 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-semibold text-slate-800 mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Dashboard</a></li>
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Lawyer Verification</a></li>
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">User Management</a></li>
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Reports</a></li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Lawyer Verification
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  User Management
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Reports
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -35,10 +64,38 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-semibold text-slate-800 mb-4">Support</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Help Center</a></li>
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Contact Support</a></li>
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Privacy Policy</a></li>
-              <li><a href="#" className="text-slate-600 hover:text-blue-500 transition-colors duration-200">Terms of Service</a></li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Help Center
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Contact Support
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-slate-600 hover:text-blue-500 transition-colors duration-200"
+                >
+                  Terms of Service
+                </a>
+              </li>
             </ul>
           </div>
         </div>

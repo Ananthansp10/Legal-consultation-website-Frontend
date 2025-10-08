@@ -1,29 +1,31 @@
-import React, { useState } from 'react';
-import { Mail, Scale, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { sendMail } from '../../services/lawyer/authService';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Mail, Scale, ArrowRight, CheckCircle2 } from "lucide-react";
+import { sendMail } from "../../services/lawyer/authService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function LawyerForgotPasswordEmailPage() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
     setIsLoading(true);
-    sendMail({ email: email }).then((response) => {
-      toast.success(response.data.message)
-      setEmail('')
-    }).catch((error) => {
-      toast.error(error.response.data.message)
-      setEmail('')
-    })
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    sendMail({ email: email })
+      .then((response) => {
+        toast.success(response.data.message);
+        setEmail("");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+        setEmail("");
+      });
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsLoading(false);
     setIsSubmitted(true);
   };
@@ -54,11 +56,13 @@ function LawyerForgotPasswordEmailPage() {
               <Scale className="w-16 h-16 text-blue-300" />
             </div>
             <h1 className="text-4xl font-bold mb-6 leading-tight">
-              Secure Legal Practice<br />
+              Secure Legal Practice
+              <br />
               <span className="text-blue-300">Management</span>
             </h1>
             <p className="text-xl text-slate-300 max-w-md leading-relaxed">
-              Professional tools designed for modern legal practitioners, ensuring security and confidentiality at every step.
+              Professional tools designed for modern legal practitioners,
+              ensuring security and confidentiality at every step.
             </p>
           </div>
         </div>
@@ -83,13 +87,17 @@ function LawyerForgotPasswordEmailPage() {
                     Forgot Password?
                   </h2>
                   <p className="text-slate-600 leading-relaxed">
-                    Enter your email address and we'll send you a link to reset your password.
+                    Enter your email address and we'll send you a link to reset
+                    your password.
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-2">
-                    <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-semibold text-slate-700"
+                    >
                       Email Address
                     </label>
                     <div className="relative">
@@ -129,7 +137,7 @@ function LawyerForgotPasswordEmailPage() {
 
                 <div className="mt-8 text-center">
                   <p className="text-slate-600">
-                    Remember your password?{' '}
+                    Remember your password?{" "}
                     <button className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200">
                       Sign in
                     </button>
@@ -148,11 +156,11 @@ function LawyerForgotPasswordEmailPage() {
                   Check Your Email
                 </h2>
                 <p className="text-slate-600 leading-relaxed mb-6">
-                  We've sent a password reset link to{' '}
+                  We've sent a password reset link to{" "}
                   <span className="font-semibold text-slate-700">{email}</span>
                 </p>
                 <p className="text-sm text-slate-500 mb-8">
-                  Didn't receive the email? Check your spam folder or{' '}
+                  Didn't receive the email? Check your spam folder or{" "}
                   <button
                     onClick={() => setIsSubmitted(false)}
                     className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
@@ -161,7 +169,10 @@ function LawyerForgotPasswordEmailPage() {
                   </button>
                 </p>
                 <button
-                  onClick={() => { setIsSubmitted(false); navigate('/auth/lawyer/signin') }}
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    navigate("/auth/lawyer/signin");
+                  }}
                   className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-4 px-6 rounded-xl transition-all duration-200"
                 >
                   Back to Login
@@ -176,7 +187,9 @@ function LawyerForgotPasswordEmailPage() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50">
         <div className="flex items-center justify-center p-4">
           <Scale className="w-6 h-6 text-blue-400 mr-2" />
-          <span className="text-white font-semibold">Legal Practice Portal</span>
+          <span className="text-white font-semibold">
+            Legal Practice Portal
+          </span>
         </div>
       </div>
     </div>

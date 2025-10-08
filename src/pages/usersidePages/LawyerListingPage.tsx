@@ -59,7 +59,6 @@ function LawyerListingPage() {
   function filterLawyer(specializationId: string, specialization: string) {
     setActiveFilter(specializationId);
     filterLawyerBySpecialization(specialization).then((response) => {
-      console.log(response.data.data);
       setLawyers(response.data.data);
     });
   }

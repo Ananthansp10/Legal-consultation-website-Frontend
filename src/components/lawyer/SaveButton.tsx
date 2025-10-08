@@ -1,5 +1,5 @@
-import React from 'react';
-import { Save, Check, Sparkles, Zap } from 'lucide-react';
+import React from "react";
+import { Save, Check, Sparkles, Zap } from "lucide-react";
 
 interface SaveButtonProps {
   onSave: () => void;
@@ -16,7 +16,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({ onSave, disabled }) => {
     setIsSaving(true);
 
     // Simulate save action
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     setIsSaving(false);
     setSaved(true);
@@ -30,12 +30,15 @@ const SaveButton: React.FC<SaveButtonProps> = ({ onSave, disabled }) => {
     <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50">
       <div className="relative group">
         {/* Floating glow effect */}
-        <div className={`absolute -inset-4 rounded-full blur-2xl transition-all duration-500 ${disabled || isSaving
-            ? 'bg-gray-400/20'
-            : saved
-              ? 'bg-gradient-to-r from-emerald-400 to-green-500 opacity-60 animate-pulse'
-              : 'bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 opacity-40 group-hover:opacity-60'
-          }`}></div>
+        <div
+          className={`absolute -inset-4 rounded-full blur-2xl transition-all duration-500 ${
+            disabled || isSaving
+              ? "bg-gray-400/20"
+              : saved
+                ? "bg-gradient-to-r from-emerald-400 to-green-500 opacity-60 animate-pulse"
+                : "bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 opacity-40 group-hover:opacity-60"
+          }`}
+        ></div>
 
         {/* Main button */}
         <button
@@ -44,11 +47,12 @@ const SaveButton: React.FC<SaveButtonProps> = ({ onSave, disabled }) => {
           className={`
             relative inline-flex items-center justify-center px-8 py-4 rounded-full text-white font-bold text-lg
             backdrop-blur-xl shadow-2xl transition-all duration-500 transform overflow-hidden
-            ${disabled || isSaving
-              ? 'bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed scale-95'
-              : saved
-                ? 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-emerald-500/40 scale-110'
-                : 'bg-gradient-to-r from-blue-500 via-purple-600 to-blue-700 hover:from-blue-600 hover:via-purple-700 hover:to-blue-800 shadow-blue-500/40 hover:scale-110 hover:shadow-3xl'
+            ${
+              disabled || isSaving
+                ? "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed scale-95"
+                : saved
+                  ? "bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-emerald-500/40 scale-110"
+                  : "bg-gradient-to-r from-blue-500 via-purple-600 to-blue-700 hover:from-blue-600 hover:via-purple-700 hover:to-blue-800 shadow-blue-500/40 hover:scale-110 hover:shadow-3xl"
             }
           `}
         >

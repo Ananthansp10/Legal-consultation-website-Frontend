@@ -14,9 +14,11 @@ import {
 import {
   addSubscriptionPlans,
   changePlanStatus,
+  getPlanSummaryReport,
   getSubscriptionPlans,
   planDelete,
   planEdit,
+  searchPlan,
 } from "../../services/admin/adminService";
 import { toast } from "react-toastify";
 import ConfirmModal from "../../components/reusableComponents/ConfirmModal";
@@ -31,6 +33,7 @@ interface Plan {
   planType: PlanType;
   features: string[];
   status?: boolean;
+  totalAppointments: string;
 }
 
 interface Stat {
@@ -43,6 +46,13 @@ interface Stat {
   };
 }
 
+interface PlanSummaryReport {
+  activePlans: number;
+  inActivePlans: number;
+  mostPopularPlan: string;
+  totalMonthlyRevenue: number;
+}
+
 const SubscriptionPlanManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -51,6 +61,7 @@ const SubscriptionPlanManagement: React.FC = () => {
     duration: "30",
     planType: "monthly" as PlanType,
     features: [] as string[],
+    totalAppointments: "" as string,
   });
   const [newFeature, setNewFeature] = useState<string>("");
 
@@ -59,32 +70,49 @@ const SubscriptionPlanManagement: React.FC = () => {
   const [planId, setPlanId] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [confirmationModal, setConfirmationModal] = useState(false);
+  const [planSummaryReport, setPlanSummaryReport] =
+    useState<PlanSummaryReport>();
+
+  useEffect(() => {
+    getPlanSummaryReport().then((response) => {
+      setPlanSummaryReport(response.data.data);
+    });
+  }, [refresh]);
 
   const stats: Stat[] = [
     {
       title: "Active Plans",
-      value: plans.filter((p) => p.status).length,
+      value: planSummaryReport?.activePlans || 0,
       icon: TrendingUp,
       trend: { value: 8.2, isPositive: true },
     },
     {
       title: "Inactive Plans",
-      value: plans.filter((p) => !p.status).length,
+      value: planSummaryReport?.inActivePlans || 0,
       icon: TrendingDown,
       trend: { value: 2.1, isPositive: false },
     },
     {
       title: "Most Popular",
-      value: "Professional",
+      value: planSummaryReport?.mostPopularPlan || "",
       icon: Star,
     },
     {
       title: "Monthly Revenue",
-      value: "₹2,45,890",
+      value: planSummaryReport?.totalMonthlyRevenue || 0,
       icon: DollarSign,
       trend: { value: 12.5, isPositive: true },
     },
   ];
+
+  // Search state - no filtering logic added
+  const [searchTerm, setSearchTerm] = useState("");
+
+  function planSearch() {
+    searchPlan(searchTerm).then((response) => {
+      setPlans(response.data.data);
+    });
+  }
 
   const openModal = (): void => {
     setFormData({
@@ -93,6 +121,7 @@ const SubscriptionPlanManagement: React.FC = () => {
       duration: "30",
       planType: "monthly",
       features: [],
+      totalAppointments: "",
     });
     setNewFeature("");
     setIsModalOpen(true);
@@ -106,13 +135,14 @@ const SubscriptionPlanManagement: React.FC = () => {
       duration: "30",
       planType: "monthly",
       features: [],
+      totalAppointments: "",
     });
     setNewFeature("");
   };
 
   const handleInputChange = (
     field: keyof typeof formData,
-    value: string | PlanType
+    value: string | PlanType,
   ): void => {
     setFormData((prev) => ({
       ...prev,
@@ -162,6 +192,7 @@ const SubscriptionPlanManagement: React.FC = () => {
         duration: parseInt(formData.duration),
         planType: formData.planType,
         features: formData.features,
+        totalAppointments: formData.totalAppointments,
       };
 
       addSubscriptionPlans(newPlan).then((response) => {
@@ -202,6 +233,7 @@ const SubscriptionPlanManagement: React.FC = () => {
       ...findPlan[0],
       price: findPlan[0].price.toString(),
       duration: findPlan[0].duration.toString(),
+      totalAppointments: findPlan[0].totalAppointments,
     });
     setIsEdit(true);
     setPlanId(planId);
@@ -287,6 +319,24 @@ const SubscriptionPlanManagement: React.FC = () => {
           ))}
         </div>
 
+        {/* Search Bar */}
+        <div className="mb-6 flex items-center space-x-2 max-w-md">
+          <input
+            type="text"
+            placeholder="Search plans..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 px-4 py-2 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+          />
+          <button
+            onClick={planSearch}
+            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all"
+            type="button"
+          >
+            Search
+          </button>
+        </div>
+
         {/* Plans Table */}
         <div className="mb-8">
           <div className="mb-6">
@@ -337,7 +387,7 @@ const SubscriptionPlanManagement: React.FC = () => {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(
-                            plan.planType
+                            plan.planType,
                           )}`}
                         >
                           {plan.planType.charAt(0).toUpperCase() +
@@ -395,7 +445,7 @@ const SubscriptionPlanManagement: React.FC = () => {
                             onClick={() =>
                               togglePlanStatus(
                                 plan._id!,
-                                plan.status ? "Deactivate" : "Activate"
+                                plan.status ? "Deactivate" : "Activate",
                               )
                             }
                             className={`p-2 rounded-lg transition-all duration-200 group ${
@@ -475,7 +525,7 @@ const SubscriptionPlanManagement: React.FC = () => {
                       onChange={(e) =>
                         handleInputChange(
                           "planType",
-                          e.target.value as PlanType
+                          e.target.value as PlanType,
                         )
                       }
                       className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
@@ -523,6 +573,25 @@ const SubscriptionPlanManagement: React.FC = () => {
                     }
                     className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                     placeholder="30"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="totalAppointments"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Total Appointments
+                  </label>
+                  <input
+                    id="totalAppointments"
+                    type="text"
+                    value={formData.totalAppointments}
+                    onChange={(e) =>
+                      handleInputChange("totalAppointments", e.target.value)
+                    }
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                    placeholder="Enter total Appointments"
                   />
                 </div>
 

@@ -17,10 +17,9 @@ interface ProtectRouteProps {
 
 function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   const [isAuth, setIsAuth] = useState<boolean | null | string>(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-
-  const user: User | null = useSelector((state: RootState) => state.auth.user)
+  const user: User | null = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     if (!user) {
@@ -30,13 +29,13 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
             id: response.data.result.id,
             googleId: response.data.result.googleId,
             email: response.data.result.email,
-            name: response.data.result.name
-          }
-          dispatch(login(obj))
+            name: response.data.result.name,
+          };
+          dispatch(login(obj));
         }
-      })
+      });
     }
-  }, [])
+  }, []);
 
   interface CheckAuthResponse {
     success: boolean;
@@ -50,32 +49,37 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
     isBlock: string;
   }
 
-
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response: AxiosResponse<CheckAuthResponse> = await isValidUser(allowedRoles);
+        const response: AxiosResponse<CheckAuthResponse> =
+          await isValidUser(allowedRoles);
         if (response.data.success) {
           setIsAuth(true);
         } else {
-          setIsAuth(false)
+          setIsAuth(false);
         }
       } catch (error) {
-        const axiosError = error as AxiosError<CheckAuthErrorResponse>
-        const errorData = axiosError.response?.data
+        const axiosError = error as AxiosError<CheckAuthErrorResponse>;
+        const errorData = axiosError.response?.data;
         if (errorData?.isUnAuth) {
-          localStorage.removeItem('user')
+          if (allowedRoles[0] == "user") {
+            localStorage.removeItem("userDetails");
+          } else if (allowedRoles[0] == "lawyer") {
+            localStorage.removeItem("lawyer");
+          } else {
+            localStorage.removeItem("admin");
+          }
           setIsAuth("unAuth");
         } else if (errorData?.isBlock) {
-          if (allowedRoles[0] == 'user') {
-            dispatch(logout())
-            setIsAuth('blocked')
+          if (allowedRoles[0] == "user") {
+            dispatch(logout());
+            setIsAuth("blocked");
           } else {
-            dispatch(lawyerLogout())
-            setIsAuth('blocked')
+            dispatch(lawyerLogout());
+            setIsAuth("blocked");
           }
-        }
-        else {
+        } else {
           setIsAuth(false);
         }
       }
@@ -85,15 +89,15 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
   }, [allowedRoles[0]]);
 
   if (isAuth === null) {
-    return <Loader />
+    return <Loader />;
   }
 
-  if (isAuth == 'blocked') {
-    return <Navigate to={`/block-page?role=${allowedRoles[0]}`} />
+  if (isAuth == "blocked") {
+    return <Navigate to={`/block-page?role=${allowedRoles[0]}`} />;
   }
 
   if (isAuth == "unAuth") {
-    return <Navigate to={`/unauthorized?role=${allowedRoles[0]}`} />
+    return <Navigate to={`/unauthorized?role=${allowedRoles[0]}`} />;
   }
 
   if (isAuth) {

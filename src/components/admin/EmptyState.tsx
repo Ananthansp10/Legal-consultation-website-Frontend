@@ -1,5 +1,5 @@
-import React from 'react';
-import { Scale, Plus } from 'lucide-react';
+import React from "react";
+import { Scale, Plus } from "lucide-react";
 
 interface EmptyStateProps {
   onAddClick: () => void;
@@ -23,7 +23,8 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onAddClick }) => {
           No Specializations Added
         </h3>
         <p className="text-slate-500 text-lg mb-8 leading-relaxed">
-          Get started by adding your first legal specialization to organize your practice areas.
+          Get started by adding your first legal specialization to organize your
+          practice areas.
         </p>
 
         <button

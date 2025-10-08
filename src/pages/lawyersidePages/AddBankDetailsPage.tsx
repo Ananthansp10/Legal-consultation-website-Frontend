@@ -32,7 +32,7 @@ function AddBankDetailsPage() {
   });
 
   const lawyerId: string | undefined = useSelector(
-    (state: RootState) => state.lawyerAuth.lawyer?._id
+    (state: RootState) => state.lawyerAuth.lawyer?._id,
   );
 
   const [errors, setErrors] = useState<FormErrors>({});

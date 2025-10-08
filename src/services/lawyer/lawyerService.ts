@@ -35,7 +35,7 @@ export const addSlot = async (lawyerId: string, data: BookingRule) => {
 
 export const getSlot = async (lawyerId: string, type: string) => {
   try {
-    let result = await axios.get(LAWYER_API.GET_SLOT(lawyerId, type));
+    const result = await axios.get(LAWYER_API.GET_SLOT(lawyerId, type));
     return result;
   } catch (error) {
     throw error;
@@ -54,7 +54,7 @@ export const getAppointments = async (
   lawyerId: string,
   appointmentStatus: string,
   startIndex: number,
-  limit: number
+  limit: number,
 ) => {
   try {
     return axios.get(
@@ -62,8 +62,8 @@ export const getAppointments = async (
         lawyerId,
         appointmentStatus,
         startIndex,
-        limit
-      )
+        limit,
+      ),
     );
   } catch (error) {
     throw error;
@@ -73,11 +73,11 @@ export const getAppointments = async (
 export const updateAppointmentStatus = async (
   id: string,
   status: string,
-  lawyerId: string
+  lawyerId: string,
 ) => {
   try {
     return axios.patch(
-      LAWYER_API.UPDATE_APPOINTMENT_STATUS(id, status, lawyerId)
+      LAWYER_API.UPDATE_APPOINTMENT_STATUS(id, status, lawyerId),
     );
   } catch (error) {
     throw error;
@@ -114,7 +114,7 @@ export const verifyRazorpayPayment = async (data: RazorpayPaymentData) => {
 export const addPlan = async (
   lawyerId: string,
   planId: string,
-  price: number
+  price: number,
 ) => {
   try {
     return await axios.post(LAWYER_API.ADD_PLAN(lawyerId, planId, price));
@@ -149,7 +149,7 @@ export const getUserChatProfile = async (userId: string) => {
 
 export const updateChatReadStatus = async (
   lawyerId: string,
-  userId: string
+  userId: string,
 ) => {
   try {
     await axios.post(LAWYER_API.UPDATE_CHAT_READ_STATUS(lawyerId, userId));
@@ -192,16 +192,29 @@ export const startMeeting = async (appointmentId: string) => {
 
 export const addFinalNote = async (appointmentId: string, note: string) => {
   try {
-    return await axios.post(LAWYER_API.ADD_FINAL_NOTE(appointmentId),{note:note})
+    return await axios.post(LAWYER_API.ADD_FINAL_NOTE(appointmentId), {
+      note: note,
+    });
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
 
-export const addFeedback = async (appointmentId: string, data: {feedback:string, rating: number}) => {
+export const addFeedback = async (
+  appointmentId: string,
+  data: { feedback: string; rating: number },
+) => {
   try {
-    return await axios.post(LAWYER_API.ADD_FEEDBACK(appointmentId),data)
+    return await axios.post(LAWYER_API.ADD_FEEDBACK(appointmentId), data);
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
+
+export const findStarterPlan = async (lawyerId: string) => {
+  try {
+    return await axios.get(LAWYER_API.FIND_STARTER_PLAN(lawyerId));
+  } catch (error) {
+    throw error;
+  }
+};

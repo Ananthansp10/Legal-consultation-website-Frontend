@@ -1,6 +1,6 @@
-import React from 'react';
-import { DivideIcon as LucideIcon } from 'lucide-react';
-import GlassCard from './GlassCard';
+import React from "react";
+import { DivideIcon as LucideIcon } from "lucide-react";
+import GlassCard from "./GlassCard";
 
 interface StatCardProps {
   title: string;
@@ -13,7 +13,13 @@ interface StatCardProps {
   className?: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, trend, className = '' }) => {
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  icon: Icon,
+  trend,
+  className = "",
+}) => {
   return (
     <GlassCard hover className={`p-6 ${className}`}>
       <div className="flex items-center justify-between">
@@ -23,10 +29,12 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, trend, cl
           {trend && (
             <div className="flex items-center mt-2">
               <span
-                className={`text-xs font-medium ${trend.isPositive ? 'text-green-500' : 'text-red-500'
-                  }`}
+                className={`text-xs font-medium ${
+                  trend.isPositive ? "text-green-500" : "text-red-500"
+                }`}
               >
-                {trend.isPositive ? '+' : ''}{trend.value}%
+                {trend.isPositive ? "+" : ""}
+                {trend.value}%
               </span>
               <span className="text-xs text-slate-500 ml-1">vs last month</span>
             </div>

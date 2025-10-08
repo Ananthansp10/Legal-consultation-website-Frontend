@@ -13,7 +13,7 @@ const Pagination = ({
   totalPages,
   onPageChange,
   showPageInfo = true,
-  maxVisiblePages = 7
+  maxVisiblePages = 7,
 }: Props) => {
   if (totalPages <= 1) return null;
 
@@ -41,14 +41,15 @@ const Pagination = ({
   const showFirstPage = visiblePages[0] > 1;
   const showLastPage = visiblePages[visiblePages.length - 1] < totalPages;
   const showStartEllipsis = visiblePages[0] > 2;
-  const showEndEllipsis = visiblePages[visiblePages.length - 1] < totalPages - 1;
+  const showEndEllipsis =
+    visiblePages[visiblePages.length - 1] < totalPages - 1;
 
   const PaginationButton = ({
     children,
     onClick,
     disabled = false,
     active = false,
-    className = ""
+    className = "",
   }: {
     children: React.ReactNode;
     onClick: () => void;
@@ -67,11 +68,12 @@ const Pagination = ({
         transition-all duration-200
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
         disabled:cursor-not-allowed
-        ${active
-          ? 'bg-blue-600 text-white shadow-lg transform scale-105 hover:bg-blue-700'
-          : disabled
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md'
+        ${
+          active
+            ? "bg-blue-600 text-white shadow-lg transform scale-105 hover:bg-blue-700"
+            : disabled
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md"
         }
         ${className}
       `}
@@ -91,7 +93,7 @@ const Pagination = ({
       {/* Page Info */}
       {showPageInfo && (
         <div className="text-sm text-gray-600">
-          Page <span className="font-semibold">{currentPage}</span> of{' '}
+          Page <span className="font-semibold">{currentPage}</span> of{" "}
           <span className="font-semibold">{totalPages}</span>
         </div>
       )}
@@ -110,7 +112,12 @@ const Pagination = ({
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Previous
         </PaginationButton>
@@ -165,7 +172,12 @@ const Pagination = ({
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </PaginationButton>
       </nav>

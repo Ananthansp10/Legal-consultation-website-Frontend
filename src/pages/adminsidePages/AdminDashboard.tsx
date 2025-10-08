@@ -115,7 +115,7 @@ const AdminDashboard: React.FC = () => {
   ];
 
   const [summaryReport, setSummaryReport] = useState<SummaryReport | null>(
-    null
+    null,
   );
 
   useEffect(() => {

@@ -143,7 +143,7 @@ function AddFeedbackPage() {
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                   e.currentTarget.nextElementSibling?.classList.remove(
-                    "hidden"
+                    "hidden",
                   );
                 }}
               />
@@ -198,12 +198,12 @@ function AddFeedbackPage() {
                   {rating === 5
                     ? "Excellent!"
                     : rating === 4
-                    ? "Very Good!"
-                    : rating === 3
-                    ? "Good!"
-                    : rating === 2
-                    ? "Fair"
-                    : "Poor"}
+                      ? "Very Good!"
+                      : rating === 3
+                        ? "Good!"
+                        : rating === 2
+                          ? "Fair"
+                          : "Poor"}
                 </p>
               )}
             </div>

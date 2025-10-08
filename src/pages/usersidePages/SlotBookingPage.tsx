@@ -89,7 +89,7 @@ function SlotBookingPage() {
   const { lawyerId, caseId } = useParams();
 
   const userId: string | undefined = useSelector(
-    (state: RootState) => state.auth.user?.id
+    (state: RootState) => state.auth.user?.id,
   );
 
   const navigate = useNavigate();
@@ -153,7 +153,7 @@ function SlotBookingPage() {
   const validateModal = () => {
     const consultationModeValid = validateField(
       "consultationMode",
-      consultationMode
+      consultationMode,
     );
     const problemValid = validateField("problem", problem);
 
@@ -173,13 +173,13 @@ function SlotBookingPage() {
       {
         lawyerId: lawyerId!,
         userId: userId!,
-        date: selectedDate?.toLocaleDateString("en-CA")!,
+        date: selectedDate?.toLocaleDateString("en-CA") ?? "",
         time: selectedTime,
         consultationMode: consultationMode,
         problem: problem,
-        fee: parseInt(lawyer?.proffessionalInfo.fee!),
+        fee: parseInt(lawyer?.proffessionalInfo.fee ?? ""),
       },
-      caseId
+      caseId,
     )
       .then((response) => {
         toast.success(response.data.message);
@@ -286,7 +286,7 @@ function SlotBookingPage() {
       const date = new Date(
         currentMonth.getFullYear(),
         currentMonth.getMonth(),
-        day
+        day,
       );
       days.push({
         date: day,
@@ -495,8 +495,8 @@ function SlotBookingPage() {
                         dayItem.fullDate.toDateString()
                           ? "bg-gradient-to-br from-[#3b82f6] to-[#6366f1] text-white shadow-lg ring-2 ring-[#3b82f6] ring-opacity-30"
                           : dayItem.isPast
-                          ? "bg-[#f8fafc]"
-                          : "bg-[#f8fafc] hover:bg-[#3b82f6] hover:text-white"
+                            ? "bg-[#f8fafc]"
+                            : "bg-[#f8fafc] hover:bg-[#3b82f6] hover:text-white"
                       }
                     `}
                   >
@@ -506,8 +506,8 @@ function SlotBookingPage() {
                         dayItem.fullDate.toDateString()
                           ? "text-white"
                           : dayItem.isPast
-                          ? "text-[#cbd5e1]"
-                          : "text-[#334155]"
+                            ? "text-[#cbd5e1]"
+                            : "text-[#334155]"
                       }`}
                     >
                       {dayItem?.date}

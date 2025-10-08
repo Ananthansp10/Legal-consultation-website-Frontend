@@ -14,6 +14,7 @@ import LawyerNavbar from "../../components/lawyer/Navbar";
 import {
   addPlan,
   createRazorpayOrder,
+  findStarterPlan,
   getSubscriptionPlans,
 } from "../../services/lawyer/lawyerService";
 import { openRazorpayCheckout } from "../../config/razorpayCheckout";
@@ -40,16 +41,17 @@ function SubscriptionPlanPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [subscriptionPlans, setSubscriptionPlans] = useState<Plan[]>([]);
+  const [isStarterPlanExist, setIsStarterPlanExist] = useState(false);
 
   const navigate = useNavigate();
   const lawyerId: string | undefined = useSelector(
-    (state: RootState) => state?.lawyerAuth?.lawyer?._id
+    (state: RootState) => state?.lawyerAuth?.lawyer?._id,
   );
 
   const getColorScheme = (
     index: number,
     planName: string,
-    duration: number
+    duration: number,
   ) => {
     const colorSchemes = [
       {
@@ -182,15 +184,20 @@ function SubscriptionPlanPage() {
   const formatPrice = (
     price: number,
     currency: string = "₹",
-    duration: number
+    duration: number,
   ) => {
     if (price === 0) return "Free";
     return `${currency}${price.toLocaleString()} / ${duration} days`;
   };
 
+  useEffect(() => {
+    findStarterPlan(lawyerId!).then((response) => {
+      setIsStarterPlanExist(response.data.data);
+    });
+  }, []);
+
   function executePayment(planId: string, price: number) {
     createRazorpayOrder(planId, price).then((response) => {
-      console.log(response);
       openRazorpayCheckout(response.data.data)
         .then(() => {
           addPlan(lawyerId!, planId, price).then(() => {
@@ -341,7 +348,7 @@ function SubscriptionPlanPage() {
                       {formatPrice(
                         plan.price,
                         plan.currency || "₹",
-                        plan.duration
+                        plan.duration,
                       )}
                     </div>
                     {plan.price > 0 && (
@@ -378,15 +385,22 @@ function SubscriptionPlanPage() {
                   {/* Purchase Button */}
                   <button
                     onClick={() => openPurchaseModal(plan)}
-                    disabled={!plan.status}
+                    disabled={
+                      !plan.status ||
+                      (plan.name == "Starter Plan" && isStarterPlanExist)
+                    }
                     className={`
                       w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300
                       transform hover:scale-105 focus:outline-none focus:ring-4 
                       shadow-xl hover:shadow-2xl relative overflow-hidden
                       ${
-                        plan.status
+                        plan.status && plan.name != "Starter Plan"
                           ? `bg-gradient-to-r ${colorScheme.button} text-white focus:ring-blue-500/25`
-                          : "bg-gray-200 text-gray-500 cursor-not-allowed shadow-none"
+                          : (plan.name == "Starter Plan" &&
+                                isStarterPlanExist) ||
+                              !plan.status
+                            ? "bg-gray-200 text-gray-500 cursor-not-allowed shadow-none"
+                            : `bg-gradient-to-r ${colorScheme.button} text-white focus:ring-blue-500/25`
                       }
                     `}
                   >
@@ -397,8 +411,10 @@ function SubscriptionPlanPage() {
                       {!plan.status
                         ? "Currently Unavailable"
                         : plan.price === 0
-                        ? "✅ Free Plan"
-                        : "🚀 Get Started Now"}
+                          ? "✅ Free Plan"
+                          : plan.name == "Starter Plan" && isStarterPlanExist
+                            ? "Purchased"
+                            : "🚀 Get Started Now"}
                     </span>
                   </button>
                 </div>
@@ -450,7 +466,7 @@ function SubscriptionPlanPage() {
                 {formatPrice(
                   selectedPlan.price,
                   selectedPlan.currency || "₹",
-                  selectedPlan.duration
+                  selectedPlan.duration,
                 )}
               </div>
 

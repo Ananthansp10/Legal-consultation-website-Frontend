@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ImageSlider: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -7,24 +7,30 @@ const ImageSlider: React.FC = () => {
   const slides = [
     {
       id: 1,
-      title: 'Legal Tips & Best Practices',
-      description: 'Stay updated with the latest legal insights and professional advice',
-      image: 'https://images.pexels.com/photos/3194521/pexels-photo-3194521.jpeg?auto=compress&cs=tinysrgb&w=800',
-      category: 'Legal Tips',
+      title: "Legal Tips & Best Practices",
+      description:
+        "Stay updated with the latest legal insights and professional advice",
+      image:
+        "https://images.pexels.com/photos/3194521/pexels-photo-3194521.jpeg?auto=compress&cs=tinysrgb&w=800",
+      category: "Legal Tips",
     },
     {
       id: 2,
-      title: 'Productivity Hacks for Lawyers',
-      description: 'Optimize your workflow and manage your practice more efficiently',
-      image: 'https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=800',
-      category: 'Productivity',
+      title: "Productivity Hacks for Lawyers",
+      description:
+        "Optimize your workflow and manage your practice more efficiently",
+      image:
+        "https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=800",
+      category: "Productivity",
     },
     {
       id: 3,
-      title: 'Platform Updates & Announcements',
-      description: 'Latest features and improvements to enhance your experience',
-      image: 'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=800',
-      category: 'Announcements',
+      title: "Platform Updates & Announcements",
+      description:
+        "Latest features and improvements to enhance your experience",
+      image:
+        "https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=800",
+      category: "Announcements",
     },
   ];
 
@@ -43,16 +49,22 @@ const ImageSlider: React.FC = () => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold text-slate-800 mb-6">Featured Content</h2>
+      <h2 className="text-2xl font-bold text-slate-800 mb-6">
+        Featured Content
+      </h2>
 
       <div className="relative bg-white/70 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-200/50 shadow-lg">
         <div className="relative h-64 md:h-80 overflow-hidden">
           {slides.map((slide, index) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-transform duration-500 ease-in-out ${index === currentSlide ? 'translate-x-0' :
-                  index < currentSlide ? '-translate-x-full' : 'translate-x-full'
-                }`}
+              className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
+                index === currentSlide
+                  ? "translate-x-0"
+                  : index < currentSlide
+                    ? "-translate-x-full"
+                    : "translate-x-full"
+              }`}
             >
               <img
                 src={slide.image}
@@ -91,8 +103,9 @@ const ImageSlider: React.FC = () => {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentSlide ? 'bg-white' : 'bg-white/50'
-                }`}
+              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                index === currentSlide ? "bg-white" : "bg-white/50"
+              }`}
             />
           ))}
         </div>

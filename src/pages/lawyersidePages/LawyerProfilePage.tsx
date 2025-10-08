@@ -201,7 +201,7 @@ export default function LawyerProfilePage() {
   };
 
   const handleProfileImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -634,7 +634,7 @@ export default function LawyerProfilePage() {
                               <div className="flex items-center space-x-2 text-slate-600">
                                 <Calendar className="w-4 h-4" />
                                 <span>
-                                  {formatDisplayDate(personalInfo?.DOB!)}
+                                  {formatDisplayDate(personalInfo?.DOB ?? "")}
                                 </span>
                               </div>
                             </div>
@@ -678,7 +678,7 @@ export default function LawyerProfilePage() {
                                   >
                                     {language}
                                   </span>
-                                )
+                                ),
                               )}
                             </div>
                           </div>

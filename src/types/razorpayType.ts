@@ -23,20 +23,17 @@ interface RazorpayPaymentResponse {
   razorpay_signature: string;
 }
 
-
-
-
-
-
 declare global {
   interface Window {
     Razorpay: new (options: RazorpayOptions) => {
       open: () => void;
-      on: (event: "payment.success" | "payment.failed", callback: (response: RazorpayPaymentResponse) => void) => void;
+      on: (
+        event: "payment.success" | "payment.failed",
+        callback: (response: RazorpayPaymentResponse) => void,
+      ) => void;
       close: () => void;
     };
   }
 }
 
-export { };
-
+export {};

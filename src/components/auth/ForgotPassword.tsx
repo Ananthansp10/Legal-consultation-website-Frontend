@@ -1,70 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, ArrowLeft } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { forgotPassword } from '../../services/user/authService';
-import { useApi } from '../../hooks/UseApi';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, ArrowLeft } from "lucide-react";
+import { toast } from "react-toastify";
+import { forgotPassword } from "../../services/user/authService";
+import { useApi } from "../../hooks/UseApi";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
 
-  const { data, error, loading, execute } = useApi(forgotPassword)
+  const { data, error, loading, execute } = useApi(forgotPassword);
 
   const validateEmail = (emailValue: string) => {
     const emailRegex = /^\S+@\S+\.\S+$/;
-    
+
     if (!emailValue.trim()) {
-      setEmailError('Email is required');
+      setEmailError("Email is required");
       return false;
     }
-    
+
     if (!emailRegex.test(emailValue.trim())) {
-      setEmailError('Invalid email format');
+      setEmailError("Invalid email format");
       return false;
     }
-    
-    setEmailError('');
+
+    setEmailError("");
     return true;
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    
+
     // Clear error when user starts typing
     if (emailError) {
-      setEmailError('');
+      setEmailError("");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const isEmailValid = validateEmail(email);
-    
+
     if (!isEmailValid) {
       return;
     }
 
-    await execute(email)
+    await execute(email);
   };
 
   useEffect(() => {
     if (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }, [error])
+  }, [error]);
 
   useEffect(() => {
     if (data) {
-      const responseData = { ...data.data, forgotPassword: true }
-      localStorage.setItem('userDetails', JSON.stringify(responseData))
-      toast.success(data.message)
-      navigate('/auth/otp-verification')
+      const responseData = { ...data.data, forgotPassword: true };
+      localStorage.setItem("userDetails", JSON.stringify(responseData));
+      toast.success(data.message);
+      navigate("/auth/otp-verification");
     }
-  }, [data])
+  }, [data]);
 
   return (
     <div className="min-h-screen flex">
@@ -88,7 +88,9 @@ const ForgotPassword = () => {
         <div className="absolute inset-0 z-20 flex items-center justify-center p-12">
           <div className="text-white text-center">
             <h2 className="text-4xl font-bold mb-4">Reset Your Password</h2>
-            <p className="text-xl opacity-90">We'll help you get back into your account securely</p>
+            <p className="text-xl opacity-90">
+              We'll help you get back into your account securely
+            </p>
           </div>
         </div>
       </div>
@@ -98,15 +100,21 @@ const ForgotPassword = () => {
         <div className="w-full max-w-md">
           <div className="bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-slate-800 mb-2">Forgot your password?</h1>
+              <h1 className="text-3xl font-bold text-slate-800 mb-2">
+                Forgot your password?
+              </h1>
               <p className="text-slate-600">
-                Enter your email or phone number and we'll send you a password reset link or OTP.
+                Enter your email or phone number and we'll send you a password
+                reset link or OTP.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-slate-700 mb-2"
+                >
                   Email
                 </label>
                 <div className="relative">
@@ -118,9 +126,9 @@ const ForgotPassword = () => {
                     value={email}
                     onChange={handleEmailChange}
                     className={`w-full pl-10 pr-4 py-3 bg-white/80 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
-                      emailError 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-slate-200 focus:ring-blue-500'
+                      emailError
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-slate-200 focus:ring-blue-500"
                     }`}
                     placeholder="Enter your email"
                   />
@@ -135,7 +143,7 @@ const ForgotPassword = () => {
                 disabled={loading}
                 className="w-full py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed text-white rounded-xl font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
               >
-                {loading ? 'Sending...' : 'Send Reset Link'}
+                {loading ? "Sending..." : "Send Reset Link"}
               </button>
             </form>
 

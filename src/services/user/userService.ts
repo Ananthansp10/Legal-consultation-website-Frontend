@@ -57,7 +57,7 @@ export const getLawyerSlots = async (lawyerId: string, date: string) => {
 export const filterLawyerBySpecialization = async (specialization: string) => {
   try {
     const result = await axios.get(
-      USER_API.FILTER_BY_SPECIALIZATION(specialization)
+      USER_API.FILTER_BY_SPECIALIZATION(specialization),
     );
     return result;
   } catch (error) {
@@ -76,7 +76,7 @@ export const searchLawyer = async (name: string) => {
 
 export const bookAppointment = async (
   data: AppointmentData,
-  caseId: string | undefined
+  caseId: string | undefined,
 ) => {
   try {
     return await axios.post(USER_API.BOOK_APPOINTMENT(caseId), data);
@@ -89,11 +89,11 @@ export const getAppointments = async (
   userId: string,
   appointmentStatus: string,
   startIndex: number,
-  limit: number
+  limit: number,
 ) => {
   try {
     return await axios.get(
-      USER_API.GET_APPOINTMENTS(userId, appointmentStatus, startIndex, limit)
+      USER_API.GET_APPOINTMENTS(userId, appointmentStatus, startIndex, limit),
     );
   } catch (error) {
     throw error;
@@ -175,6 +175,14 @@ export const addReview = async (lawyerId: string, data: Review) => {
 export const getReview = async (lawyerId: string) => {
   try {
     return await axios.get(USER_API.GET_REVIEW(lawyerId));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTopLawyers = async () => {
+  try {
+    return await axios.get(USER_API.GET_TOP_LAWYERS);
   } catch (error) {
     throw error;
   }

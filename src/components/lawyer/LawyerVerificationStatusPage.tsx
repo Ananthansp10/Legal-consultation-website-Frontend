@@ -15,7 +15,7 @@ function LawyerVerificationStatusPage() {
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     setStatusMessage(
-      "Your verification is pending. You'll be notified via email once it's approved."
+      "Your verification is pending. You'll be notified via email once it's approved.",
     );
     return () => clearTimeout(timer);
   }, []);

@@ -20,7 +20,7 @@ const UpcomingAppointments: React.FC = () => {
   const navigate = useNavigate();
 
   const userId: string | undefined = useSelector(
-    (state: RootState) => state.auth.user?.id
+    (state: RootState) => state.auth.user?.id,
   );
 
   useEffect(() => {

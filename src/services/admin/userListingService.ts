@@ -14,11 +14,11 @@ export const getUsers = async (startIndex: number, limit: number) => {
 
 export const updateUserStatus = async (
   userId: string,
-  status: string
+  status: string,
 ): Promise<AxiosResponse<ApiResponse>> => {
   try {
     const result = await axios.patch(
-      ADMIN_API.UPDATE_USER_STATUS(userId, status)
+      ADMIN_API.UPDATE_USER_STATUS(userId, status),
     );
     return result;
   } catch (error) {

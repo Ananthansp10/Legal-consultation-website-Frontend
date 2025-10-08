@@ -16,7 +16,7 @@ export const USER_API = {
     userId: string,
     appointmentStatus: string,
     startIndex: number,
-    limit: number
+    limit: number,
   ) =>
     `/user/get-appointments/${userId}/${appointmentStatus}/${startIndex}/${limit}`,
   CANCEL_APPOINTMENT: (appointmentId: string) =>
@@ -33,4 +33,5 @@ export const USER_API = {
     `/user/get-lawyer-chat-profile/${lawyerId}`,
   ADD_REVIEW: (lawyerId: string) => `/user/add-review/${lawyerId}`,
   GET_REVIEW: (lawyerId: string) => `/user/get-review/${lawyerId}`,
+  GET_TOP_LAWYERS: `/user/get-top-lawyers`,
 };

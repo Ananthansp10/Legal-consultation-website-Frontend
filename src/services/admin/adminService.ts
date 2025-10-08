@@ -28,7 +28,7 @@ export const addSpecialization = async (data: SpecializationData) => {
 export const getSpecialization = async (startIndex: number, limit: number) => {
   try {
     const result = await axios.get(
-      ADMIN_API.GET_SPECIALIZATION(startIndex, limit)
+      ADMIN_API.GET_SPECIALIZATION(startIndex, limit),
     );
     return result;
   } catch (error) {
@@ -55,11 +55,11 @@ export const deleteSpecialization = async (specId: string) => {
 export const getAppointments = async (
   appointmentStatus: string,
   startIndex: number,
-  limit: number
+  limit: number,
 ) => {
   try {
     return await axios.get(
-      ADMIN_API.GET_APPOINTMENTS(appointmentStatus, startIndex, limit)
+      ADMIN_API.GET_APPOINTMENTS(appointmentStatus, startIndex, limit),
     );
   } catch (error) {
     throw error;
@@ -69,11 +69,11 @@ export const getAppointments = async (
 export const getReportedAccounts = async (
   userType: string,
   startIndex: number,
-  limit: number
+  limit: number,
 ) => {
   try {
     return await axios.get(
-      ADMIN_API.GET_REPORTED_ACCOUNTS(userType, startIndex, limit)
+      ADMIN_API.GET_REPORTED_ACCOUNTS(userType, startIndex, limit),
     );
   } catch (error) {
     throw error;
@@ -81,11 +81,11 @@ export const getReportedAccounts = async (
 };
 
 export const updateReportedAccountStatus = async (
-  reportedAccountId: string
+  reportedAccountId: string,
 ) => {
   try {
     await axios.post(
-      ADMIN_API.UPDATE_REPORTED_ACCOUNT_STATUS(reportedAccountId)
+      ADMIN_API.UPDATE_REPORTED_ACCOUNT_STATUS(reportedAccountId),
     );
   } catch (error) {
     throw error;
@@ -158,12 +158,36 @@ export const getSummaryReport = async () => {
 
 export const getReports = async (
   revenueDateRange: string,
-  specializationType: string
+  specializationType: string,
 ) => {
   try {
     return await axios.get(
-      ADMIN_API.GET_REPORTS(revenueDateRange, specializationType)
+      ADMIN_API.GET_REPORTS(revenueDateRange, specializationType),
     );
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const searchAppointment = async (name: string) => {
+  try {
+    return await axios.get(ADMIN_API.SEARCH_APPOINTMENT(name));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getPlanSummaryReport = async () => {
+  try {
+    return await axios.get(ADMIN_API.GET_PLAN_SUMMARY_REPORT);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const searchPlan = async (planName: string) => {
+  try {
+    return await axios.get(ADMIN_API.SEARCH_PLAN(planName));
   } catch (error) {
     throw error;
   }

@@ -15,12 +15,12 @@ export const unverifiedLawyersListing = async () => {
 export const verifyLawyer = async (
   lawyerId: string,
   status: string,
-  reason: string | null
+  reason: string | null,
 ) => {
   try {
     const result = await axios.patch(
       ADMIN_API.VERIFY_LAWYER(lawyerId, status, reason),
-      { role: "admin" }
+      { role: "admin" },
     );
     return result;
   } catch (error) {
@@ -42,7 +42,7 @@ export const getLawyers = async (startIndex: number, limit: number) => {
 export const updateLawyerStatus = async (lawyerId: string, status: string) => {
   try {
     const result = await axios.patch(
-      ADMIN_API.UPDATE_LAWYER_STATUS(lawyerId, status)
+      ADMIN_API.UPDATE_LAWYER_STATUS(lawyerId, status),
     );
     return result;
   } catch (error) {

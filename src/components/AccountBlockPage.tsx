@@ -1,17 +1,16 @@
-import { Lock, AlertCircle, Mail } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Lock, AlertCircle, Mail } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function AccountBlockPage() {
-
-  const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
-  const role = searchParams.get('role')
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const role = searchParams.get("role");
 
   function gotoSignin() {
-    if (role == 'user') {
-      navigate('/auth/signin')
+    if (role == "user") {
+      navigate("/auth/signin");
     } else {
-      navigate('/auth/lawyer/signin')
+      navigate("/auth/lawyer/signin");
     }
   }
 
@@ -68,7 +67,9 @@ function AccountBlockPage() {
               {/* Message */}
               <div className="space-y-4">
                 <p className="text-gray-600 text-base leading-relaxed">
-                  Unfortunately, your account has been temporarily blocked due to a violation of our terms. Please contact support for further assistance.
+                  Unfortunately, your account has been temporarily blocked due
+                  to a violation of our terms. Please contact support for
+                  further assistance.
                 </p>
 
                 <div className="flex items-center justify-center space-x-2 text-gray-500 text-sm">
@@ -79,7 +80,10 @@ function AccountBlockPage() {
 
               {/* Sign In Button */}
               <div className="pt-4">
-                <button onClick={gotoSignin} className="group relative w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/25 active:scale-[0.98]">
+                <button
+                  onClick={gotoSignin}
+                  className="group relative w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/25 active:scale-[0.98]"
+                >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                   <div className="absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <span className="relative text-lg">Sign In</span>

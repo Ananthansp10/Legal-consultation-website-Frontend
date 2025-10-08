@@ -32,7 +32,7 @@ interface GetProfileData {
 
 function Dashboard() {
   const userDetails: User | null = useSelector(
-    (state: RootState) => state.auth.user
+    (state: RootState) => state.auth.user,
   );
 
   const userData = {
@@ -44,7 +44,7 @@ function Dashboard() {
   >();
 
   useEffect(() => {
-    getProfile(userDetails?.id!).then((response) => {
+    getProfile(userDetails?.id ?? "").then((response) => {
       if (response.data.data) {
         setUserProfileData(response.data.data);
       }

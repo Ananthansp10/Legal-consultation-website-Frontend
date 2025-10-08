@@ -52,7 +52,7 @@ interface KPIData {
   specializationChart: SpecializationChartData[];
 }
 
-function convertToDate(date: Date) {
+function convertToDate(date: any) {
   return new Date(date).toISOString().split("T")[0];
 }
 
@@ -72,7 +72,7 @@ const generatePDFReport = (
   specializationData: SpecializationChartData[] | null,
   sunscriptionPlanData: SubscriptionReportData[] | null,
   lawyerData: LawyerDetailsData[] | undefined,
-  dateRange: string
+  dateRange: string,
 ) => {
   const html = `
     <!DOCTYPE html>
@@ -247,15 +247,15 @@ const generatePDFReport = (
               dateRange == "Daily"
                 ? item._id.day + "-" + item._id.month + "-" + item._id.year
                 : dateRange === "Weekly"
-                ? "Week " + item._id.week + ", " + item._id.year
-                : dateRange === "Monthly"
-                ? item.month + " " + item.year
-                : dateRange === "Yearly"
-                ? item.year
-                : item.totalRevenue
+                  ? "Week " + item._id.week + ", " + item._id.year
+                  : dateRange === "Monthly"
+                    ? item.month + " " + item.year
+                    : dateRange === "Yearly"
+                      ? item.year
+                      : item.totalRevenue
             }</span>
             <span>₹${item.totalRevenue.toLocaleString()}</span>
-          </div>`
+          </div>`,
           )
           .join("")}
       </div>
@@ -268,7 +268,7 @@ const generatePDFReport = (
               `<div class="chart-item">
             <span>${item._id}</span>
             <span>${item.specializationCount} appointments</span>
-          </div>`
+          </div>`,
           )
           .join("")}
       </div>
@@ -281,7 +281,7 @@ const generatePDFReport = (
               `<div class="chart-item">
             <span>${item._id}</span>
             <span>${item.specializationCount} lawyers</span>
-          </div>`
+          </div>`,
           )
           .join("")}
       </div>
@@ -306,12 +306,12 @@ const generatePDFReport = (
               <td>${lawyer?.name}</td>
               <td>${lawyer?.specialization}</td>
               <td><span class="plan-badge plan-${lawyer?.planName[0]}">${
-                  lawyer?.planName[0]
-                }</span></td>
+                lawyer?.planName[0]
+              }</span></td>
               <td>₹${lawyer?.totalRevenue?.toLocaleString()}</td>
               <td>${lawyer?.totalAppointments}</td>
               <td>${lawyer?.joinDate}</td>
-            </tr>`
+            </tr>`,
             )
             .join("")}
         </tbody>
@@ -362,7 +362,7 @@ function CompanyReportPage() {
       reports?.specializationChart || [],
       reports?.subscriptionPlanReport || [],
       reports?.lawyerDetails,
-      dateRange
+      dateRange,
     );
   };
 
@@ -496,7 +496,7 @@ function CompanyReportPage() {
               reports.revenueDateChart.length > 0 ? (
                 (() => {
                   const maxRevenue = Math.max(
-                    ...reports.revenueDateChart.map((r) => r.totalRevenue)
+                    ...reports.revenueDateChart.map((r) => r.totalRevenue),
                   );
                   return reports.revenueDateChart.map((item, index) => (
                     <div
@@ -514,12 +514,12 @@ function CompanyReportPage() {
                         {dateRange == "Daily"
                           ? `${item._id.day}/${item._id.month}/${item._id.year}`
                           : dateRange == "Weekly"
-                          ? `${item._id.week}/${item._id.year}`
-                          : dateRange == "Monthly"
-                          ? `${item._id.week}/${item._id.year}`
-                          : dateRange == "Yearly"
-                          ? `${item.year}`
-                          : `${item.totalRevenue}`}
+                            ? `${item._id.week}/${item._id.year}`
+                            : dateRange == "Monthly"
+                              ? `${item._id.week}/${item._id.year}`
+                              : dateRange == "Yearly"
+                                ? `${item.year}`
+                                : `${item.totalRevenue}`}
                       </span>
                     </div>
                   ));
@@ -552,7 +552,7 @@ function CompanyReportPage() {
                     const total =
                       reports?.specializationChart.reduce(
                         (sum, d) => sum + d.specializationCount,
-                        0
+                        0,
                       ) || 1;
                     const percentage = (item.specializationCount / total) * 100;
                     const circumference = 2 * Math.PI * 70;
@@ -582,7 +582,7 @@ function CompanyReportPage() {
                     <p className="text-2xl font-bold text-gray-900">
                       {reports?.specializationChart.reduce(
                         (sum, d) => sum + d.specializationCount,
-                        0
+                        0,
                       )}
                     </p>
                     <p className="text-sm text-gray-600">Total</p>
@@ -721,8 +721,8 @@ function CompanyReportPage() {
                           lawyer.planName[0] === "Standard Plan"
                             ? "bg-purple-100 text-purple-800"
                             : lawyer.planName[0] === "Premium Plan"
-                            ? "bg-teal-100 text-teal-800"
-                            : "bg-gray-100 text-gray-800"
+                              ? "bg-teal-100 text-teal-800"
+                              : "bg-gray-100 text-gray-800"
                         }`}
                       >
                         {lawyer.planName[0]}
@@ -735,7 +735,7 @@ function CompanyReportPage() {
                       {Math.floor(lawyer.totalAppointments / 2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {convertToDate(lawyer.joinDate)}
+                      {convertToDate(lawyer.joinDate || "")}
                     </td>
                   </tr>
                 ))}

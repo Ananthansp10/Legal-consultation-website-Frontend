@@ -180,7 +180,7 @@ const LawyerNavbar: React.FC = () => {
                 >
                   {item}
                 </a>
-              )
+              ),
             )}
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">

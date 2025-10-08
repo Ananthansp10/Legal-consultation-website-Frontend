@@ -21,7 +21,7 @@ function LawyerChatListPage() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const lawyerId: string | undefined = useSelector(
-    (state: RootState) => state.lawyerAuth.lawyer?._id
+    (state: RootState) => state.lawyerAuth.lawyer?._id,
   );
   const navigate = useNavigate();
 
@@ -33,7 +33,7 @@ function LawyerChatListPage() {
     return chats.filter(
       (chat) =>
         chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+        chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase()),
     );
   }, [chats, searchQuery]);
 

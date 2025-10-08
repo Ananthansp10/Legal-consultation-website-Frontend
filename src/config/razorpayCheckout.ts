@@ -2,7 +2,10 @@ import { toast } from "react-toastify";
 import { verifyRazorpayPayment } from "../services/lawyer/lawyerService";
 import { AxiosResponse } from "axios";
 import { ApiResponse } from "../interface/userInterface/axiosResponseInterface";
-import { RazorpayPaymentFailedResponse, RazorpayPaymentResponse } from "./razorpay";
+import {
+  RazorpayPaymentFailedResponse,
+  RazorpayPaymentResponse,
+} from "./razorpay";
 
 export interface RazorpayOrder {
   id: string;
@@ -17,7 +20,9 @@ export interface RazorpayOrder {
   created_at?: number;
 }
 
-export function openRazorpayCheckout(order: RazorpayOrder): Promise<AxiosResponse<ApiResponse>> {
+export function openRazorpayCheckout(
+  order: RazorpayOrder,
+): Promise<AxiosResponse<ApiResponse>> {
   return new Promise((resolve, reject) => {
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY,
@@ -51,10 +56,13 @@ export function openRazorpayCheckout(order: RazorpayOrder): Promise<AxiosRespons
     const rzp = new (window as any).Razorpay(options);
     rzp.open();
 
-    rzp.on("payment.failed", function (response: RazorpayPaymentFailedResponse) {
-      toast.error("Payment Failed");
-      reject(response.error);
-    });
+    rzp.on(
+      "payment.failed",
+      function (response: RazorpayPaymentFailedResponse) {
+        toast.error("Payment Failed");
+        reject(response.error);
+      },
+    );
 
     // rzp.on("payment.success", (response) => {
     //   console.log("Success:", response.razorpay_payment_id);

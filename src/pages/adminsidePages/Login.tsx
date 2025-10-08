@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Scale, Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import Button from '../../components/admin/Button';
-import Footer from '../../components/admin/Footer';
-import { z } from 'zod';
-import { signin } from '../../services/admin/authService';
-import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import { adminLogin } from '../../redux/slices/adminAuthSlice';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Scale, Eye, EyeOff, Mail, Lock } from "lucide-react";
+import Button from "../../components/admin/Button";
+import Footer from "../../components/admin/Footer";
+import { z } from "zod";
+import { signin } from "../../services/admin/authService";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { adminLogin } from "../../redux/slices/adminAuthSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const Login: React.FC = () => {
-
   const loginSchema = z.object({
-    email: z
-      .string()
-      .min(1, 'Email is required')
-      .email('Invalid email format'),
+    email: z.string().min(1, "Email is required").email("Invalid email format"),
     password: z
       .string()
-      .min(1, 'Password is required')
-      .min(6, 'Password must be at least 6 characters'),
+      .min(1, "Password is required")
+      .min(6, "Password must be at least 6 characters"),
   });
 
   type LoginFormData = z.infer<typeof loginSchema>;
-  const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof LoginFormData, string>>
+  >({});
 
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
-  const adminExist = useSelector((state: RootState) => state.adminAuth.isAuthenticate)
+  const adminExist = useSelector(
+    (state: RootState) => state.adminAuth.isAuthenticate,
+  );
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (adminExist) {
-      navigate('/admin-dashboard')
+      navigate("/admin-dashboard");
     }
-  }, [])
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,20 +55,22 @@ const Login: React.FC = () => {
         password: fieldErrors.password?.[0],
       });
     } else {
-      signin(formData).then((response) => {
-        dispatch(adminLogin(response.data.data))
-        toast.success(response.data.message)
-        navigate('/admin-dashboard')
-      }).catch((error) => {
-        toast.error(error.response.data.message)
-      })
+      signin(formData)
+        .then((response) => {
+          dispatch(adminLogin(response.data.data));
+          toast.success(response.data.message);
+          navigate("/admin-dashboard");
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -107,13 +109,20 @@ const Login: React.FC = () => {
           <div className="w-full max-w-md">
             <div className="bg-white/70 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-8">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-slate-800">Admin Login</h2>
-                <p className="text-slate-600 mt-2">Welcome back! Please sign in to continue.</p>
+                <h2 className="text-2xl font-bold text-slate-800">
+                  Admin Login
+                </h2>
+                <p className="text-slate-600 mt-2">
+                  Welcome back! Please sign in to continue.
+                </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-slate-700 mb-2"
+                  >
                     Email Address
                   </label>
                   <div className="relative">
@@ -127,18 +136,25 @@ const Login: React.FC = () => {
                       className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200"
                       placeholder="admin@legalconnect.com"
                     />
-                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-slate-700 mb-2"
+                  >
                     Password
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       name="password"
                       value={formData.password}
@@ -146,13 +162,21 @@ const Login: React.FC = () => {
                       className="w-full pl-11 pr-12 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm transition-all duration-200"
                       placeholder="Enter your password"
                     />
-                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                    {errors.password && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.password}
+                      </p>
+                    )}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors duration-200"
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>

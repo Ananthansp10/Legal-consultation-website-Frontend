@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Lock, Eye, EyeOff } from 'lucide-react';
-import { saveNewPassword } from '../../services/lawyer/authService';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { z } from 'zod';
-
+import React, { useState } from "react";
+import { Lock, Eye, EyeOff } from "lucide-react";
+import { saveNewPassword } from "../../services/lawyer/authService";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { z } from "zod";
 
 const forgotPasswordSchema = z
   .object({
@@ -14,56 +13,55 @@ const forgotPasswordSchema = z
   .superRefine((data, ctx) => {
     if (!data.newPassword) {
       ctx.addIssue({
-        path: ['newPassword'],
+        path: ["newPassword"],
         code: z.ZodIssueCode.custom,
-        message: 'Password is required',
+        message: "Password is required",
       });
     } else if (data.newPassword.length < 6) {
       ctx.addIssue({
-        path: ['newPassword'],
+        path: ["newPassword"],
         code: z.ZodIssueCode.too_small,
         minimum: 6,
-        type: 'string',
+        type: "string",
         inclusive: true,
-        message: 'Password must be at least 6 characters',
+        message: "Password must be at least 6 characters",
       });
     }
 
     if (!data.confirmPassword) {
       ctx.addIssue({
-        path: ['confirmPassword'],
+        path: ["confirmPassword"],
         code: z.ZodIssueCode.custom,
-        message: 'Confirm Password is required',
+        message: "Confirm Password is required",
       });
     } else if (data.newPassword !== data.confirmPassword) {
       ctx.addIssue({
-        path: ['confirmPassword'],
+        path: ["confirmPassword"],
         code: z.ZodIssueCode.custom,
         message: "Passwords don't match",
       });
     }
   });
 
-
 const LawyerForgotPasswordPage: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [formData, setFormData] = useState({
-    newPassword: '',
-    confirmPassword: ''
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [searchParams] = useSearchParams();
-  const email = searchParams.get('email');
-  const token = searchParams.get('token')
+  const email = searchParams.get("email");
+  const token = searchParams.get("token");
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -75,23 +73,27 @@ const LawyerForgotPasswordPage: React.FC = () => {
     if (!result.success) {
       const flattened = result.error.flatten().fieldErrors;
       setFormErrors({
-        newPassword: flattened.newPassword?.[0] || '',
-        confirmPassword: flattened.confirmPassword?.[0] || ''
+        newPassword: flattened.newPassword?.[0] || "",
+        confirmPassword: flattened.confirmPassword?.[0] || "",
       });
       return;
     }
 
     setFormErrors({});
 
-    saveNewPassword({ email: email!, password: formData.newPassword, token: token! })
+    saveNewPassword({
+      email: email!,
+      password: formData.newPassword,
+      token: token!,
+    })
       .then((response) => {
         toast.success(response.data.message);
-        navigate('/auth/lawyer/signin');
+        navigate("/auth/lawyer/signin");
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message || 'Something went wrong');
+        toast.error(error.response?.data?.message || "Something went wrong");
         if (error.response.data.message == "Link has Expired try again") {
-          navigate('/auth/lawyer/forgot-password-email-page')
+          navigate("/auth/lawyer/forgot-password-email-page");
         }
       });
   };
@@ -104,7 +106,7 @@ const LawyerForgotPasswordPage: React.FC = () => {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.pexels.com/photos/5668882/pexels-photo-5668882.jpeg?auto=compress&cs=tinysrgb&w=1200')`
+            backgroundImage: `url('https://images.pexels.com/photos/5668882/pexels-photo-5668882.jpeg?auto=compress&cs=tinysrgb&w=1200')`,
           }}
         ></div>
         <div className="relative z-10 flex flex-col justify-center px-12 text-white">
@@ -117,7 +119,8 @@ const LawyerForgotPasswordPage: React.FC = () => {
                 Secure Access for Legal Professionals
               </h1>
               <p className="text-lg text-gray-300 leading-relaxed">
-                Your trusted platform for legal document management and client communications. Security and privacy are our top priorities.
+                Your trusted platform for legal document management and client
+                communications. Security and privacy are our top priorities.
               </p>
             </div>
             <div className="space-y-4 text-sm text-gray-400">
@@ -146,14 +149,21 @@ const LawyerForgotPasswordPage: React.FC = () => {
               <div className="w-12 h-12 bg-blue-500 bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Lock className="w-6 h-6 text-blue-600" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-700 mb-2">Forgot Password</h2>
-              <p className="text-slate-500">Please enter your new password to continue.</p>
+              <h2 className="text-2xl font-bold text-slate-700 mb-2">
+                Forgot Password
+              </h2>
+              <p className="text-slate-500">
+                Please enter your new password to continue.
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* New Password Field */}
               <div className="space-y-2">
-                <label htmlFor="newPassword" className="block text-sm font-medium text-slate-600">
+                <label
+                  htmlFor="newPassword"
+                  className="block text-sm font-medium text-slate-600"
+                >
                   New Password
                 </label>
                 <div className="relative">
@@ -182,13 +192,18 @@ const LawyerForgotPasswordPage: React.FC = () => {
                   </button>
                 </div>
                 {formErrors.newPassword && (
-                  <p className="text-red-500 text-sm mt-1">{formErrors.newPassword}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.newPassword}
+                  </p>
                 )}
               </div>
 
               {/* Confirm Password Field */}
               <div className="space-y-2">
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-600">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-slate-600"
+                >
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -217,7 +232,9 @@ const LawyerForgotPasswordPage: React.FC = () => {
                   </button>
                 </div>
                 {formErrors.confirmPassword && (
-                  <p className="text-red-500 text-sm mt-1">{formErrors.confirmPassword}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.confirmPassword}
+                  </p>
                 )}
               </div>
 
@@ -232,7 +249,7 @@ const LawyerForgotPasswordPage: React.FC = () => {
 
             <div className="mt-8 text-center">
               <p className="text-sm text-slate-500">
-                Remember your password?{' '}
+                Remember your password?{" "}
                 <button className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
                   Sign in
                 </button>

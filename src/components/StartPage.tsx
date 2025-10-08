@@ -1,16 +1,16 @@
-import { User, Scale } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { User, Scale } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function StartPage() {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Background with blur and overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url("https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop")'
+          backgroundImage:
+            'url("https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop")',
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/70 to-slate-800/90 backdrop-blur-sm"></div>
@@ -51,7 +51,10 @@ function StartPage() {
             {/* Action buttons */}
             <div className="space-y-4">
               {/* I am a User button */}
-              <button onClick={() => navigate('/user')} className="group w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-blue-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10">
+              <button
+                onClick={() => navigate("/user")}
+                className="group w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-blue-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10"
+              >
                 <div className="flex items-center justify-center space-x-3">
                   <User className="w-6 h-6 transition-transform group-hover:scale-110" />
                   <span className="text-lg">I am a User</span>
@@ -59,7 +62,10 @@ function StartPage() {
               </button>
 
               {/* I am a Lawyer button */}
-              <button onClick={() => navigate('/lawyer')} className="group w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-amber-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10">
+              <button
+                onClick={() => navigate("/lawyer")}
+                className="group w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-amber-500/30 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl border border-white/10"
+              >
                 <div className="flex items-center justify-center space-x-3">
                   <Scale className="w-6 h-6 transition-transform group-hover:scale-110" />
                   <span className="text-lg">I am a Lawyer</span>

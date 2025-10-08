@@ -1,16 +1,15 @@
-import { Mail, AlertTriangle, ArrowRight, LogIn } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Mail, AlertTriangle, ArrowRight, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function EmailExistError() {
-
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
   const handleSignIn = () => {
-    navigate('/auth/signin')
+    navigate("/auth/signin");
   };
 
   const handleTryDifferentEmail = () => {
-    navigate('/auth/signup')
+    navigate("/auth/signup");
   };
 
   return (
@@ -44,7 +43,8 @@ function EmailExistError() {
                 Email Already Exists
               </h1>
               <p className="text-slate-500 text-lg mb-8 leading-relaxed">
-                An account with this email already exists. Please sign in or use a different email to continue.
+                An account with this email already exists. Please sign in or use
+                a different email to continue.
               </p>
 
               <div className="space-y-4">
@@ -84,7 +84,8 @@ function EmailExistError() {
               Email Already Exists
             </h1>
             <p className="text-slate-500 mb-8 leading-relaxed">
-              An account with this email already exists. Please sign in or use a different email to continue.
+              An account with this email already exists. Please sign in or use a
+              different email to continue.
             </p>
           </div>
 

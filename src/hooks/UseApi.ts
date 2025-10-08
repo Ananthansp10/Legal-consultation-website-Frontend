@@ -29,7 +29,7 @@ import { ErrorResponse } from "../interface/errorInterface";
 // }
 
 export function useApi<T = unknown, A extends unknown[] = unknown[]>(
-  apiFunction: (...args: A) => Promise<AxiosResponse<T>>
+  apiFunction: (...args: A) => Promise<AxiosResponse<T>>,
 ) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<ErrorResponse | null>(null);

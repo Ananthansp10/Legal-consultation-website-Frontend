@@ -25,7 +25,7 @@ function ReviewListing() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const totalPages = Math.ceil(
-    reviews?.reviews.length ? reviews.reviews.length / itemsPerPage : 0
+    reviews?.reviews.length ? reviews.reviews.length / itemsPerPage : 0,
   );
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -58,7 +58,7 @@ function ReviewListing() {
           className={`${
             i <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
           } transition-colors duration-200`}
-        />
+        />,
       );
     }
     return stars;

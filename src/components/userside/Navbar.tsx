@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Menu, X, ChevronDown, User, LogOut, Lock } from 'lucide-react';
-import { useSelector } from 'react-redux';
-import { logoutService } from '../../services/user/authService';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import { logout as logoutAction } from '../../redux/slices/authSlice';
-import { useDispatch } from 'react-redux';
-import { getProfile } from '../../services/user/profileService';
-import { User as userDetails } from '../../interface/userInterface/userInterface';
-import { RootState } from '../../redux/store';
-import { AxiosError } from 'axios';
-import { ErrorResponse } from '../../interface/errorInterface';
+import React, { useEffect, useState } from "react";
+import { Menu, X, ChevronDown, User, LogOut, Lock } from "lucide-react";
+import { useSelector } from "react-redux";
+import { logoutService } from "../../services/user/authService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { logout as logoutAction } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { getProfile } from "../../services/user/profileService";
+import { User as userDetails } from "../../interface/userInterface/userInterface";
+import { RootState } from "../../redux/store";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "../../interface/errorInterface";
 
 interface NavProps {
-  navLink: string
+  navLink: string;
 }
 
 interface GetProfileData {
@@ -35,61 +35,61 @@ interface GetProfileData {
   };
 }
 
-
 const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(navLink);
 
-  const navLinks = ['Home', 'Lawyers', 'My Appointments', 'Chat'];
+  const navLinks = ["Home", "Lawyers", "My Appointments", "Chat"];
 
-  let user: userDetails | null = useSelector((state: RootState) => state.auth.user)
+  let user: userDetails | null = useSelector(
+    (state: RootState) => state.auth.user,
+  );
 
-  const [profileImage, setProfileImage] = useState<GetProfileData>()
+  const [profileImage, setProfileImage] = useState<GetProfileData>();
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   async function logout() {
     try {
-      let result = await logoutService()
-      dispatch(logoutAction())
-      toast.success(result.data.message)
-      navigate('/auth/signin')
+      let result = await logoutService();
+      dispatch(logoutAction());
+      toast.success(result.data.message);
+      navigate("/auth/signin");
     } catch (error) {
-      const errorResponse = error as AxiosError
-      const errorData = errorResponse.response?.data as ErrorResponse
-      toast.error(errorData.message)
+      const errorResponse = error as AxiosError;
+      const errorData = errorResponse.response?.data as ErrorResponse;
+      toast.error(errorData.message);
     }
-
   }
 
   useEffect(() => {
     getProfile(user?.id!).then((response) => {
       if (response.data.data) {
-        setProfileImage(response.data.data)
+        setProfileImage(response.data.data);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   function resetPasswordPage() {
-    navigate('/auth/reset-password')
+    navigate("/auth/reset-password");
   }
 
   function setNewPage(link: string) {
-    setActiveLink(link)
-    if (link == 'Lawyers') {
-      navigate('/user/lawyers')
+    setActiveLink(link);
+    if (link == "Lawyers") {
+      navigate("/user/lawyers");
     }
-    if (link == 'Home') {
-      navigate('/user-dashboard')
+    if (link == "Home") {
+      navigate("/user-dashboard");
     }
-    if (link == 'My Appointments') {
-      navigate('/user/appointments')
+    if (link == "My Appointments") {
+      navigate("/user/appointments");
     }
-    if (link == 'Chat') {
-      navigate('/user/chat')
+    if (link == "Chat") {
+      navigate("/user/chat");
     }
   }
 
@@ -98,7 +98,7 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div onClick={() => navigate('/user')} className="flex-shrink-0">
+          <div onClick={() => navigate("/user")} className="flex-shrink-0">
             <h1 className="text-xl font-bold text-slate-700 cursor-pointer hover:text-blue-600 transition-colors">
               LegalConnect
             </h1>
@@ -110,10 +110,11 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
               <button
                 key={link}
                 onClick={() => setNewPage(link)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${activeLink === link
-                  ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-600'
-                  : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50'
-                  }`}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                  activeLink === link
+                    ? "text-blue-600 bg-blue-50 border-b-2 border-blue-600"
+                    : "text-slate-600 hover:text-blue-600 hover:bg-blue-50/50"
+                }`}
               >
                 {link}
               </button>
@@ -132,22 +133,37 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
                   alt={user?.name}
                   className="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm"
                 />
-                <span className="text-sm font-medium text-slate-700">{profileImage ? profileImage.name : user?.name}</span>
-                <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
+                <span className="text-sm font-medium text-slate-700">
+                  {profileImage ? profileImage.name : user?.name}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${isProfileOpen ? "rotate-180" : ""}`}
+                />
               </button>
 
               {/* Profile Dropdown */}
               {isProfileOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-lg rounded-lg shadow-xl border border-gray-200/20 py-2">
-                  <button onClick={() => navigate('/user/profile')} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
+                  <button
+                    onClick={() => navigate("/user/profile")}
+                    className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors"
+                  >
                     <User className="w-4 h-4" />
                     <span>My Profile</span>
                   </button>
-                  {!user?.googleId ? <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
-                    <Lock className='w-4 h-4' />
-                    <span>Reset Password</span>
-                  </button> : null}
-                  <button onClick={logout} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-red-50/50 transition-colors">
+                  {!user?.googleId ? (
+                    <button
+                      onClick={resetPasswordPage}
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors"
+                    >
+                      <Lock className="w-4 h-4" />
+                      <span>Reset Password</span>
+                    </button>
+                  ) : null}
+                  <button
+                    onClick={logout}
+                    className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-red-50/50 transition-colors"
+                  >
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>
@@ -162,7 +178,11 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 rounded-md text-slate-600 hover:text-blue-600 hover:bg-blue-50/50 transition-colors"
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -178,10 +198,11 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
                     setActiveLink(link);
                     setIsMenuOpen(false);
                   }}
-                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors ${activeLink === link
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-slate-600 hover:text-blue-600 hover:bg-blue-50/50'
-                    }`}
+                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    activeLink === link
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-slate-600 hover:text-blue-600 hover:bg-blue-50/50"
+                  }`}
                 >
                   {link}
                 </button>
@@ -195,7 +216,9 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
                   className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
                 />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-slate-700">{profileImage ? profileImage.name : user?.name}</div>
+                  <div className="text-base font-medium text-slate-700">
+                    {profileImage ? profileImage.name : user?.name}
+                  </div>
                 </div>
               </div>
               <div className="mt-3 px-2 space-y-1">
@@ -203,10 +226,15 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
                   <User className="w-5 h-5" />
                   <span>My Profile</span>
                 </button>
-                {!user?.googleId ? <button onClick={resetPasswordPage} className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors">
-                  <Lock className='w-4 h-4' />
-                  <span>Reset Password</span>
-                </button> : null}
+                {!user?.googleId ? (
+                  <button
+                    onClick={resetPasswordPage}
+                    className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-slate-700 hover:bg-blue-50/50 transition-colors"
+                  >
+                    <Lock className="w-4 h-4" />
+                    <span>Reset Password</span>
+                  </button>
+                ) : null}
                 <button className="flex items-center space-x-3 w-full px-3 py-2 text-base font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/50 rounded-md transition-colors">
                   <LogOut className="w-5 h-5" />
                   <span>Logout</span>

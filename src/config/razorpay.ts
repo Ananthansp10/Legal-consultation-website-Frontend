@@ -29,11 +29,10 @@ export interface RazorpayPaymentFailedResponse {
   };
 }
 
-
 export const handlePayment = (
   data: CreateOrderData,
   user: User,
-  appointmentId: string
+  appointmentId: string,
 ): Promise<AxiosResponse<ApiResponse>> => {
   return new Promise((resolve, reject) => {
     try {
@@ -69,9 +68,12 @@ export const handlePayment = (
       const rzp = new (window as any).Razorpay(options);
       rzp.open();
 
-      rzp.on("payment.failed", function (response: RazorpayPaymentFailedResponse) {
-        reject(response.error);
-      });
+      rzp.on(
+        "payment.failed",
+        function (response: RazorpayPaymentFailedResponse) {
+          reject(response.error);
+        },
+      );
     } catch (err) {
       reject(err);
     }

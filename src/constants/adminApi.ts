@@ -19,12 +19,12 @@ export const ADMIN_API = {
   GET_APPOINTMENTS: (
     appointmentStatus: string,
     startIndex: number,
-    limit: number
+    limit: number,
   ) => `/admin/get-appointments/${appointmentStatus}/${startIndex}/${limit}`,
   GET_REPORTED_ACCOUNTS: (
     userType: string,
     startIndex: number,
-    limit: number
+    limit: number,
   ) => `/admin/reported-accounts/${userType}/${startIndex}/${limit}`,
   UPDATE_REPORTED_ACCOUNT_STATUS: (reportedAccountId: string) =>
     `/admin/update-reportedAccount-status/${reportedAccountId}`,
@@ -44,4 +44,7 @@ export const ADMIN_API = {
   GET_SUMMARY_REPORT: `/admin/get-summary-report`,
   GET_REPORTS: (revenueDateRange: string, specializationType: string) =>
     `/admin/get-reports/${revenueDateRange}/${specializationType}`,
+  SEARCH_APPOINTMENT: (name: string) => `/admin/search-appointment/${name}`,
+  GET_PLAN_SUMMARY_REPORT: "/admin/get-plan-summary-report",
+  SEARCH_PLAN: (planName: string) => `/admin/search-plan/${planName}`,
 };

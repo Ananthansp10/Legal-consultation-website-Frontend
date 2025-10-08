@@ -23,7 +23,7 @@ function ChatPage() {
   const navigate = useNavigate();
 
   const userId: string | undefined = useSelector(
-    (state: RootState) => state.auth.user?.id
+    (state: RootState) => state.auth.user?.id,
   );
 
   const filteredChats = useMemo(() => {
@@ -34,7 +34,7 @@ function ChatPage() {
     return chats.filter(
       (chat) =>
         chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+        chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase()),
     );
   }, [chats, searchQuery]);
 

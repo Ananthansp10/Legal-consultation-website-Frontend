@@ -52,7 +52,7 @@ function SlotListPage() {
 
   const navigate = useNavigate();
   const lawyerId: string | undefined = useSelector(
-    (state: RootState) => state?.lawyerAuth?.lawyer?._id
+    (state: RootState) => state?.lawyerAuth?.lawyer?._id,
   );
 
   const [slots, setSlots] = useState<Array<SlotData>>();
@@ -195,7 +195,7 @@ function SlotListPage() {
                   </div>
                   <span
                     className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${getPriorityColor(
-                      slot.priority
+                      slot.priority,
                     )}`}
                   >
                     <AlertCircle className="w-3 h-3 mr-1" />

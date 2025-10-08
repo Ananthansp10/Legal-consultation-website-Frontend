@@ -1,5 +1,5 @@
-import React from 'react';
-import { Zap } from 'lucide-react';
+import React from "react";
+import { Zap } from "lucide-react";
 
 interface LoaderProps {
   showText?: boolean;
@@ -8,7 +8,7 @@ interface LoaderProps {
 
 const Loader: React.FC<LoaderProps> = ({
   showText = true,
-  brandText = "Loading..."
+  brandText = "Loading...",
 }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">

@@ -1,12 +1,15 @@
-import React from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import React from "react";
+import { Calendar, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
 interface DatePickerProps {
   selectedDate: Date | null;
   onDateSelect: (date: Date) => void;
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) => {
+const DatePicker: React.FC<DatePickerProps> = ({
+  selectedDate,
+  onDateSelect,
+}) => {
   const [currentMonth, setCurrentMonth] = React.useState(new Date());
 
   const today = new Date();
@@ -35,10 +38,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
     return days;
   };
 
-  const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentMonth(prevMonth => {
+  const navigateMonth = (direction: "prev" | "next") => {
+    setCurrentMonth((prevMonth) => {
       const newMonth = new Date(prevMonth);
-      if (direction === 'prev') {
+      if (direction === "prev") {
         newMonth.setMonth(newMonth.getMonth() - 1);
       } else {
         newMonth.setMonth(newMonth.getMonth() + 1);
@@ -67,16 +70,19 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
   };
 
   const formatSelectedDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const days = getDaysInMonth(currentMonth);
-  const monthYear = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const monthYear = currentMonth.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <div className="group relative">
@@ -101,7 +107,9 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
               <h3 className="text-xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
                 Select Date
               </h3>
-              <p className="text-sm text-slate-500 font-medium">Choose your available day</p>
+              <p className="text-sm text-slate-500 font-medium">
+                Choose your available day
+              </p>
             </div>
           </div>
         </div>
@@ -109,7 +117,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
         {/* Calendar Header */}
         <div className="flex items-center justify-between mb-6">
           <button
-            onClick={() => navigateMonth('prev')}
+            onClick={() => navigateMonth("prev")}
             className="group/btn p-3 hover:bg-white/20 rounded-2xl transition-all duration-300 hover:scale-110 hover:shadow-lg"
           >
             <ChevronLeft className="w-6 h-6 text-slate-600 group-hover/btn:text-blue-600 transition-colors duration-300" />
@@ -120,7 +128,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
             </h4>
           </div>
           <button
-            onClick={() => navigateMonth('next')}
+            onClick={() => navigateMonth("next")}
             className="group/btn p-3 hover:bg-white/20 rounded-2xl transition-all duration-300 hover:scale-110 hover:shadow-lg"
           >
             <ChevronRight className="w-6 h-6 text-slate-600 group-hover/btn:text-blue-600 transition-colors duration-300" />
@@ -129,8 +137,11 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
 
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-2 mb-6">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="p-3 text-center text-sm font-bold text-slate-500 uppercase tracking-wider">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div
+              key={day}
+              className="p-3 text-center text-sm font-bold text-slate-500 uppercase tracking-wider"
+            >
               {day}
             </div>
           ))}
@@ -142,13 +153,14 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
                   disabled={isDateDisabled(date)}
                   className={`
                     relative w-full h-full rounded-2xl transition-all duration-300 text-sm font-bold overflow-hidden group/date
-                    ${isDateDisabled(date)
-                      ? 'text-slate-300 cursor-not-allowed bg-slate-100/30'
-                      : isDateSelected(date)
-                        ? 'bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-110 z-10'
-                        : isToday(date)
-                          ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-200 hover:scale-105'
-                          : 'text-slate-700 hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 hover:shadow-xl hover:scale-105 hover:text-blue-700'
+                    ${
+                      isDateDisabled(date)
+                        ? "text-slate-300 cursor-not-allowed bg-slate-100/30"
+                        : isDateSelected(date)
+                          ? "bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 scale-110 z-10"
+                          : isToday(date)
+                            ? "bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-200 hover:scale-105"
+                            : "text-slate-700 hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 hover:shadow-xl hover:scale-105 hover:text-blue-700"
                     }
                   `}
                 >
@@ -184,7 +196,9 @@ const DatePicker: React.FC<DatePickerProps> = ({ selectedDate, onDateSelect }) =
                   <Calendar className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-500">You selected:</p>
+                  <p className="text-sm font-medium text-slate-500">
+                    You selected:
+                  </p>
                   <p className="text-lg font-bold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
                     {formatSelectedDate(selectedDate)}
                   </p>

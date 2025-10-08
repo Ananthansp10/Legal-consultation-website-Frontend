@@ -85,7 +85,7 @@ interface ReviewsData {
 export default function LawyerViewPage() {
   const { lawyerId } = useParams();
   const userId: string | undefined = useSelector(
-    (state: RootState) => state.auth.user?.id
+    (state: RootState) => state.auth.user?.id,
   );
 
   const [lawyerData, setLawyerData] = useState<LawyerProfileData>();
@@ -119,8 +119,8 @@ export default function LawyerViewPage() {
           i < Math.floor(rating)
             ? "fill-yellow-400 text-yellow-400"
             : i < rating
-            ? "fill-yellow-200 text-yellow-400"
-            : "text-gray-300"
+              ? "fill-yellow-200 text-yellow-400"
+              : "text-gray-300"
         }`}
       />
     ));
@@ -176,7 +176,7 @@ export default function LawyerViewPage() {
                           >
                             {area}
                           </span>
-                        )
+                        ),
                       )}
                     </div>
 
@@ -303,7 +303,7 @@ export default function LawyerViewPage() {
                             >
                               {lang}
                             </span>
-                          )
+                          ),
                         )}
                       </div>
                     </div>
@@ -386,7 +386,7 @@ export default function LawyerViewPage() {
                         >
                           {area}
                         </span>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
@@ -415,7 +415,7 @@ export default function LawyerViewPage() {
                           <p className="text-sm text-slate-500">{edu?.year}</p>
                         </div>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </div>

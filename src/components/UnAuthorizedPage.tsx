@@ -1,29 +1,28 @@
-import { ShieldX, ArrowLeft, Lock, AlertTriangle, LogIn } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ShieldX, ArrowLeft, Lock, AlertTriangle, LogIn } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function UnAuthorizedPage() {
   const [searchParams] = useSearchParams();
-  const role = searchParams.get('role')
-  let navigate = useNavigate()
+  const role = searchParams.get("role");
+  let navigate = useNavigate();
 
   function gotoLogin() {
-    if (role === 'user') {
-      navigate('/auth/signin')
-    } else if (role === 'lawyer') {
-      navigate('/auth/lawyer/signin')
+    if (role === "user") {
+      navigate("/auth/signin");
+    } else if (role === "lawyer") {
+      navigate("/auth/lawyer/signin");
     } else {
-      navigate('/auth/admin/signin')
+      navigate("/auth/admin/signin");
     }
   }
 
   function goBack() {
-
-    if (role === 'user') {
-      navigate('/user')
-    } else if (role === 'lawyer') {
-      navigate('/lawyer')
+    if (role === "user") {
+      navigate("/user");
+    } else if (role === "lawyer") {
+      navigate("/lawyer");
     } else {
-      navigate('/admin')
+      navigate("/admin");
     }
   }
 
@@ -40,7 +39,9 @@ function UnAuthorizedPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">Access Denied</h1>
-                <p className="text-red-100 font-medium">Error 401 - Unauthorized</p>
+                <p className="text-red-100 font-medium">
+                  Error 401 - Unauthorized
+                </p>
               </div>
             </div>
           </div>
@@ -56,7 +57,8 @@ function UnAuthorizedPage() {
                 You don't have permission to access this page
               </h2>
               <p className="text-slate-600 text-lg leading-relaxed max-w-md mx-auto">
-                This area is restricted to authorized users only. Please check your credentials or contact your administrator.
+                This area is restricted to authorized users only. Please check
+                your credentials or contact your administrator.
               </p>
             </div>
 
@@ -71,7 +73,9 @@ function UnAuthorizedPage() {
                     Security Notice
                   </h3>
                   <p className="text-amber-700 text-sm leading-relaxed">
-                    Unauthorized access attempts are logged and monitored. If you believe this is an error, please contact support with your user ID and the time of access.
+                    Unauthorized access attempts are logged and monitored. If
+                    you believe this is an error, please contact support with
+                    your user ID and the time of access.
                   </p>
                 </div>
               </div>
@@ -79,11 +83,17 @@ function UnAuthorizedPage() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button onClick={goBack} className="group inline-flex items-center justify-center px-6 py-3 bg-slate-800 text-white font-semibold rounded-xl shadow-lg hover:bg-slate-700 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
+              <button
+                onClick={goBack}
+                className="group inline-flex items-center justify-center px-6 py-3 bg-slate-800 text-white font-semibold rounded-xl shadow-lg hover:bg-slate-700 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+              >
                 <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
                 Go Back
               </button>
-              <button onClick={gotoLogin} className="group inline-flex items-center justify-center px-6 py-3 bg-white text-slate-700 font-semibold rounded-xl shadow-lg border-2 border-slate-200 hover:border-slate-300 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
+              <button
+                onClick={gotoLogin}
+                className="group inline-flex items-center justify-center px-6 py-3 bg-white text-slate-700 font-semibold rounded-xl shadow-lg border-2 border-slate-200 hover:border-slate-300 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+              >
                 <LogIn className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-200" />
                 Return Login
               </button>
@@ -102,7 +112,8 @@ function UnAuthorizedPage() {
         {/* Footer Info */}
         <div className="text-center mt-8">
           <p className="text-slate-400 text-sm">
-            If you believe this is an error, please try refreshing the page or contact your system administrator.
+            If you believe this is an error, please try refreshing the page or
+            contact your system administrator.
           </p>
         </div>
       </div>

@@ -1,12 +1,10 @@
-import React from 'react';
-import { Sparkles } from 'lucide-react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import React from "react";
+import { Sparkles } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const WelcomeSection: React.FC = () => {
-
-  const lawyer = useSelector((state: RootState) => state.lawyerAuth.lawyer)
-
+  const lawyer = useSelector((state: RootState) => state.lawyerAuth.lawyer);
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8 relative overflow-hidden">
@@ -21,7 +19,8 @@ const WelcomeSection: React.FC = () => {
           </h1>
         </div>
         <p className="text-lg text-slate-600 max-w-2xl">
-          Ready to help your clients navigate their legal challenges. Your expertise makes justice accessible to everyone.
+          Ready to help your clients navigate their legal challenges. Your
+          expertise makes justice accessible to everyone.
         </p>
         <div className="mt-6 inline-flex items-center px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full text-sm text-blue-700 font-medium border border-blue-200">
           <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>

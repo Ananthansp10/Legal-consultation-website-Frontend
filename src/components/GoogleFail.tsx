@@ -1,15 +1,15 @@
-import { AlertCircle, RefreshCw, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { AlertCircle, RefreshCw, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function GoogleFail() {
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
   const handleTryAgain = () => {
-    window.open("http://localhost:5000/api/user/auth/google", "_self")
+    window.open("http://localhost:5000/api/user/auth/google", "_self");
   };
 
   const handleGoBack = () => {
-    navigate('/auth/signin')
+    navigate("/auth/signin");
   };
 
   return (
@@ -27,7 +27,10 @@ function GoogleFail() {
                       {/* Broken Shield/Lock Illustration */}
                       <div className="w-32 h-32 lg:w-40 lg:h-40 mx-auto mb-4 relative">
                         <div className="absolute inset-0 bg-red-100 rounded-full flex items-center justify-center">
-                          <AlertCircle className="w-16 h-16 lg:w-20 lg:h-20 text-red-500" strokeWidth={1.5} />
+                          <AlertCircle
+                            className="w-16 h-16 lg:w-20 lg:h-20 text-red-500"
+                            strokeWidth={1.5}
+                          />
                         </div>
                         {/* Broken pieces effect */}
                         <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-200 rounded-full animate-pulse opacity-75"></div>
@@ -48,10 +51,14 @@ function GoogleFail() {
 
                 {/* Subtle background pattern */}
                 <div className="absolute inset-0 opacity-5">
-                  <div className="w-full h-full" style={{
-                    backgroundImage: 'radial-gradient(circle at 2px 2px, #334155 1px, transparent 0)',
-                    backgroundSize: '24px 24px'
-                  }}></div>
+                  <div
+                    className="w-full h-full"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle at 2px 2px, #334155 1px, transparent 0)",
+                      backgroundSize: "24px 24px",
+                    }}
+                  ></div>
                 </div>
               </div>
             </div>
@@ -72,7 +79,8 @@ function GoogleFail() {
 
                 {/* Error Message */}
                 <p className="text-slate-600 text-lg mb-8 leading-relaxed">
-                  We couldn't log you in with Google. Please try again or use another method.
+                  We couldn't log you in with Google. Please try again or use
+                  another method.
                 </p>
 
                 {/* Action Buttons */}
@@ -99,7 +107,8 @@ function GoogleFail() {
                 {/* Help Text */}
                 <div className="mt-8 p-4 bg-slate-50 rounded-xl border border-slate-200">
                   <p className="text-sm text-slate-600">
-                    <strong>Need help?</strong> Contact our support team if you continue experiencing issues.
+                    <strong>Need help?</strong> Contact our support team if you
+                    continue experiencing issues.
                   </p>
                 </div>
 
@@ -119,7 +128,8 @@ function GoogleFail() {
         {/* Optional: Additional Information Footer */}
         <div className="mt-8 text-center">
           <p className="text-slate-500 text-sm">
-            Having trouble? Check your internet connection or try refreshing the page.
+            Having trouble? Check your internet connection or try refreshing the
+            page.
           </p>
         </div>
       </div>

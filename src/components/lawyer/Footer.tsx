@@ -1,5 +1,13 @@
-import React from 'react';
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import React from "react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+} from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
@@ -8,10 +16,13 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-slate-800">About LegalConnect</h3>
+            <h3 className="text-lg font-bold text-slate-800">
+              About LegalConnect
+            </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Connecting clients with experienced legal professionals for quality consultations and expert advice.
-              Our platform makes legal services accessible, transparent, and efficient.
+              Connecting clients with experienced legal professionals for
+              quality consultations and expert advice. Our platform makes legal
+              services accessible, transparent, and efficient.
             </p>
             <div className="flex space-x-4">
               {[Facebook, Twitter, Linkedin, Instagram].map((Icon, index) => (
@@ -30,7 +41,14 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-slate-800">Quick Links</h3>
             <div className="space-y-2">
-              {['Home', 'Appointments', 'Reviews', 'Contact', 'Privacy Policy', 'Terms of Service'].map((link) => (
+              {[
+                "Home",
+                "Appointments",
+                "Reviews",
+                "Contact",
+                "Privacy Policy",
+                "Terms of Service",
+              ].map((link) => (
                 <a
                   key={link}
                   href="#"
@@ -52,7 +70,9 @@ const Footer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-slate-600">Email</p>
-                  <p className="text-sm font-medium text-slate-800">support@legalconnect.com</p>
+                  <p className="text-sm font-medium text-slate-800">
+                    support@legalconnect.com
+                  </p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -61,7 +81,9 @@ const Footer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-slate-600">Phone</p>
-                  <p className="text-sm font-medium text-slate-800">+1 (555) 123-4567</p>
+                  <p className="text-sm font-medium text-slate-800">
+                    +1 (555) 123-4567
+                  </p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -70,7 +92,9 @@ const Footer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-slate-600">Office</p>
-                  <p className="text-sm font-medium text-slate-800">123 Legal Street, Suite 100</p>
+                  <p className="text-sm font-medium text-slate-800">
+                    123 Legal Street, Suite 100
+                  </p>
                 </div>
               </div>
             </div>
@@ -84,9 +108,15 @@ const Footer: React.FC = () => {
               © 2025 LegalConnect. All rights reserved.
             </p>
             <div className="flex items-center space-x-6 text-sm text-slate-600">
-              <a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Cookie Policy</a>
+              <a href="#" className="hover:text-blue-600 transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="hover:text-blue-600 transition-colors">
+                Terms of Service
+              </a>
+              <a href="#" className="hover:text-blue-600 transition-colors">
+                Cookie Policy
+              </a>
             </div>
           </div>
         </div>

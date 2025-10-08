@@ -1,45 +1,62 @@
-import React, { useState } from 'react';
-import { Edit3, Trash2, Scale, X } from 'lucide-react';
-import { deleteSpecialization, editSpecialization } from '../../services/admin/adminService';
-import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
-import { ErrorResponse } from '../../interface/errorInterface';
-import ConfirmModal from '../reusableComponents/ConfirmModal';
+import React, { useState } from "react";
+import { Edit3, Trash2, Scale, X } from "lucide-react";
+import {
+  deleteSpecialization,
+  editSpecialization,
+} from "../../services/admin/adminService";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "../../interface/errorInterface";
+import ConfirmModal from "../reusableComponents/ConfirmModal";
 
 interface SpecializationCardProps {
-  specId: string
+  specId: string;
   name: string;
   description: string;
   handleChange: Function;
 }
 
-const SpecializationCard: React.FC<SpecializationCardProps> = ({ specId, name, description, handleChange }) => {
+const SpecializationCard: React.FC<SpecializationCardProps> = ({
+  specId,
+  name,
+  description,
+  handleChange,
+}) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editName, setEditName] = useState(name);
   const [editDescription, setEditDescription] = useState(description);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   function removeSpecialization(specId: string) {
-    deleteSpecialization(specId).then((response) => {
-      toast.success(response.data.message)
-      handleChange()
-    }).catch((error) => {
-      const errorResponse = error as AxiosError<ErrorResponse>
-      const errorData = errorResponse.response?.data
-      toast.error(errorData?.message)
-    })
+    deleteSpecialization(specId)
+      .then((response) => {
+        toast.success(response.data.message);
+        handleChange();
+      })
+      .catch((error) => {
+        const errorResponse = error as AxiosError<ErrorResponse>;
+        const errorData = errorResponse.response?.data;
+        toast.error(errorData?.message);
+      });
   }
 
   const handleEditSubmit = () => {
     setIsEditModalOpen(false);
-    editSpecialization({ specId: specId, name: editName, description: editDescription, isDeleted: false }).then((response) => {
-      toast.success(response.data.message)
-      handleChange()
-    }).catch((error) => {
-      const errorResponse = error as AxiosError<ErrorResponse>
-      const errorData = errorResponse.response?.data
-      toast.error(errorData?.message)
+    editSpecialization({
+      specId: specId,
+      name: editName,
+      description: editDescription,
+      isDeleted: false,
     })
+      .then((response) => {
+        toast.success(response.data.message);
+        handleChange();
+      })
+      .catch((error) => {
+        const errorResponse = error as AxiosError<ErrorResponse>;
+        const errorData = errorResponse.response?.data;
+        toast.error(errorData?.message);
+      });
   };
 
   const openEditModal = () => {
@@ -66,10 +83,16 @@ const SpecializationCard: React.FC<SpecializationCardProps> = ({ specId, name, d
               </h3>
             </div>
             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-              <button onClick={openEditModal} className="p-3 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 hover:from-blue-100 hover:to-blue-200 hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-blue-200/50 border border-blue-200/50">
+              <button
+                onClick={openEditModal}
+                className="p-3 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 hover:from-blue-100 hover:to-blue-200 hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-blue-200/50 border border-blue-200/50"
+              >
                 <Edit3 className="w-4 h-4" />
               </button>
-              <button onClick={() => setIsConfirmOpen(true)} className="p-3 rounded-xl bg-gradient-to-br from-red-50 to-red-100 text-red-600 hover:from-red-100 hover:to-red-200 hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-red-200/50 border border-red-200/50">
+              <button
+                onClick={() => setIsConfirmOpen(true)}
+                className="p-3 rounded-xl bg-gradient-to-br from-red-50 to-red-100 text-red-600 hover:from-red-100 hover:to-red-200 hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-red-200/50 border border-red-200/50"
+              >
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>

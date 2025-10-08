@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Clock, Plus, X, Zap, Timer } from 'lucide-react';
+import React, { useState } from "react";
+import { Clock, Plus, X, Zap, Timer } from "lucide-react";
 
 interface TimeSlot {
   id: string;
@@ -12,21 +12,27 @@ interface TimeSlotsProps {
   onTimeSlotsChange: (slots: TimeSlot[]) => void;
 }
 
-const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) => {
+const TimeSlots: React.FC<TimeSlotsProps> = ({
+  timeSlots,
+  onTimeSlotsChange,
+}) => {
   const [showAddForm, setShowAddForm] = useState(false);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const generateTimeOptions = () => {
     const options = [];
     for (let hour = 8; hour <= 20; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
-        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        const display = new Date(`1970-01-01T${time}`).toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
+        const time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+        const display = new Date(`1970-01-01T${time}`).toLocaleTimeString(
+          "en-US",
+          {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          },
+        );
         options.push({ value: time, display });
       }
     }
@@ -34,15 +40,18 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
   };
 
   const formatTimeSlot = (startTime: string, endTime: string) => {
-    const start = new Date(`1970-01-01T${startTime}`).toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
-    const end = new Date(`1970-01-01T${endTime}`).toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
+    const start = new Date(`1970-01-01T${startTime}`).toLocaleTimeString(
+      "en-US",
+      {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      },
+    );
+    const end = new Date(`1970-01-01T${endTime}`).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
     });
     return `${start} – ${end}`;
   };
@@ -52,17 +61,17 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
       const newSlot: TimeSlot = {
         id: Date.now().toString(),
         startTime,
-        endTime
+        endTime,
       };
       onTimeSlotsChange([...timeSlots, newSlot]);
-      setStartTime('');
-      setEndTime('');
+      setStartTime("");
+      setEndTime("");
       setShowAddForm(false);
     }
   };
 
   const handleRemoveSlot = (id: string) => {
-    onTimeSlotsChange(timeSlots.filter(slot => slot.id !== id));
+    onTimeSlotsChange(timeSlots.filter((slot) => slot.id !== id));
   };
 
   const timeOptions = generateTimeOptions();
@@ -89,7 +98,9 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
             <h3 className="text-xl font-bold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
               Add Time Slots
             </h3>
-            <p className="text-sm text-slate-500 font-medium">Define your availability windows</p>
+            <p className="text-sm text-slate-500 font-medium">
+              Define your availability windows
+            </p>
           </div>
         </div>
 
@@ -113,7 +124,9 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
                   <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full blur opacity-0 group-hover/slot:opacity-30 transition-all duration-300"></div>
 
                   <div className="relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-white/40 to-white/20 border border-white/30 rounded-full text-sm font-semibold text-slate-700 backdrop-blur-sm hover:from-white/50 hover:to-white/30 transition-all duration-300 group-hover/slot:scale-105 shadow-lg hover:shadow-xl">
-                    <span className="mr-3">{formatTimeSlot(slot.startTime, slot.endTime)}</span>
+                    <span className="mr-3">
+                      {formatTimeSlot(slot.startTime, slot.endTime)}
+                    </span>
                     <button
                       onClick={() => handleRemoveSlot(slot.id)}
                       className="p-1.5 hover:bg-red-100/80 rounded-full transition-all duration-200 group-hover/slot:scale-110 hover:shadow-lg"
@@ -144,7 +157,7 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
                       className="w-full p-4 rounded-2xl border border-white/30 bg-white/60 backdrop-blur-sm focus:ring-4 focus:ring-blue-200/50 focus:border-blue-400 transition-all duration-300 text-slate-700 font-semibold shadow-lg hover:shadow-xl appearance-none cursor-pointer"
                     >
                       <option value="">Select start time</option>
-                      {timeOptions.map(option => (
+                      {timeOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.display}
                         </option>
@@ -166,7 +179,7 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
                       className="w-full p-4 rounded-2xl border border-white/30 bg-white/60 backdrop-blur-sm focus:ring-4 focus:ring-purple-200/50 focus:border-purple-400 transition-all duration-300 text-slate-700 font-semibold shadow-lg hover:shadow-xl appearance-none cursor-pointer"
                     >
                       <option value="">Select end time</option>
-                      {timeOptions.map(option => (
+                      {timeOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.display}
                         </option>
@@ -190,8 +203,8 @@ const TimeSlots: React.FC<TimeSlotsProps> = ({ timeSlots, onTimeSlotsChange }) =
                 <button
                   onClick={() => {
                     setShowAddForm(false);
-                    setStartTime('');
-                    setEndTime('');
+                    setStartTime("");
+                    setEndTime("");
                   }}
                   className="px-8 py-4 bg-white/50 text-slate-700 rounded-2xl font-bold hover:bg-white/70 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                 >

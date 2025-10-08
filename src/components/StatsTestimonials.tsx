@@ -72,7 +72,7 @@ const StatsTestimonials = () => {
 
   const prevTestimonial = () => {
     setCurrentTestimonial(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
     );
   };
 
@@ -131,7 +131,7 @@ const StatsTestimonials = () => {
                         key={i}
                         className="h-4 w-4 text-yellow-400 fill-current"
                       />
-                    )
+                    ),
                   )}
                 </div>
               </div>

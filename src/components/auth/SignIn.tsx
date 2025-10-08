@@ -33,7 +33,7 @@ const SignIn = () => {
   });
 
   const { user, isAuthenticate } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   const { data, error, loading, execute } = useApi(signinService);

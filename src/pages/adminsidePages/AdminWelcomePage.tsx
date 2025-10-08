@@ -177,7 +177,7 @@ function AdminWelcomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
   const adminDetails = useSelector(
-    (state: RootState) => state.adminAuth.isAuthenticate
+    (state: RootState) => state.adminAuth.isAuthenticate,
   );
 
   useEffect(() => {

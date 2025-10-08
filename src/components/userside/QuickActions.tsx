@@ -1,37 +1,37 @@
-import React from 'react';
-import { Calendar, Users, FileText, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Calendar, Users, FileText, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const QuickActions: React.FC = () => {
   const actions = [
     {
       id: 1,
-      title: 'Book New Consultation',
-      description: 'Schedule a meeting with a lawyer',
+      title: "Book New Consultation",
+      description: "Schedule a meeting with a lawyer",
       icon: Calendar,
-      color: 'bg-blue-600 hover:bg-blue-700'
+      color: "bg-blue-600 hover:bg-blue-700",
     },
     {
       id: 2,
-      title: 'View All Lawyers',
-      description: 'Browse our expert legal team',
+      title: "View All Lawyers",
+      description: "Browse our expert legal team",
       icon: Users,
-      color: 'bg-emerald-600 hover:bg-emerald-700'
+      color: "bg-emerald-600 hover:bg-emerald-700",
     },
     {
       id: 3,
-      title: 'Legal Resources',
-      description: 'Access helpful legal information',
+      title: "Legal Resources",
+      description: "Access helpful legal information",
       icon: Search,
-      color: 'bg-purple-600 hover:bg-purple-700'
-    }
+      color: "bg-purple-600 hover:bg-purple-700",
+    },
   ];
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function goToPage(id: number) {
     if (id == 1 || id == 2) {
-      navigate('/user/lawyers')
+      navigate("/user/lawyers");
     }
   }
 

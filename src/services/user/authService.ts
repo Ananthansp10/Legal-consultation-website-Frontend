@@ -18,7 +18,7 @@ interface ResetPasswordData {
 }
 
 export const registerUser = async (
-  data: SignupInterface
+  data: SignupInterface,
 ): Promise<AxiosResponse<ApiResponse<User>>> => {
   try {
     const result = await axios.post(USER_AUTH_API.SIGNUP, data);
@@ -76,7 +76,9 @@ export const resetPassword = async (data: ResetPasswordData) => {
 export const googleAuth = async () => {
   try {
     window.open(USER_AUTH_API.GOOGLE_AUTH, "_self");
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getGoogleAuthDetails = async () => {

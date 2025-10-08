@@ -1,8 +1,8 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Navbar from '../../components/admin/Navbar';
-import Sidebar from '../../components/admin/Sidebar';
-import Footer from './Footer';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Navbar from "../../components/admin/Navbar";
+import Sidebar from "../../components/admin/Sidebar";
+import Footer from "./Footer";
 
 const Layout: React.FC = () => {
   return (

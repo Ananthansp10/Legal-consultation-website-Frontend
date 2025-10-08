@@ -66,7 +66,7 @@ function UserAppointmentPage() {
   }
 
   const user: userDetails | null = useSelector(
-    (state: RootState) => state.auth.user
+    (state: RootState) => state.auth.user,
   );
 
   const [appointments, setAppointments] = useState<Array<AppointmentsData>>([]);
@@ -86,13 +86,13 @@ function UserAppointmentPage() {
   const startIndex = (currentPage - 1) * itemsPerPage;
 
   useEffect(() => {
-    getAppointments(user?.id!, activeTab, startIndex, itemsPerPage).then(
+    getAppointments(user?.id ?? "", activeTab, startIndex, itemsPerPage).then(
       (response) => {
         setAppointments(response.data.data);
         setTotalPages(
-          Math.ceil(response.data.totalAppointments / itemsPerPage)
+          Math.ceil(response.data.totalAppointments / itemsPerPage),
         );
-      }
+      },
     );
   }, [activeTab, currentPage]);
 
@@ -108,7 +108,7 @@ function UserAppointmentPage() {
             toast.error(error.response.data.message);
             setActiveTab("Accepted");
           });
-      }
+      },
     );
   }
 
@@ -208,8 +208,8 @@ function UserAppointmentPage() {
                     appointment.payment === "Success"
                       ? "bg-green-100 text-green-700"
                       : appointment.payment === "Failed"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-yellow-100 text-yellow-700"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-yellow-100 text-yellow-700"
                   }`}
                 >
                   {appointment.status == "Cancelled"
@@ -300,10 +300,10 @@ function UserAppointmentPage() {
         appointment.status === "Booked"
           ? "cursor-pointer"
           : appointment.status === "Completed"
-          ? "cursor-pointer"
-          : appointment.status === "Cancelled"
-          ? "cursor-pointer"
-          : ""
+            ? "cursor-pointer"
+            : appointment.status === "Cancelled"
+              ? "cursor-pointer"
+              : ""
       }`}
     >
       <div className="flex items-start justify-between">
@@ -327,12 +327,12 @@ function UserAppointmentPage() {
                   appointment.status === "Completed"
                     ? "bg-green-100 text-green-700"
                     : appointment.status === "Pending"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : appointment.status === "Cancelled"
-                    ? "bg-red-100 text-red-700"
-                    : appointment.status === "Rejected"
-                    ? "bg-red-100 text-red-700"
-                    : "bg-blue-100 text-blue-700"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : appointment.status === "Cancelled"
+                        ? "bg-red-100 text-red-700"
+                        : appointment.status === "Rejected"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-blue-100 text-blue-700"
                 }`}
               >
                 {appointment.status}
@@ -421,7 +421,7 @@ function UserAppointmentPage() {
                       generateRazorpay(
                         appointment._id,
                         Number(appointment.lawyer.fee),
-                        appointment.lawyer._id
+                        appointment.lawyer._id,
                       )
                     }
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -497,7 +497,7 @@ function UserAppointmentPage() {
                     onClick={() =>
                       handleContinueConsultation(
                         appointment.lawyer._id,
-                        appointment.caseId
+                        appointment.caseId,
                       )
                     }
                     className="bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm flex items-center space-x-2"
@@ -700,7 +700,7 @@ function UserAppointmentPage() {
             </h2>
             <div
               className={`ml-3 px-2 py-1 text-xs font-medium rounded-full ${getTabColor(
-                activeTab
+                activeTab,
               )}`}
             >
               {appointments?.length || 0}

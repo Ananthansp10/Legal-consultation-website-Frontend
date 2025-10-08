@@ -1,22 +1,32 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
-import { otpService, resendOtp } from '../../services/user/otpService';
-import { toast } from 'react-toastify'
-import { User } from '../../interface/userInterface/userInterface';
-import { useApi } from '../../hooks/UseApi';
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, RefreshCw } from "lucide-react";
+import { otpService, resendOtp } from "../../services/user/otpService";
+import { toast } from "react-toastify";
+import { User } from "../../interface/userInterface/userInterface";
+import { useApi } from "../../hooks/UseApi";
 
 const OTPVerification = () => {
   const navigate = useNavigate();
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState(120);
   const [canResend, setCanResend] = useState(false);
-  const [otpError, setOtpError] = useState('');
+  const [otpError, setOtpError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const { data: otpData, error: otpApiError, loading: otpLoading, execute: otpExecute } = useApi(otpService)
-  const { data: resendData, error: resendError, loading: resendLoading, execute: resendExecute } = useApi(resendOtp)
+  const {
+    data: otpData,
+    error: otpApiError,
+    loading: otpLoading,
+    execute: otpExecute,
+  } = useApi(otpService);
+  const {
+    data: resendData,
+    error: resendError,
+    loading: resendLoading,
+    execute: resendExecute,
+  } = useApi(resendOtp);
 
   useEffect(() => {
     if (timer > 0) {
@@ -30,24 +40,24 @@ const OTPVerification = () => {
   }, [timer]);
 
   const validateOtp = (otpArray: string[]) => {
-    const otpValue = otpArray.join('');
-    
+    const otpValue = otpArray.join("");
+
     if (otpValue.length === 0) {
-      setOtpError('OTP is required');
+      setOtpError("OTP is required");
       return false;
     }
-    
+
     if (otpValue.length < 6) {
-      setOtpError('Please enter complete 6-digit OTP');
+      setOtpError("Please enter complete 6-digit OTP");
       return false;
     }
-    
+
     if (!/^\d{6}$/.test(otpValue)) {
-      setOtpError('OTP must contain only numbers');
+      setOtpError("OTP must contain only numbers");
       return false;
     }
-    
-    setOtpError('');
+
+    setOtpError("");
     return true;
   };
 
@@ -59,25 +69,25 @@ const OTPVerification = () => {
 
       // Clear error when user starts typing
       if (otpError) {
-        setOtpError('');
+        setOtpError("");
       }
 
       if (value && index < 5) {
         inputRefs.current[index + 1]?.focus();
       }
-      
+
       // Validate on every change
       validateOtp(newOtp);
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
-      
+
       // Clear error when user starts correcting
       if (otpError) {
-        setOtpError('');
+        setOtpError("");
       }
     }
   };
@@ -86,78 +96,79 @@ const OTPVerification = () => {
     validateOtp(otp);
   };
 
-  let userDetails = localStorage.getItem('userDetails')
-  let userData: User | undefined=userDetails ? JSON.parse(userDetails) : ''
+  let userDetails = localStorage.getItem("userDetails");
+  let userData: User | undefined = userDetails ? JSON.parse(userDetails) : "";
 
   // Check if form is valid for button activation
   useEffect(() => {
-    const otpValue = otp.join('');
-    const isValid = otpValue.length === 6 && /^\d{6}$/.test(otpValue) && !otpError;
+    const otpValue = otp.join("");
+    const isValid =
+      otpValue.length === 6 && /^\d{6}$/.test(otpValue) && !otpError;
     setIsFormValid(isValid);
   }, [otp, otpError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const isOtpValid = validateOtp(otp);
-    
+
     if (!isOtpValid) {
       return;
     }
 
-    const otpValue = otp.join('');
+    const otpValue = otp.join("");
 
-    await otpExecute({ userDetails: userData!, otp: otpValue })
+    await otpExecute({ userDetails: userData!, otp: otpValue });
   };
 
   useEffect(() => {
     if (otpApiError) {
-      toast.error(otpApiError.message)
+      toast.error(otpApiError.message);
     }
-  }, [otpApiError])
+  }, [otpApiError]);
 
   useEffect(() => {
     if (otpData) {
       if (userData?.forgotPassword) {
-        navigate('/auth/new-password')
+        navigate("/auth/new-password");
       } else {
-        localStorage.removeItem('userDetails')
-        toast.success(otpData.message)
+        localStorage.removeItem("userDetails");
+        toast.success(otpData.message);
         setTimeout(() => {
-          navigate('/auth/signin')
-        }, 2000)
+          navigate("/auth/signin");
+        }, 2000);
       }
     }
-  }, [otpData])
+  }, [otpData]);
 
   const handleResend = async () => {
     setCanResend(false);
-    setOtp(['', '', '', '', '', '']);
-    setOtpError('');
-    
+    setOtp(["", "", "", "", "", ""]);
+    setOtpError("");
+
     // Set new expiration time for 120 seconds
-    const expirationTime = Date.now() + (120 * 1000);
-    localStorage.setItem('otpTimerExpiration', expirationTime.toString());
+    const expirationTime = Date.now() + 120 * 1000;
+    localStorage.setItem("otpTimerExpiration", expirationTime.toString());
     setTimer(120);
-    
-    let userDetails: string | null = localStorage.getItem('userDetails')
+
+    let userDetails: string | null = localStorage.getItem("userDetails");
     if (userDetails) {
-      await resendExecute(JSON.parse(userDetails))
+      await resendExecute(JSON.parse(userDetails));
     }
   };
 
   useEffect(() => {
     if (resendError) {
-      toast.error(resendError.message)
+      toast.error(resendError.message);
     }
-  }, [resendError])
+  }, [resendError]);
 
   useEffect(() => {
     if (resendData) {
-      toast.success(resendData.message)
+      toast.success(resendData.message);
       // Timer is already set in handleResend, no need to set it here
     }
-  }, [resendData])
+  }, [resendData]);
 
   return (
     <div className="min-h-screen flex">
@@ -181,7 +192,9 @@ const OTPVerification = () => {
         <div className="absolute inset-0 z-20 flex items-center justify-center p-12">
           <div className="text-white text-center">
             <h2 className="text-4xl font-bold mb-4">Verify Your Identity</h2>
-            <p className="text-xl opacity-90">Enter the verification code to secure your account</p>
+            <p className="text-xl opacity-90">
+              Enter the verification code to secure your account
+            </p>
           </div>
         </div>
       </div>
@@ -191,9 +204,12 @@ const OTPVerification = () => {
         <div className="w-full max-w-md">
           <div className="bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-slate-800 mb-2">Enter Verification Code</h1>
+              <h1 className="text-3xl font-bold text-slate-800 mb-2">
+                Enter Verification Code
+              </h1>
               <p className="text-slate-600">
-                We've sent a 6-digit verification code to your registered email or phone number.
+                We've sent a 6-digit verification code to your registered email
+                or phone number.
               </p>
             </div>
 
@@ -213,16 +229,18 @@ const OTPVerification = () => {
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       onBlur={handleBlur}
                       className={`w-12 h-12 text-center text-xl font-bold bg-white/80 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
-                        otpError 
-                          ? 'border-red-500 focus:ring-red-500' 
-                          : 'border-slate-200 focus:ring-blue-500'
+                        otpError
+                          ? "border-red-500 focus:ring-red-500"
+                          : "border-slate-200 focus:ring-blue-500"
                       }`}
                       maxLength={1}
                     />
                   ))}
                 </div>
                 {otpError && (
-                  <p className="text-red-500 text-sm mt-3 text-center">{otpError}</p>
+                  <p className="text-red-500 text-sm mt-3 text-center">
+                    {otpError}
+                  </p>
                 )}
               </div>
 
@@ -231,8 +249,8 @@ const OTPVerification = () => {
                 disabled={otpLoading || !isFormValid}
                 className={`w-full py-3 rounded-xl font-semibold transition-all duration-200 ${
                   isFormValid && !otpLoading
-                    ? 'bg-blue-500 hover:bg-blue-600 text-white hover:shadow-lg hover:shadow-blue-500/25 cursor-pointer'
-                    : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    ? "bg-blue-500 hover:bg-blue-600 text-white hover:shadow-lg hover:shadow-blue-500/25 cursor-pointer"
+                    : "bg-slate-300 text-slate-500 cursor-not-allowed"
                 }`}
               >
                 {otpLoading ? (
@@ -241,24 +259,22 @@ const OTPVerification = () => {
                     <span>Verifying...</span>
                   </div>
                 ) : (
-                  'Verify OTP'
+                  "Verify OTP"
                 )}
               </button>
             </form>
 
             <div className="text-center mt-6 space-y-4">
-              <div className="text-slate-600">
-                Didn't receive the code?
-              </div>
+              <div className="text-slate-600">Didn't receive the code?</div>
 
               {canResend ? (
                 <button
                   onClick={handleResend}
                   disabled={resendLoading}
                   className={`inline-flex items-center space-x-2 font-medium transition-colors duration-200 ${
-                    resendLoading 
-                      ? 'text-slate-400 cursor-not-allowed' 
-                      : 'text-blue-500 hover:text-blue-600'
+                    resendLoading
+                      ? "text-slate-400 cursor-not-allowed"
+                      : "text-blue-500 hover:text-blue-600"
                   }`}
                 >
                   {resendLoading ? (
@@ -274,9 +290,7 @@ const OTPVerification = () => {
                   )}
                 </button>
               ) : (
-                <div className="text-slate-500">
-                  Resend code in {timer}s
-                </div>
+                <div className="text-slate-500">Resend code in {timer}s</div>
               )}
 
               <div>

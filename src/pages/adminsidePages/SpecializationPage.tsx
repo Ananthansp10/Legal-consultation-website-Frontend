@@ -1,30 +1,34 @@
-import { useEffect, useState } from 'react';
-import AdminHeader from '../../components/admin/AdminHeader';
-import SpecializationCard from '../../components/admin/SpecializationCard';
-import AddSpecializationModal from '../../components/admin/AddSpecializationModal';
-import EmptyState from '../../components/admin/EmptyState';
-import { getSpecialization } from '../../services/admin/adminService';
-import Pagination from '../../components/reusableComponents/Pagination';
+import { useEffect, useState } from "react";
+import AdminHeader from "../../components/admin/AdminHeader";
+import SpecializationCard from "../../components/admin/SpecializationCard";
+import AddSpecializationModal from "../../components/admin/AddSpecializationModal";
+import EmptyState from "../../components/admin/EmptyState";
+import { getSpecialization } from "../../services/admin/adminService";
+import Pagination from "../../components/reusableComponents/Pagination";
 
 function SpecializationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [specializations, setSpecializations] = useState<Array<{ _id: string, name: string, description: string }>>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 4
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const [totalPages, setTotalPages] = useState(0)
+  const [specializations, setSpecializations] = useState<
+    Array<{ _id: string; name: string; description: string }>
+  >([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const [totalPages, setTotalPages] = useState(0);
 
   function fetchSpecialization() {
     getSpecialization(startIndex, itemsPerPage).then((response) => {
-      setSpecializations(response.data.data)
-      setTotalPages(Math.ceil(response.data.totalSpecialization / itemsPerPage))
-    })
+      setSpecializations(response.data.data);
+      setTotalPages(
+        Math.ceil(response.data.totalSpecialization / itemsPerPage),
+      );
+    });
   }
 
   useEffect(() => {
-    fetchSpecialization()
-  }, [isModalOpen, currentPage])
+    fetchSpecialization();
+  }, [isModalOpen, currentPage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 relative overflow-hidden">
@@ -59,9 +63,13 @@ function SpecializationPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }
 
-export default SpecializationPage
+export default SpecializationPage;

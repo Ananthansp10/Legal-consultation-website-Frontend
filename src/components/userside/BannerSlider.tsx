@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const BannerSlider: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -7,34 +7,39 @@ const BannerSlider: React.FC = () => {
   const slides = [
     {
       id: 1,
-      image: 'https://images.pexels.com/photos/5668882/pexels-photo-5668882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      title: 'Expert Legal Consultation',
-      subtitle: 'Connect with experienced lawyers instantly'
+      image:
+        "https://images.pexels.com/photos/5668882/pexels-photo-5668882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      title: "Expert Legal Consultation",
+      subtitle: "Connect with experienced lawyers instantly",
     },
     {
       id: 2,
-      image: 'https://images.pexels.com/photos/4427430/pexels-photo-4427430.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      title: 'Corporate Law Specialists',
-      subtitle: 'Professional legal services for your business'
+      image:
+        "https://images.pexels.com/photos/4427430/pexels-photo-4427430.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      title: "Corporate Law Specialists",
+      subtitle: "Professional legal services for your business",
     },
     {
       id: 3,
-      image: 'https://images.pexels.com/photos/5673488/pexels-photo-5673488.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      title: 'Family Law Experts',
-      subtitle: 'Compassionate legal support when you need it most'
+      image:
+        "https://images.pexels.com/photos/5673488/pexels-photo-5673488.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      title: "Family Law Experts",
+      subtitle: "Compassionate legal support when you need it most",
     },
     {
       id: 4,
-      image: 'https://images.pexels.com/photos/4427611/pexels-photo-4427611.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      title: 'Criminal Defense',
-      subtitle: 'Dedicated advocacy for your legal rights'
+      image:
+        "https://images.pexels.com/photos/4427611/pexels-photo-4427611.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      title: "Criminal Defense",
+      subtitle: "Dedicated advocacy for your legal rights",
     },
     {
       id: 5,
-      image: 'https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      title: 'Real Estate Law',
-      subtitle: 'Navigate property transactions with confidence'
-    }
+      image:
+        "https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      title: "Real Estate Law",
+      subtitle: "Navigate property transactions with confidence",
+    },
   ];
 
   useEffect(() => {
@@ -58,8 +63,9 @@ const BannerSlider: React.FC = () => {
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
           >
             <img
               src={slide.image}
@@ -100,10 +106,11 @@ const BannerSlider: React.FC = () => {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentSlide
-              ? 'bg-white'
-              : 'bg-white/40 hover:bg-white/60'
-              }`}
+            className={`w-3 h-3 rounded-full transition-all duration-200 ${
+              index === currentSlide
+                ? "bg-white"
+                : "bg-white/40 hover:bg-white/60"
+            }`}
           />
         ))}
       </div>

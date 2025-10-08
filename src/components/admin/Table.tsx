@@ -1,5 +1,5 @@
-import React from 'react';
-import GlassCard from './GlassCard';
+import React from "react";
+import GlassCard from "./GlassCard";
 
 interface Column {
   key: string;
@@ -13,7 +13,7 @@ interface TableProps {
   className?: string;
 }
 
-const Table: React.FC<TableProps> = ({ columns, data, className = '' }) => {
+const Table: React.FC<TableProps> = ({ columns, data, className = "" }) => {
   return (
     <GlassCard className={className}>
       <div className="overflow-x-auto">
@@ -37,8 +37,13 @@ const Table: React.FC<TableProps> = ({ columns, data, className = '' }) => {
                 className="border-b border-slate-200/30 hover:bg-white/50 transition-colors duration-200"
               >
                 {columns.map((column) => (
-                  <td key={column.key} className="py-4 px-6 text-sm text-slate-600">
-                    {column.render ? column.render(row[column.key], row) : row[column.key]}
+                  <td
+                    key={column.key}
+                    className="py-4 px-6 text-sm text-slate-600"
+                  >
+                    {column.render
+                      ? column.render(row[column.key], row)
+                      : row[column.key]}
                   </td>
                 ))}
               </tr>
