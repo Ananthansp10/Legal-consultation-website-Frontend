@@ -25,7 +25,7 @@ function ProtectedRoute({ allowedRoles }: ProtectRouteProps) {
     if (!user) {
       getGoogleAuthDetails().then((response) => {
         if (response.data.result) {
-          let obj = {
+          const obj = {
             id: response.data.result.id,
             googleId: response.data.result.googleId,
             email: response.data.result.email,

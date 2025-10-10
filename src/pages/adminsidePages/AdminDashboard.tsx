@@ -497,7 +497,7 @@ const AdminDashboard: React.FC = () => {
 
           {/* Legend */}
           <div className="mt-4 space-y-2">
-            {summaryReport?.countryChart.map((item, index) => (
+            {summaryReport?.countryChart.map((item) => (
               <div key={item._id} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div

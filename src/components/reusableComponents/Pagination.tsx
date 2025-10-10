@@ -24,7 +24,7 @@ const Pagination = ({
 
     const half = Math.floor(maxVisiblePages / 2);
     let start = Math.max(currentPage - half, 1);
-    let end = Math.min(start + maxVisiblePages - 1, totalPages);
+    const end = Math.min(start + maxVisiblePages - 1, totalPages);
 
     if (end - start + 1 < maxVisiblePages) {
       start = Math.max(end - maxVisiblePages + 1, 1);

@@ -2,7 +2,7 @@ import { AlertCircle, RefreshCw, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function GoogleFail() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleTryAgain = () => {
     window.open("http://localhost:5000/api/user/auth/google", "_self");

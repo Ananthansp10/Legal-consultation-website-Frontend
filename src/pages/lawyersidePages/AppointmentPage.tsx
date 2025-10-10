@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import {
   getAppointments,
+  searchAppointment,
   updateAppointmentStatus,
 } from "../../services/lawyer/lawyerService";
 import { useSelector } from "react-redux";
@@ -24,13 +25,72 @@ import ConfirmModal from "../../components/reusableComponents/ConfirmModal";
 import LawyerNavbar from "../../components/lawyer/Navbar";
 import Pagination from "../../components/reusableComponents/Pagination";
 import { useNavigate } from "react-router-dom";
+import ReportModal from "../../components/reusableComponents/ReportModal";
+
+const UserDetailsModal = ({
+  isOpen,
+  onClose,
+  user,
+  onReport,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  user: User | null;
+  onReport: () => void;
+}) => {
+  if (!isOpen || !user) return null;
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-slate-800">User Details</h3>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X className="w-5 h-5 text-gray-500" />
+          </button>
+        </div>
+        {/* Content */}
+        <div className="p-6 flex flex-col items-center space-y-4">
+          <img
+            src={user.profileImage}
+            alt={user.name}
+            className="w-24 h-24 rounded-full border-2 border-blue-400 object-cover shadow"
+          />
+          <div className="text-center space-y-2">
+            <p className="text-lg font-semibold text-gray-900">{user.name}</p>
+            <p className="text-sm text-gray-700">
+              Profession: {user.proffession || "N/A"}
+            </p>
+            <p className="text-sm text-gray-700">
+              Email: {user.email || "N/A"}
+            </p>
+            <p className="text-sm text-gray-700">
+              Phone: {user.phoneNumber || "N/A"}
+            </p>
+          </div>
+          <button
+            onClick={onReport}
+            className="mt-4 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+          >
+            Report User
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export interface User {
   _id: string;
   name: string;
   profileImage: string;
+  email: string;
+  phoneNumber: string;
+  proffession: string;
 }
-
 export interface Appointment {
   _id: string;
   user: User;
@@ -52,20 +112,18 @@ export interface Appointment {
   note?: string;
   caseId: number;
 }
-
 interface AppointmentCardProps {
   appointment: Appointment;
   setActiveFilter: (filter: string) => void;
   onCardClick: (appointment: Appointment) => void;
+  onUserDetailsClick: (user: User) => void;
 }
-
 interface PaymentHistoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   appointment: Appointment;
 }
 
-// Helper: Get today's date as 'YYYY-MM-DD'
 function getTodayDateStr() {
   const today = new Date();
   const yyyy = today.getFullYear();
@@ -80,7 +138,6 @@ const PaymentHistoryModal = ({
   appointment,
 }: PaymentHistoryModalProps) => {
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
@@ -101,7 +158,6 @@ const PaymentHistoryModal = ({
             <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
-
         {/* Content */}
         <div className="p-6">
           <div className="space-y-4">
@@ -114,7 +170,6 @@ const PaymentHistoryModal = ({
                 {appointment._id.slice(-8)}
               </span>
             </div>
-
             {/* Payment Status */}
             <div className="flex justify-between items-center py-3 border-b border-gray-100">
               <span className="text-sm font-medium text-gray-600">
@@ -132,7 +187,6 @@ const PaymentHistoryModal = ({
                 {appointment.payment || "Refunded"}
               </span>
             </div>
-
             {/* Payment Mode */}
             <div className="flex justify-between items-center py-3 border-b border-gray-100">
               <span className="text-sm font-medium text-gray-600">
@@ -142,7 +196,6 @@ const PaymentHistoryModal = ({
                 {appointment.paymentMode || "Online Payment"}
               </span>
             </div>
-
             {/* Payment Date */}
             <div className="flex justify-between items-center py-3 border-b border-gray-100">
               <span className="text-sm font-medium text-gray-600">
@@ -152,7 +205,6 @@ const PaymentHistoryModal = ({
                 {appointment.paymentDate}
               </span>
             </div>
-
             {/* Amount */}
             <div className="flex justify-between items-center py-3 border-b border-gray-100">
               <span className="text-sm font-medium text-gray-600">
@@ -162,7 +214,6 @@ const PaymentHistoryModal = ({
                 ₹{appointment.fee}
               </span>
             </div>
-
             {/* Client Details */}
             <div className="bg-gray-50 rounded-lg p-4 mt-4">
               <h4 className="text-sm font-medium text-gray-700 mb-2">
@@ -198,7 +249,6 @@ const PaymentHistoryModal = ({
             </div>
           </div>
         </div>
-
         {/* Footer */}
         <div className="flex justify-end p-6 border-t border-gray-200">
           <button
@@ -217,6 +267,7 @@ function AppointmentCard({
   appointment,
   setActiveFilter,
   onCardClick,
+  onUserDetailsClick,
 }: AppointmentCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -234,7 +285,6 @@ function AppointmentCard({
         return "bg-gray-100 text-gray-800 border-gray-300";
     }
   };
-
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "Completed":
@@ -253,7 +303,6 @@ function AppointmentCard({
         return <Clock size={16} />;
     }
   };
-
   const [showModal, setShowModal] = useState(false);
 
   const lawyerId: string | undefined = useSelector(
@@ -274,17 +323,12 @@ function AppointmentCard({
       setShowModal(true);
     }
   }
-
   const showStartMeeting =
     appointment.status === "Booked" && appointment.date === getTodayDateStr();
-
   const navigate = useNavigate();
-
   const canShowPaymentHistory = ["Booked", "Completed", "Cancelled"].includes(
     appointment.status,
   );
-
-  // Show previous consultations button for all statuses except Pending, Cancelled, and Rejected
   const showPreviousConsultations = ![
     "Pending",
     "Cancelled",
@@ -333,9 +377,18 @@ function AppointmentCard({
                   </>
                 )}
               </div>
+              <button
+                className="mt-2 px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors border border-blue-200"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUserDetailsClick(appointment.user);
+                }}
+              >
+                View Details
+              </button>
+              {/* ---------------------------------------------------- */}
             </div>
           </div>
-
           <div className="flex items-center space-x-3">
             {/* Previous Consultations Button */}
             {showPreviousConsultations && (
@@ -351,19 +404,19 @@ function AppointmentCard({
 
             {/* Status Badge */}
             <div
-              className={`px-3 py-1 rounded-full border text-xs font-medium flex items-center gap-1 ${getStatusColor(appointment.status)}`}
+              className={`px-3 py-1 rounded-full border text-xs font-medium flex items-center gap-1 ${getStatusColor(
+                appointment.status,
+              )}`}
             >
               {getStatusIcon(appointment.status)}
               {appointment.status}
             </div>
           </div>
         </div>
-
         {/* Problem description */}
         <div className="mb-4">
           <p className="text-gray-700 leading-relaxed">{appointment.problem}</p>
         </div>
-
         {/* Note section for completed appointments */}
         {appointment.status === "Completed" && appointment.note && (
           <div className="bg-blue-50 border-l-4 border-blue-400 p-3 mb-4 rounded-r-lg">
@@ -378,7 +431,6 @@ function AppointmentCard({
             </div>
           </div>
         )}
-
         {/* Date and time info */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-6">
@@ -392,7 +444,6 @@ function AppointmentCard({
             </div>
           </div>
         </div>
-
         {/* Actions - Static display only */}
         {appointment.status === "Pending" && (
           <div
@@ -413,7 +464,6 @@ function AppointmentCard({
             </button>
           </div>
         )}
-
         {/* ---- "Start Meeting" Button Only For Booked & Today's Date ---- */}
         {showStartMeeting && (
           <div
@@ -428,9 +478,7 @@ function AppointmentCard({
             </button>
           </div>
         )}
-        {/* ------------------------------------------------------------- */}
 
-        {/* Click hint for appointments with payment history */}
         {canShowPaymentHistory && (
           <div
             onClick={handleCardClick}
@@ -478,6 +526,8 @@ function AppointmentPage() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const lawyerId: string | undefined = useSelector(
     (state: RootState) => state.lawyerAuth.lawyer?._id,
@@ -487,6 +537,17 @@ function AppointmentPage() {
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 2;
   const startIndex = (currentPage - 1) * itemsPerPage;
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const filteredAppointments = appointments.filter((appointment) => {
+    const lower = searchTerm.trim().toLowerCase();
+    if (!lower) return true;
+    return (
+      appointment.user.name.toLowerCase().includes(lower) ||
+      appointment.problem.toLowerCase().includes(lower)
+    );
+  });
 
   useEffect(() => {
     getAppointments(lawyerId!, activeFilter, startIndex, itemsPerPage).then(
@@ -502,6 +563,25 @@ function AppointmentPage() {
   const handleCardClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
     setShowPaymentModal(true);
+  };
+
+  function appointmentSearch() {
+    setSearchTerm(searchInput);
+    searchAppointment(lawyerId ?? "", searchInput).then((response) => {
+      setAppointments(response.data.data);
+    });
+  }
+
+  const handleUserCardClick = (user: User) => {
+    setSelectedUser(user);
+    setShowUserModal(true);
+  };
+
+  const [showReportModal, setShowReportModal] = useState(false);
+
+  const handleReportUser = () => {
+    setShowUserModal(false);
+    setShowReportModal(true);
   };
 
   return (
@@ -521,7 +601,6 @@ function AppointmentPage() {
           <User size={40} />
         </div>
       </div>
-
       <div className="relative z-10">
         <LawyerNavbar />
         <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -533,7 +612,6 @@ function AppointmentPage() {
               Manage and track your upcoming appointments
             </p>
           </div>
-
           {/* Filter Bar */}
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/40 shadow-lg p-4 mb-8 sticky top-4 z-20">
             <div className="flex flex-wrap gap-2 justify-center">
@@ -552,10 +630,25 @@ function AppointmentPage() {
               ))}
             </div>
           </div>
-
+          {/* Search Bar Addition */}
+          <input
+            type="text"
+            placeholder="Search the user"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="w-[250px] px-4 mb-5 py-2 rounded-lg ms-12 border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          />
+          <button
+            onClick={appointmentSearch}
+            type="submit"
+            className="px-4 py-2 ms-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700"
+          >
+            Search
+          </button>
+          {/* End Search Bar */}
           {/* Appointments List */}
           <div className="space-y-6">
-            {appointments?.length === 0 ? (
+            {filteredAppointments?.length === 0 ? (
               <div className="text-center py-16">
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/40 shadow-lg p-12">
                   <div className="text-gray-400 mb-4">
@@ -570,12 +663,13 @@ function AppointmentPage() {
                 </div>
               </div>
             ) : (
-              appointments?.map((appointment) => (
+              filteredAppointments?.map((appointment) => (
                 <AppointmentCard
                   key={appointment._id}
                   appointment={appointment}
                   setActiveFilter={setActiveFilter}
                   onCardClick={handleCardClick}
+                  onUserDetailsClick={handleUserCardClick}
                 />
               ))
             )}
@@ -587,7 +681,6 @@ function AppointmentPage() {
         totalPages={totalPages || 0}
         onPageChange={setCurrentPage}
       />
-
       {/* Payment History Modal */}
       {selectedAppointment && (
         <PaymentHistoryModal
@@ -599,6 +692,21 @@ function AppointmentPage() {
           appointment={selectedAppointment}
         />
       )}
+      {showReportModal && (
+        <ReportModal
+          isOpen={true}
+          onClose={() => setShowReportModal(false)}
+          reportType="user"
+          reportedId={selectedUser?._id ?? ""}
+          reporterId={lawyerId ?? ""}
+        />
+      )}
+      <UserDetailsModal
+        isOpen={showUserModal}
+        onClose={() => setShowUserModal(false)}
+        user={selectedUser}
+        onReport={handleReportUser}
+      />
     </div>
   );
 }

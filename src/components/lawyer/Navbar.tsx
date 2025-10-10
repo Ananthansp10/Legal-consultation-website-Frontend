@@ -57,10 +57,14 @@ const LawyerNavbar: React.FC = () => {
     if (link == "Reviews") {
       navigate(`/lawyer/reviews/${lawyer?._id}/lawyer`);
     }
+
+    if (link == "My Plans") {
+      navigate("/lawyer/my-plans");
+    }
   }
 
   useEffect(() => {
-    getProfileImage(lawyer?._id!).then((response) => {
+    getProfileImage(lawyer?._id ?? '').then((response) => {
       setProfileImage(response.data.data);
     });
   }, []);
@@ -87,6 +91,7 @@ const LawyerNavbar: React.FC = () => {
                 "Appointments",
                 "Schedule",
                 "Reviews",
+                "My Plans",
                 "Subscription Plans",
                 "Chat",
               ].map((item) => (

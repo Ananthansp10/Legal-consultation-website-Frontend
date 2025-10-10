@@ -287,7 +287,7 @@ function LawyerProfileAddPage() {
     )
       newErrors.dob =
         "Date of birth should be greater than or equal to 18 years"; // Example for education
-    formData.education.forEach((edu, i) => {
+    formData.education.forEach((edu) => {
       if (!edu.degree)
         newErrors[`education-degree-${edu.id}`] = "Degree required.";
       if (!edu.university)
@@ -305,7 +305,7 @@ function LawyerProfileAddPage() {
     if (!validateForm()) return;
 
     const data = new FormData();
-    data.append("lawyerId", lawyer?._id!);
+    data.append("lawyerId", lawyer?._id ?? '');
     data.append("name", formData.fullName);
     data.append("email", formData.email);
     data.append("phoneNumber", formData.phone);
@@ -1052,7 +1052,7 @@ function LawyerProfileAddPage() {
                              {" "}
               </div>
                            {" "}
-              {formData.education.map((edu, index) => (
+              {formData.education.map((edu) => (
                 <div
                   key={edu.id}
                   className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-slate-50 rounded-lg"

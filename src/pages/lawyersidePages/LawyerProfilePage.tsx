@@ -113,10 +113,10 @@ export default function LawyerProfilePage() {
   // Edit form state
   const [editForm, setEditForm] = useState<
     EditFormType & { profileImageFile?: File }
-  >({ ...personalInfo!, fee: proffessionalInfo?.fee! });
+  >({ ...personalInfo!, fee: proffessionalInfo?.fee ?? '' });
 
   const handleEditClick = () => {
-    setEditForm({ ...personalInfo!, fee: proffessionalInfo?.fee! });
+    setEditForm({ ...personalInfo!, fee: proffessionalInfo?.fee ?? '' });
     setShowEditModal(true);
   };
 

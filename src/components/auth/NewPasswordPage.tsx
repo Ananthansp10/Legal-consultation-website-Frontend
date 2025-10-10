@@ -122,7 +122,7 @@ function NewPasswordPage() {
 
     setIsLoading(true);
 
-    let userDetails = localStorage.getItem("userDetails");
+    const userDetails = localStorage.getItem("userDetails");
     let user;
     if (userDetails) {
       user = JSON.parse(userDetails) as { email: string };

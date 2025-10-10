@@ -44,4 +44,8 @@ export const LAWYER_API = {
     `/lawyer/add-feedback/${appointmentId}`,
   FIND_STARTER_PLAN: (lawyerId: string) =>
     `/lawyer/find-starter-plan/${lawyerId}`,
+  SEARCH_APPOINTMENT: (lawyerId: string, userName: string) =>
+    `/lawyer/search-appointment/${lawyerId}/${userName}`,
+  GET_PURCHASED_PLANS: (lawyerId: string) =>
+    `/lawyer/get-purchased-plans/${lawyerId}`,
 };

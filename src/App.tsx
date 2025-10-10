@@ -58,6 +58,7 @@ import CompanyReportPage from "./pages/adminsidePages/CompanyReportPage";
 import UserVideoCallPage from "./pages/usersidePages/UserVideoCallPage";
 import LawyerVideoCallPage from "./pages/lawyersidePages/LawyerVideoCallPage";
 import ConsultationHistoryPage from "./components/reusableComponents/ConsultationHistoryPage";
+import MyPlansPage from "./pages/lawyersidePages/MyPlansPage";
 
 function App() {
   return (
@@ -180,6 +181,7 @@ function App() {
               path="/lawyer/consultation-history/:caseId"
               element={<ConsultationHistoryPage />}
             />
+            <Route path="/lawyer/my-plans" element={<MyPlansPage />} />
           </Route>
 
           <Route path="/admin" element={<AdminWelcomePage />} />

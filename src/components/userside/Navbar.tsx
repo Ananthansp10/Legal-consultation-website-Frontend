@@ -42,7 +42,7 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
 
   const navLinks = ["Home", "Lawyers", "My Appointments", "Chat"];
 
-  let user: userDetails | null = useSelector(
+  const user: userDetails | null = useSelector(
     (state: RootState) => state.auth.user,
   );
 
@@ -54,7 +54,7 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
 
   async function logout() {
     try {
-      let result = await logoutService();
+      const result = await logoutService();
       dispatch(logoutAction());
       toast.success(result.data.message);
       navigate("/auth/signin");
@@ -66,7 +66,7 @@ const UserNavbar: React.FC<NavProps> = ({ navLink }) => {
   }
 
   useEffect(() => {
-    getProfile(user?.id!).then((response) => {
+    getProfile(user?.id ?? '').then((response) => {
       if (response.data.data) {
         setProfileImage(response.data.data);
       }

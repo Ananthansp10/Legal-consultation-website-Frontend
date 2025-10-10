@@ -38,37 +38,15 @@ const ReportModal: React.FC<ReportModalProps> = ({
       reason: reason,
       description: description,
       reporterId,
-    }).then((response) => {
+    }).then(() => {
       onClose();
-      toast.success(response.data.message);
+      toast.success(
+        reportType == "user"
+          ? "User has reported successfully"
+          : "Lawyer has reported successfully",
+      );
     });
   };
-
-  // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = e.target.files;
-  //   if (files) {
-  //     console.log("Files uploaded:", files);
-  //   }
-  // };
-
-  // const handleDragOver = (e: React.DragEvent) => {
-  //   e.preventDefault();
-  //   setIsDragOver(true);
-  // };
-
-  // const handleDragLeave = (e: React.DragEvent) => {
-  //   e.preventDefault();
-  //   setIsDragOver(false);
-  // };
-
-  // const handleDrop = (e: React.DragEvent) => {
-  //   e.preventDefault();
-  //   setIsDragOver(false);
-  //   const files = e.dataTransfer.files;
-  //   if (files) {
-  //     console.log("Files dropped:", files);
-  //   }
-  // };
 
   if (!isOpen) return null;
 

@@ -2,7 +2,7 @@ import { Mail, AlertTriangle, ArrowRight, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function EmailExistError() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSignIn = () => {
     navigate("/auth/signin");

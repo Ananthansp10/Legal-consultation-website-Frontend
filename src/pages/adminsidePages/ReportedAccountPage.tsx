@@ -91,6 +91,7 @@ const ReportedAccountsPage = () => {
   useEffect(() => {
     getReportedAccounts(activeTab, startIndex, itemsPerPage).then(
       (response) => {
+        console.log(response);
         setReports(response.data.data);
         setTotalPages(
           Math.ceil(response.data.totalReportedAccounts / itemsPerPage),

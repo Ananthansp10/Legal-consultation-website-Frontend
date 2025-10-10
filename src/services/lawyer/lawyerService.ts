@@ -218,3 +218,19 @@ export const findStarterPlan = async (lawyerId: string) => {
     throw error;
   }
 };
+
+export const searchAppointment = async (lawyerId: string, userName: string) => {
+  try {
+    return await axios.get(LAWYER_API.SEARCH_APPOINTMENT(lawyerId, userName));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getPurchasedPlans = async (lawyerId: string) => {
+  try {
+    return await axios.get(LAWYER_API.GET_PURCHASED_PLANS(lawyerId));
+  } catch (error) {
+    throw error;
+  }
+};

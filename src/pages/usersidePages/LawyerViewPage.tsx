@@ -488,7 +488,7 @@ export default function LawyerViewPage() {
           isOpen={true}
           onClose={() => setShowReportModal(false)}
           reportType="lawyer"
-          reportedId={lawyerData?.lawyerId!}
+          reportedId={lawyerData?.lawyerId ?? ''}
           reporterId={userId!}
         />
       )}

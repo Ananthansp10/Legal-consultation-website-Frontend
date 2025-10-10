@@ -205,7 +205,7 @@ const SignUp = () => {
       return;
     }
 
-    let signupObj = {
+    const signupObj = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
@@ -213,7 +213,7 @@ const SignUp = () => {
       confirmPassword: formData.confirmPassword,
     };
 
-    let errorMsg = await validateSignup(signupObj);
+    const errorMsg = await validateSignup(signupObj);
     if (errorMsg) {
       toast.error(errorMsg);
     } else {

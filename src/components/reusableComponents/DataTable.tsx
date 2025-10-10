@@ -111,7 +111,7 @@ const DataTable: React.FC<DataTableProps> = ({
       });
     } else {
       getLawyerProfile(id).then((response) => {
-        let data = { ...response.data.data, type: "lawyer" };
+        const data = { ...response.data.data, type: "lawyer" };
         navigate("/admin-dashboard/profile-view", { state: { profile: data } });
       });
     }

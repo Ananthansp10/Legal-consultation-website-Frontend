@@ -45,7 +45,7 @@ function LawyerChatViewPage() {
   );
 
   useEffect(() => {
-    let sock = connectSocket();
+    const sock = connectSocket();
     setSocket(sock);
 
     sock.on("connect", () => {

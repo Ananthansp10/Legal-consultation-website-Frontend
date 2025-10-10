@@ -41,7 +41,7 @@ function ResetPasswordPage() {
     hasSpecialChar: false,
   });
 
-  let email: string | undefined = useSelector(
+  const email: string | undefined = useSelector(
     (state: RootState) => state.auth?.user?.email,
   );
 

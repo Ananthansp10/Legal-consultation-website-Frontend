@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 function UnAuthorizedPage() {
   const [searchParams] = useSearchParams();
   const role = searchParams.get("role");
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   function gotoLogin() {
     if (role === "user") {

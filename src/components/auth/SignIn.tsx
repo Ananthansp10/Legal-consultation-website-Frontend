@@ -131,7 +131,7 @@ const SignIn = () => {
     }
 
     // Then run existing validation
-    let errorMsg = signinValidation(formData);
+    const errorMsg = signinValidation(formData);
     if (errorMsg) {
       toast.error(errorMsg);
     } else {

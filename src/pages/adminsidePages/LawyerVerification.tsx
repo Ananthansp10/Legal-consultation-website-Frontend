@@ -72,7 +72,7 @@ const LawyerVerification: React.FC = () => {
       setRejectReasonModalOpen(true);
     } else {
       setConfirmModal({ isOpen: false, type: "approve", lawyer: null });
-      verifyLawyer(confirmModal.lawyer?._id!, confirmModal.type, "null")
+      verifyLawyer(confirmModal.lawyer?._id ?? '', confirmModal.type, "null")
         .then((response) => {
           toast.success(response.data.message);
           fetchData();
@@ -86,7 +86,7 @@ const LawyerVerification: React.FC = () => {
   const submitRejection = () => {
     setRejectReasonModalOpen(false);
     setConfirmModal({ isOpen: false, type: "reject", lawyer: null });
-    verifyLawyer(confirmModal.lawyer?._id!, confirmModal.type, rejectReason)
+    verifyLawyer(confirmModal.lawyer?._id ?? '', confirmModal.type, rejectReason)
       .then((response) => {
         toast.success(response.data.message);
         fetchData();

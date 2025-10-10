@@ -96,8 +96,8 @@ const OTPVerification = () => {
     validateOtp(otp);
   };
 
-  let userDetails = localStorage.getItem("userDetails");
-  let userData: User | undefined = userDetails ? JSON.parse(userDetails) : "";
+  const userDetails = localStorage.getItem("userDetails");
+  const userData: User | undefined = userDetails ? JSON.parse(userDetails) : "";
 
   // Check if form is valid for button activation
   useEffect(() => {
@@ -151,7 +151,7 @@ const OTPVerification = () => {
     localStorage.setItem("otpTimerExpiration", expirationTime.toString());
     setTimer(120);
 
-    let userDetails: string | null = localStorage.getItem("userDetails");
+    const userDetails: string | null = localStorage.getItem("userDetails");
     if (userDetails) {
       await resendExecute(JSON.parse(userDetails));
     }

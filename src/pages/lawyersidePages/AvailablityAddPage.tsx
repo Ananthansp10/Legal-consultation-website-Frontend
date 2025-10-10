@@ -45,14 +45,14 @@ const DAYS_OF_WEEK = [
   { id: "sun", label: "Sun", full: "Sunday" },
 ];
 
-const convertTo12Hour = (time24: string): string => {
-  if (!time24) return "";
-  const [hours, minutes] = time24.split(":");
-  const hour = parseInt(hours, 10);
-  const ampm = hour >= 12 ? "PM" : "AM";
-  const hour12 = hour % 12 || 12;
-  return `${hour12}:${minutes} ${ampm}`;
-};
+// const convertTo12Hour = (time24: string): string => {
+//   if (!time24) return "";
+//   const [hours, minutes] = time24.split(":");
+//   const hour = parseInt(hours, 10);
+//   const ampm = hour >= 12 ? "PM" : "AM";
+//   const hour12 = hour % 12 || 12;
+//   return `${hour12}:${minutes} ${ampm}`;
+// };
 
 const convertTo24Hour = (time12: string): string => {
   if (!time12) return "";
@@ -71,12 +71,12 @@ const convertTo24Hour = (time12: string): string => {
 const generateTimeOptions = (): string[] => {
   const options: string[] = [];
   for (let hour = 1; hour <= 12; hour++) {
-    for (let minute of ["00", "15", "30", "45"]) {
+    for (const minute of ["00", "15", "30", "45"]) {
       options.push(`${hour}:${minute} AM`);
     }
   }
   for (let hour = 1; hour <= 12; hour++) {
-    for (let minute of ["00", "15", "30", "45"]) {
+    for (const minute of ["00", "15", "30", "45"]) {
       options.push(`${hour}:${minute} PM`);
     }
   }
@@ -311,7 +311,7 @@ function AvailabilityAddPage() {
         toast.success(response.data.message);
         navigate("/lawyer/slot-list-page");
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("Something went wrong");
       });
   };

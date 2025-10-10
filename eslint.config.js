@@ -24,6 +24,7 @@ export default tseslint.config(
       //   { allowConstantExport: true },
       // ],
       "no-useless-catch": "off",
+      "no-irregular-whitespace": "off",
     },
   },
 );
