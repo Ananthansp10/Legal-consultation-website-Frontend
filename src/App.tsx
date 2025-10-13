@@ -15,7 +15,7 @@ import LawyerListing from "./pages/adminsidePages/LawyerListing";
 import UserListing from "./pages/adminsidePages/UserListing";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NewPasswordPage from "../../Front-end/src/components/auth/NewPasswordPage";
+import NewPasswordPage from "./components/auth/NewPasswordPage";
 import ResetPasswordPage from "./components/auth/ResetPasswordPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UnAuthorizedPage from "./components/UnAuthorizedPage";
