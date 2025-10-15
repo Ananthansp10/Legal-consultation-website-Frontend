@@ -5,6 +5,6 @@ export const USER_AUTH_API = {
   FORGOT_PASSWORD: "/user/forgot-password",
   CHANGE_PASSWORD: "/user/change-password",
   RESET_PASSWORD: "/user/reset-password",
-  GOOGLE_AUTH: "https://www.api.legalconnect.site/api/user/auth/google",
+  GOOGLE_AUTH: "https://api.legalconnect.site/api/user/auth/google",
   GOOGLE_AUTH_DETAILS: "/user/getGoogleAuthDetails",
 };
