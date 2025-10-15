@@ -125,7 +125,7 @@ function App() {
             />
             <Route path="/user/chat" element={<ChatPage />} />
             <Route path="/feedback/:lawyerId" element={<AddFeedbackPage />} />
-            <Route path="/reviews/:lawyerId" element={<ReviewListing />} />
+            <Route path="/reviews/:lawyerId/:userType" element={<ReviewListing />} />
             <Route
               path="/user/video-call/:appointmentId"
               element={<UserVideoCallPage />}

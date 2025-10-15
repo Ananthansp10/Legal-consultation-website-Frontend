@@ -465,7 +465,7 @@ export default function LawyerViewPage() {
                 </div>
 
                 <Link
-                  to={`/reviews/${lawyerId}`}
+                  to={`/reviews/${lawyerId}/user`}
                   className="float-right text-blue-500 font-semibold"
                 >
                   View All
