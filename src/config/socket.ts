@@ -4,7 +4,10 @@ let socket: Socket | null = null;
 
 export const connectSocket = () => {
   if (!socket) {
-    socket = io("https://api.legalconnect.site");
+    socket = io("https://api.legalconnect.site",{
+      transports: ["websocket", "polling"],
+      withCredentials: true,   
+    });
 
     socket.on("connect", () => {
       console.log("Connected to server:", socket?.id);
