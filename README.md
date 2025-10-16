@@ -21,7 +21,7 @@ It provides a modern, responsive interface for users, lawyers, and admins to int
 
 ### 1️⃣ Clone the Repository
 
-git clone https://github.com/your-username/legal-consultation-frontend.git
+git clone https://github.com/Ananthansp10/Legal-consultation-website-Frontend.git
 
 ### 2️⃣ Install Dependencies
 npm install
